@@ -165,13 +165,6 @@ const jsonLd = {
           closes: "23:00",
         },
       ],
-      makesOffer: [
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "كيبورد" } },
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "ماوس" } },
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "ماوس باد" } },
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "مايك" } },
-        { "@type": "Offer", itemOffered: { "@type": "Product", name: "سماعات" } },
-      ],
     },
     {
       "@type": "WebSite",
