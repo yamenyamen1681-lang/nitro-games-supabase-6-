@@ -323,7 +323,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           alt={active.title}
                           fill
                           priority
-                          className="object-contain p-6"
+                          className="object-contain p-2"
                         />
                       </div>
 
