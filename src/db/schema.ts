@@ -75,6 +75,13 @@ export const settings = pgTable("settings", {
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
+export const uploads = pgTable("uploads", {
+  id: serial("id").primaryKey(),
+  mimeType: text("mime_type").notNull(),
+  data: text("data").notNull(), // base64-encoded file bytes
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 /* ============================================================
    تهيئة قاعدة البيانات تلقائياً (Auto-Migration)
    مدمجة هنا حتى لا تحتاج ملفاً منفصلاً.
@@ -153,6 +160,13 @@ const DDL = `
     key TEXT PRIMARY KEY,
     value JSONB NOT NULL,
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
+  );
+
+  CREATE TABLE IF NOT EXISTS uploads (
+    id SERIAL PRIMARY KEY,
+    mime_type TEXT NOT NULL,
+    data TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
   );
 
   CREATE INDEX IF NOT EXISTS idx_products_category  ON products(category);

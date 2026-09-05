@@ -15,6 +15,8 @@ import {
   ShoppingBag,
   Sparkles,
   Flame,
+  Music,
+  Volume2,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -30,6 +32,33 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   const { addToCart } = useCart();
   const cfg = showcase ?? DEFAULT_SHOWCASE;
+
+  const [siteAudioUrl, setSiteAudioUrl] = useState<string | null>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/settings?key=site_audio", { cache: "no-store" });
+        const data = await res.json();
+        if (data.success && data.value?.url) setSiteAudioUrl(data.value.url);
+      } catch (err) {
+        console.warn("Failed to load site audio:", err);
+      }
+    })();
+  }, []);
+
+  const toggleAudio = () => {
+    if (!audioRef.current) return;
+    if (isPlaying) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+    } else {
+      audioRef.current.play().catch(() => {});
+      setIsPlaying(true);
+    }
+  };
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
@@ -160,13 +189,93 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           {/* --- LEFT: Admin-controlled Dynamic Showcase --- */}
           <div className="lg:col-span-6">
-            {cfg.enabled && active ? (
+            {cfg.enabled && cfg.videoUrl ? (
+              <div className="relative">
+                <div className="absolute -inset-6 bg-gradient-to-tr from-[#00a3ff]/15 via-transparent to-[#00e5ff]/15 blur-2xl rounded-full pointer-events-none" />
+                <div className="relative grad-frame p-1.5">
+                  <div className="rounded-[16px] bg-[#080d18] overflow-hidden">
+                    <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#16223a] bg-[#080d18]">
+                      <span className="text-[10px] font-tech text-[#00e5ff] flex items-center gap-1">
+                        <Flame className="w-3 h-3" /> {cfg.badgeText}
+                      </span>
+                    </div>
+
+                    <div className="relative h-64 sm:h-80 w-full bg-black">
+                      <video
+                        key={cfg.videoUrl}
+                        src={cfg.videoUrl}
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        controls
+                        className="absolute inset-0 w-full h-full object-contain"
+                      />
+                      <span className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-[#00a3ff]/60 rounded-tr-md pointer-events-none" />
+                      <span className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-[#00e5ff]/60 rounded-bl-md pointer-events-none" />
+                    </div>
+
+                    <div className="px-4 py-3.5 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
+                      <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
+                        {cfg.headline}
+                      </h3>
+                      <a
+                        href="#products"
+                        className="btn-pink text-[11px] px-3.5 py-2 flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                      >
+                        <ShoppingBag className="w-3.5 h-3.5" />
+                        <span>{cfg.ctaLabel}</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
+                {siteAudioUrl && (
+                  <>
+                    <audio ref={audioRef} src={siteAudioUrl} loop />
+                    <button
+                      onClick={toggleAudio}
+                      className={`absolute -top-4 left-6 z-10 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 ${
+                        isPlaying
+                          ? "bg-[#00a3ff] text-black"
+                          : "bg-[#080d18] border border-[#00a3ff]/50 text-[#00a3ff]"
+                      }`}
+                      title={isPlaying ? "إيقاف الموسيقى" : "تشغيل موسيقى الموقع"}
+                    >
+                      {isPlaying ? <Volume2 className="w-4 h-4" /> : <Music className="w-4 h-4" />}
+                    </button>
+                  </>
+                )}
+
+                <div className="hidden sm:flex absolute -bottom-4 right-6 items-center gap-2 px-3 py-1.5 rounded-xl panel border-[#00a3ff]/40 animate-floaty">
+                  <Zap className="w-3.5 h-3.5 text-[#00a3ff]" />
+                  <span className="text-[10px] font-bold text-gray-200">{cfg.headline}</span>
+                </div>
+              </div>
+            ) : cfg.enabled && active ? (
               <div
                 className="relative"
                 onMouseEnter={() => setPaused(true)}
                 onMouseLeave={() => setPaused(false)}
               >
                 <div className="absolute -inset-6 bg-gradient-to-tr from-[#00a3ff]/15 via-transparent to-[#00e5ff]/15 blur-2xl rounded-full pointer-events-none" />
+
+                {siteAudioUrl && (
+                  <>
+                    <audio ref={audioRef} src={siteAudioUrl} loop />
+                    <button
+                      onClick={toggleAudio}
+                      className={`absolute -top-4 left-6 z-10 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 ${
+                        isPlaying
+                          ? "bg-[#00a3ff] text-black"
+                          : "bg-[#080d18] border border-[#00a3ff]/50 text-[#00a3ff]"
+                      }`}
+                      title={isPlaying ? "إيقاف الموسيقى" : "تشغيل موسيقى الموقع"}
+                    >
+                      {isPlaying ? <Volume2 className="w-4 h-4" /> : <Music className="w-4 h-4" />}
+                    </button>
+                  </>
+                )}
 
                 <div className="relative grad-frame p-1.5">
                   <div className="rounded-[16px] bg-[#080d18] overflow-hidden">

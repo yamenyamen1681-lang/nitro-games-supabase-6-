@@ -20,7 +20,8 @@ import {
   ArrowUp,
   ArrowDown,
   Play,
-  Pause
+  Pause,
+  Music
 } from "lucide-react";
 
 interface AdminDashboardModalProps {
@@ -52,7 +53,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   onShowcaseUpdate,
 }) => {
   // ===== Featured Showcase editor state =====
-  const [tab, setTab] = useState<"products" | "showcase">("products");
+  const [tab, setTab] = useState<"products" | "showcase" | "audio">("products");
   const [sc, setSc] = useState<ShowcaseConfig>(showcase ?? DEFAULT_SHOWCASE);
   const [pickerCat, setPickerCat] = useState<string>("all");
   const [pickerQuery, setPickerQuery] = useState("");
@@ -117,6 +118,104 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   const [brand, setBrand] = useState("");
   const [badge, setBadge] = useState("");
   const [imageUrl, setImageUrl] = useState("/images/keyboard-custom-rgb.jpg");
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [isUploadingVideo, setIsUploadingVideo] = useState(false);
+  const [videoUploadError, setVideoUploadError] = useState<string | null>(null);
+
+  // Site background music (separate from the showcase video)
+  const [siteAudioUrl, setSiteAudioUrl] = useState<string>("");
+  const [isUploadingAudio, setIsUploadingAudio] = useState(false);
+  const [audioUploadError, setAudioUploadError] = useState<string | null>(null);
+  const [audioLoaded, setAudioLoaded] = useState(false);
+
+  React.useEffect(() => {
+    if (tab !== "audio" || audioLoaded) return;
+    (async () => {
+      try {
+        const res = await fetch("/api/settings?key=site_audio", { cache: "no-store" });
+        const data = await res.json();
+        if (data.success && data.value?.url) setSiteAudioUrl(data.value.url);
+      } catch (err) {
+        console.warn("Failed to load site audio setting:", err);
+      } finally {
+        setAudioLoaded(true);
+      }
+    })();
+  }, [tab, audioLoaded]);
+
+  const saveSiteAudio = async (url: string) => {
+    try {
+      await fetch("/api/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "site_audio", value: { url: url || null } }),
+      });
+      showToast(url ? "تم حفظ الموسيقى — بتشتغل عند كل الزوار 🎵" : "تم إيقاف موسيقى الموقع");
+    } catch (err) {
+      console.warn("Failed to save site audio setting:", err);
+      showToast("تعذر حفظ إعدادات الموسيقى ⚠️");
+    }
+  };
+
+  const handleAudioFileUpload = async (file: File | undefined | null) => {
+    if (!file) return;
+    setAudioUploadError(null);
+    setIsUploadingAudio(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "upload failed");
+      setSiteAudioUrl(data.url);
+      await saveSiteAudio(data.url);
+    } catch (err) {
+      console.warn("Audio upload error:", err);
+      setAudioUploadError("تعذر رفع الملف — تأكد إنه صوت وحجمه أقل من 4MB");
+    } finally {
+      setIsUploadingAudio(false);
+    }
+  };
+
+  const handleVideoFileUpload = async (file: File | undefined | null) => {
+    if (!file) return;
+    setVideoUploadError(null);
+    setIsUploadingVideo(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "upload failed");
+      setSc({ ...sc, videoUrl: data.url });
+      commitShowcase({ ...sc, videoUrl: data.url });
+    } catch (err) {
+      console.warn("Video upload error:", err);
+      setVideoUploadError("تعذر رفع الفيديو — تأكد إنه أقل من 4MB");
+    } finally {
+      setIsUploadingVideo(false);
+    }
+  };
+
+  const handleFileUpload = async (file: File | undefined | null) => {
+    if (!file) return;
+    setUploadError(null);
+    setIsUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "upload failed");
+      setImageUrl(data.url);
+    } catch (err) {
+      console.warn("Image upload error:", err);
+      setUploadError("تعذر رفع الملف — تأكد إنه صورة أو فيديو وحجمه أقل من 4MB");
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
 
   // Admin filter & search
   const [filterCategory, setFilterCategory] = useState<string>("all");
@@ -357,6 +456,17 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               <Monitor className="w-3.5 h-3.5" />
               <span>المربع المميز (الشاشة الرئيسية)</span>
             </button>
+            <button
+              onClick={() => setTab("audio")}
+              className={`px-4 py-2.5 text-xs font-bold rounded-t-xl cursor-pointer transition-all flex items-center gap-2 ${
+                tab === "audio"
+                  ? "bg-[#0b1120] text-[#00a3ff] border-x border-t border-[#1c2942]"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              <Music className="w-3.5 h-3.5" />
+              <span>موسيقى الموقع</span>
+            </button>
           </div>
         )}
 
@@ -510,6 +620,69 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   />
                 </div>
               </div>
+
+              {/* video */}
+              <div>
+                <label className="text-xs font-bold text-gray-300 block mb-1">
+                  فيديو (اختياري) — لو معبّى، بيظهر بدل صور المنتجات جوا المربع المميز
+                </label>
+
+                <div className="flex items-center gap-2 mb-2">
+                  <label
+                    className={`text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer transition-all ${
+                      isUploadingVideo
+                        ? "bg-[#152034] text-gray-500 border-[#27405f] cursor-not-allowed"
+                        : "bg-[#00a3ff] text-black border-[#00a3ff] hover:brightness-110"
+                    }`}
+                  >
+                    {isUploadingVideo ? "جاري الرفع..." : "📁 اختر فيديو من جهازك"}
+                    <input
+                      type="file"
+                      accept="video/*"
+                      disabled={isUploadingVideo}
+                      onChange={(e) => handleVideoFileUpload(e.target.files?.[0])}
+                      className="hidden"
+                    />
+                  </label>
+                  {sc.videoUrl && sc.videoUrl.startsWith("/api/images/") && (
+                    <span className="text-[11px] text-green-400">✓ تم رفع الفيديو</span>
+                  )}
+                  {sc.videoUrl && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSc({ ...sc, videoUrl: undefined });
+                        commitShowcase({ ...sc, videoUrl: undefined });
+                      }}
+                      className="text-[11px] text-red-400 hover:text-red-300 underline"
+                    >
+                      إزالة الفيديو
+                    </button>
+                  )}
+                </div>
+                {videoUploadError && (
+                  <p className="text-[11px] text-red-400 mb-2">{videoUploadError}</p>
+                )}
+
+                <label className="text-[11px] text-gray-400 block mb-1">
+                  أو الصق رابط فيديو مباشر:
+                </label>
+                <input
+                  type="text"
+                  value={sc.videoUrl ?? ""}
+                  onChange={(e) => setSc({ ...sc, videoUrl: e.target.value })}
+                  onBlur={(e) =>
+                    commitShowcase({ ...sc, videoUrl: e.target.value.trim() || undefined })
+                  }
+                  placeholder="https://example.com/video.mp4"
+                  dir="ltr"
+                  className="w-full bg-[#152034] border border-[#1c2942] text-xs text-white font-mono rounded-xl px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
+                />
+                <p className="text-[10px] text-gray-500 mt-1">
+                  الحد الأقصى لحجم الفيديو المرفوع 4MB. لفيديوهات أكبر، ارفعه على خدمة استضافة
+                  خارجية والصق رابطه المباشر هون بدل الرفع.
+                </p>
+              </div>
             </div>
 
             {/* Current showcase order */}
@@ -638,6 +811,82 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             >
               تفريغ المربع المميز (يعود للعرض التلقائي)
             </button>
+          </div>
+        ) : tab === "audio" ? (
+          /* ===================== SITE AUDIO CONTROL PANEL ===================== */
+          <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+            <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-4">
+              <div className="flex items-center gap-2 border-b border-[#1c2942] pb-3">
+                <Music className="w-4 h-4 text-[#00a3ff]" />
+                <h3 className="text-sm font-bold text-white">موسيقى خلفية للموقع</h3>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[#1e170e] border border-[#00a3ff]/20 text-[11px] text-gray-300 leading-relaxed">
+                ⚠️ المتصفحات تمنع تشغيل الصوت تلقائياً بدون تفاعل الزائر. لهيك رح يظهر
+                للزوار زر عائم صغير 🎵 بالموقع، يضغطوا عليه هم لتشغيل الموسيقى — ما رح
+                تشتغل لحالها بمجرد فتح الموقع.
+              </div>
+
+              <div className="flex items-center gap-2">
+                <label
+                  className={`text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer transition-all ${
+                    isUploadingAudio
+                      ? "bg-[#152034] text-gray-500 border-[#27405f] cursor-not-allowed"
+                      : "bg-[#00a3ff] text-black border-[#00a3ff] hover:brightness-110"
+                  }`}
+                >
+                  {isUploadingAudio ? "جاري الرفع..." : "📁 اختر ملف صوت من جهازك"}
+                  <input
+                    type="file"
+                    accept="audio/*"
+                    disabled={isUploadingAudio}
+                    onChange={(e) => handleAudioFileUpload(e.target.files?.[0])}
+                    className="hidden"
+                  />
+                </label>
+                {siteAudioUrl && (
+                  <span className="text-[11px] text-green-400">✓ فيه موسيقى مفعّلة حالياً</span>
+                )}
+                {siteAudioUrl && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSiteAudioUrl("");
+                      saveSiteAudio("");
+                    }}
+                    className="text-[11px] text-red-400 hover:text-red-300 underline"
+                  >
+                    إيقاف الموسيقى
+                  </button>
+                )}
+              </div>
+              {audioUploadError && (
+                <p className="text-[11px] text-red-400">{audioUploadError}</p>
+              )}
+
+              <div>
+                <label className="text-[11px] text-gray-400 block mb-1">
+                  أو الصق رابط ملف صوت مباشر:
+                </label>
+                <input
+                  type="text"
+                  value={siteAudioUrl}
+                  onChange={(e) => setSiteAudioUrl(e.target.value)}
+                  onBlur={(e) => saveSiteAudio(e.target.value.trim())}
+                  placeholder="https://example.com/song.mp3"
+                  dir="ltr"
+                  className="w-full bg-[#152034] border border-[#1c2942] text-xs text-white font-mono rounded-xl px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
+                />
+                <p className="text-[10px] text-gray-500 mt-1">
+                  الحد الأقصى لحجم الملف المرفوع 4MB (تقريباً 3-4 دقائق بجودة عادية). لملفات
+                  أكبر، ارفعها على استضافة خارجية والصق رابطها المباشر هون.
+                </p>
+              </div>
+
+              {siteAudioUrl && (
+                <audio src={siteAudioUrl} controls className="w-full" />
+              )}
+            </div>
           </div>
         ) : (
           /* Authenticated Dashboard */
@@ -773,7 +1022,37 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 {/* Image URL & Quick Selectors */}
                 <div>
                   <label className="text-xs font-bold text-gray-300 block mb-1">
-                    رابط صورة المنتج المباشر (Direct Image URL):
+                    صورة المنتج:
+                  </label>
+
+                  {/* Upload from device */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <label
+                      className={`text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer transition-all ${
+                        isUploadingImage
+                          ? "bg-[#152034] text-gray-500 border-[#27405f] cursor-not-allowed"
+                          : "bg-[#00a3ff] text-black border-[#00a3ff] hover:brightness-110"
+                      }`}
+                    >
+                      {isUploadingImage ? "جاري الرفع..." : "📁 اختر صورة من جهازك"}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={isUploadingImage}
+                        onChange={(e) => handleFileUpload(e.target.files?.[0])}
+                        className="hidden"
+                      />
+                    </label>
+                    {imageUrl && imageUrl.startsWith("/api/images/") && (
+                      <span className="text-[11px] text-green-400">✓ تم رفع الصورة</span>
+                    )}
+                  </div>
+                  {uploadError && (
+                    <p className="text-[11px] text-red-400 mb-2">{uploadError}</p>
+                  )}
+
+                  <label className="text-[11px] text-gray-400 block mb-1">
+                    أو الصق رابط صورة مباشر (Direct Image URL):
                   </label>
                   <input
                     type="text"

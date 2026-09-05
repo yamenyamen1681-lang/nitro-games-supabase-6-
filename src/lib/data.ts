@@ -30,6 +30,8 @@ export interface ShowcaseConfig {
   badgeText: string;
   headline: string;
   ctaLabel: string;
+  /** Optional: direct video URL (mp4/webm) to show instead of the product slideshow */
+  videoUrl?: string;
 }
 
 /* ===== Store contact info (single source of truth — change here and it updates everywhere) ===== */
