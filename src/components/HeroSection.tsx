@@ -78,6 +78,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [slide, setSlide] = useState(0);
   const [paused, setPaused] = useState(false);
 
+  // Support multiple videos in the same field, comma-separated:
+  // "https://.../v1.mp4, https://.../v2.mp4" — plays v1, then auto-advances to v2, then loops.
+  const videoList = React.useMemo(
+    () => (cfg.videoUrl || "").split(",").map((s) => s.trim()).filter(Boolean),
+    [cfg.videoUrl]
+  );
+  const [videoIndex, setVideoIndex] = useState(0);
+  useEffect(() => {
+    if (videoIndex >= videoList.length) setVideoIndex(0);
+  }, [videoList.length, videoIndex]);
+  const activeVideo = videoList[videoIndex];
+
   const go = useCallback(
     (dir: number) => {
       if (showcaseItems.length === 0) return;
@@ -195,6 +207,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div className="relative grad-frame p-1.5">
                   <div className="rounded-[16px] bg-[#080d18] overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#16223a] bg-[#080d18]">
+                      <div className="flex items-center gap-1.5">
+                        {videoList.length > 1 &&
+                          videoList.map((_, i) => (
+                            <button
+                              key={i}
+                              onClick={() => setVideoIndex(i)}
+                              aria-label={`فيديو ${i + 1}`}
+                              className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                                i === videoIndex ? "w-6 bg-[#00a3ff]" : "w-1.5 bg-[#22375a]"
+                              }`}
+                            />
+                          ))}
+                      </div>
                       <span className="text-[10px] font-tech text-[#00e5ff] flex items-center gap-1">
                         <Flame className="w-3 h-3" /> {cfg.badgeText}
                       </span>
@@ -202,13 +227,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                     <div className="relative h-64 sm:h-80 w-full bg-black">
                       <video
-                        key={cfg.videoUrl}
-                        src={cfg.videoUrl}
+                        key={activeVideo}
+                        src={activeVideo}
                         autoPlay
                         muted
-                        loop
+                        loop={videoList.length <= 1}
                         playsInline
                         controls
+                        onEnded={() => {
+                          if (videoList.length > 1) {
+                            setVideoIndex((i) => (i + 1) % videoList.length);
+                          }
+                        }}
                         className="absolute inset-0 w-full h-full object-contain"
                       />
                       <span className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-[#00a3ff]/60 rounded-tr-md pointer-events-none" />
