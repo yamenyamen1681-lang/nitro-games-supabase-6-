@@ -11,6 +11,8 @@ export const products = pgTable("products", {
   originalPrice: integer("original_price"),
   discountPercent: integer("discount_percent").default(0),
   image: text("image").notNull(),
+  /** Optional direct video URL (mp4/webm) shown alongside the image on the product card */
+  video: text("video"),
   inStock: boolean("in_stock").default(true).notNull(),
   stockQuantity: integer("stock_quantity").default(15).notNull(),
   rating: real("rating").default(5.0).notNull(),
@@ -69,19 +71,6 @@ export const newsletter = pgTable("newsletter", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const settings = pgTable("settings", {
-  key: text("key").primaryKey(),
-  value: jsonb("value").notNull(),
-  updatedAt: timestamp("updated_at").defaultNow().notNull(),
-});
-
-export const uploads = pgTable("uploads", {
-  id: serial("id").primaryKey(),
-  mimeType: text("mime_type").notNull(),
-  data: text("data").notNull(), // base64-encoded file bytes
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
 /* ============================================================
    تهيئة قاعدة البيانات تلقائياً (Auto-Migration)
    مدمجة هنا حتى لا تحتاج ملفاً منفصلاً.
@@ -104,6 +93,7 @@ const DDL = `
     original_price INTEGER,
     discount_percent INTEGER DEFAULT 0,
     image TEXT NOT NULL,
+    video TEXT,
     in_stock BOOLEAN NOT NULL DEFAULT true,
     stock_quantity INTEGER NOT NULL DEFAULT 15,
     rating REAL NOT NULL DEFAULT 5.0,
@@ -117,6 +107,9 @@ const DDL = `
     fps_estimates JSONB,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
   );
+
+  -- يضيف عمود الفيديو تلقائياً لو الجدول أصلاً موجود من قبل بدونه
+  ALTER TABLE products ADD COLUMN IF NOT EXISTS video TEXT;
 
   CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
@@ -153,19 +146,6 @@ const DDL = `
     id SERIAL PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
     discount_code TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
-  );
-
-  CREATE TABLE IF NOT EXISTS settings (
-    key TEXT PRIMARY KEY,
-    value JSONB NOT NULL,
-    updated_at TIMESTAMP NOT NULL DEFAULT NOW()
-  );
-
-  CREATE TABLE IF NOT EXISTS uploads (
-    id SERIAL PRIMARY KEY,
-    mime_type TEXT NOT NULL,
-    data TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
   );
 
