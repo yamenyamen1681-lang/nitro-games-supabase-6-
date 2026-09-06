@@ -71,10 +71,14 @@ export const newsletter = pgTable("newsletter", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const uploads = pgTable("uploads", {
+  id: serial("id").primaryKey(),
+  url: text("url").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 /* ============================================================
    تهيئة قاعدة البيانات تلقائياً (Auto-Migration)
-   مدمجة هنا حتى لا تحتاج ملفاً منفصلاً.
-   تُنشئ الجداول والفهارس لو غير موجودة — آمنة للتشغيل المتكرر.
    ============================================================ */
 import { pool } from "./index";
 
@@ -108,7 +112,6 @@ const DDL = `
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
   );
 
-  -- يضيف عمود الفيديو تلقائياً لو الجدول أصلاً موجود من قبل بدونه
   ALTER TABLE products ADD COLUMN IF NOT EXISTS video TEXT;
 
   CREATE TABLE IF NOT EXISTS orders (
@@ -146,6 +149,12 @@ const DDL = `
     id SERIAL PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
     discount_code TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+  );
+
+  CREATE TABLE IF NOT EXISTS uploads (
+    id SERIAL PRIMARY KEY,
+    url TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
   );
 
