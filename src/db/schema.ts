@@ -155,11 +155,6 @@ const DDL = `
   CREATE INDEX IF NOT EXISTS idx_reviews_created    ON reviews(created_at DESC);
 `;
 
-/**
- * تُنشئ الجداول لو غير موجودة.
- * تُنفّذ مرة واحدة فقط لكل عملية تشغيل (Serverless-safe).
- * لو فشلت، يكمل الموقع بالاعتماد على localStorage بدون انهيار.
- */
 export async function ensureDbReady(): Promise<boolean> {
   if (dbReady) return true;
   if (readyPromise) return readyPromise;
