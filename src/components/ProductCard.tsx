@@ -4,7 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Product, CATEGORIES_META } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
-import { ShoppingBag, Heart, Eye, Star, ShieldCheck } from "lucide-react";
+import { ShoppingBag, Heart, Eye, Star, ShieldCheck, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
@@ -15,6 +15,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) 
   const { addToCart, wishlist, toggleWishlist, setQuickViewProduct } = useCart();
   const isWishlisted = wishlist.includes(product.id);
   const catName = CATEGORIES_META.find((c) => c.id === product.category)?.name ?? product.category;
+
+  // Optional video field on the product (safe even if not yet in the Product type).
+  const productVideo = (product as unknown as { video?: string }).video;
+
+  type MediaItem = { type: "image" | "video"; src: string };
+  const media: MediaItem[] = [
+    { type: "image", src: product.image },
+    ...(productVideo ? [{ type: "video" as const, src: productVideo }] : []),
+  ];
+
+  const [mediaIndex, setMediaIndex] = React.useState(0);
+  const activeMedia = media[mediaIndex] ?? media[0];
+
+  const goMedia = (dir: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMediaIndex((i) => (i + dir + media.length) % media.length);
+  };
 
   return (
     <div className="group relative grad-frame flex flex-col justify-between overflow-hidden">
@@ -54,21 +71,64 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) 
         </button>
       </div>
 
-      {/* Image */}
+      {/* Image / Video */}
       <div
-        className="relative h-44 sm:h-48 w-full cursor-pointer px-4 flex items-center justify-center"
+        className="relative h-64 sm:h-72 w-full cursor-pointer px-2 flex items-center justify-center"
         onClick={() => setQuickViewProduct(product)}
       >
         <div className="relative w-full h-full">
-          <Image
-            src={product.image}
-            alt={product.title}
-            fill
-            className="object-contain transition-transform duration-500 group-hover:scale-110"
-          />
+          {activeMedia.type === "video" ? (
+            <video
+              key={activeMedia.src}
+              src={activeMedia.src}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <Image
+              src={activeMedia.src}
+              alt={product.title}
+              fill
+              className="object-contain transition-transform duration-500 group-hover:scale-110"
+            />
+          )}
         </div>
 
-        <div className="absolute inset-0 bg-[#05070d]/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        {/* Arrows to switch between image and video (only shown when a video exists) */}
+        {media.length > 1 && (
+          <>
+            <button
+              onClick={(e) => goMedia(-1, e)}
+              aria-label="السابق"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-black/60 border border-[#22375a] text-gray-200 flex items-center justify-center hover:bg-[#00a3ff] hover:text-black transition-colors"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={(e) => goMedia(1, e)}
+              aria-label="التالي"
+              className="absolute left-1.5 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full bg-black/60 border border-[#22375a] text-gray-200 flex items-center justify-center hover:bg-[#00a3ff] hover:text-black transition-colors"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5">
+              {media.map((_, i) => (
+                <span
+                  key={i}
+                  className={`h-1.5 rounded-full transition-all ${
+                    i === mediaIndex ? "w-5 bg-[#00a3ff]" : "w-1.5 bg-[#22375a]"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        <div className="absolute inset-0 bg-[#05070d]/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
           <span className="px-3.5 py-2 rounded-xl btn-ghost text-[11px] font-bold flex items-center gap-1.5">
             <Eye className="w-3.5 h-3.5" />
             نظرة سريعة
