@@ -71,14 +71,10 @@ export const newsletter = pgTable("newsletter", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const uploads = pgTable("uploads", {
-  id: serial("id").primaryKey(),
-  url: text("url").notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
 /* ============================================================
    تهيئة قاعدة البيانات تلقائياً (Auto-Migration)
+   مدمجة هنا حتى لا تحتاج ملفاً منفصلاً.
+   تُنشئ الجداول والفهارس لو غير موجودة — آمنة للتشغيل المتكرر.
    ============================================================ */
 import { pool } from "./index";
 
@@ -112,6 +108,7 @@ const DDL = `
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
   );
 
+  -- يضيف عمود الفيديو تلقائياً لو الجدول أصلاً موجود من قبل بدونه
   ALTER TABLE products ADD COLUMN IF NOT EXISTS video TEXT;
 
   CREATE TABLE IF NOT EXISTS orders (
@@ -152,18 +149,17 @@ const DDL = `
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
   );
 
-  CREATE TABLE IF NOT EXISTS uploads (
-    id SERIAL PRIMARY KEY,
-    url TEXT NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW()
-  );
-
   CREATE INDEX IF NOT EXISTS idx_products_category  ON products(category);
   CREATE INDEX IF NOT EXISTS idx_products_featured  ON products(is_featured);
   CREATE INDEX IF NOT EXISTS idx_orders_created     ON orders(created_at DESC);
   CREATE INDEX IF NOT EXISTS idx_reviews_created    ON reviews(created_at DESC);
 `;
 
+/**
+ * تُنشئ الجداول لو غير موجودة.
+ * تُنفّذ مرة واحدة فقط لكل عملية تشغيل (Serverless-safe).
+ * لو فشلت، يكمل الموقع بالاعتماد على localStorage بدون انهيار.
+ */
 export async function ensureDbReady(): Promise<boolean> {
   if (dbReady) return true;
   if (readyPromise) return readyPromise;
