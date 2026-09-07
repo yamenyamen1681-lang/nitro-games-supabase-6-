@@ -71,6 +71,13 @@ export const newsletter = pgTable("newsletter", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const uploads = pgTable("uploads", {
+  id: serial("id").primaryKey(),
+  mimeType: text("mime_type").notNull(),
+  data: text("data").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 /* ============================================================
    تهيئة قاعدة البيانات تلقائياً (Auto-Migration)
    مدمجة هنا حتى لا تحتاج ملفاً منفصلاً.
@@ -146,6 +153,13 @@ const DDL = `
     id SERIAL PRIMARY KEY,
     email TEXT NOT NULL UNIQUE,
     discount_code TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT NOW()
+  );
+
+  CREATE TABLE IF NOT EXISTS uploads (
+    id SERIAL PRIMARY KEY,
+    mime_type TEXT NOT NULL,
+    data TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
   );
 
