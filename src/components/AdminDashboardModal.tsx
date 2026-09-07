@@ -120,8 +120,36 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   const [imageUrl, setImageUrl] = useState("/images/keyboard-custom-rgb.jpg");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [gallery, setGallery] = useState<{ type: "image" | "video"; url: string }[]>([]);
+  const [isUploadingGalleryItem, setIsUploadingGalleryItem] = useState(false);
+  const [galleryUploadError, setGalleryUploadError] = useState<string | null>(null);
+
+  const handleGalleryFileUpload = async (file: File | undefined | null) => {
+    if (!file) return;
+    setGalleryUploadError(null);
+    setIsUploadingGalleryItem(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "upload failed");
+      const type: "image" | "video" = file.type.startsWith("video/") ? "video" : "image";
+      setGallery((prev) => [...prev, { type, url: data.url }]);
+    } catch (err) {
+      console.warn("Gallery upload error:", err);
+      setGalleryUploadError("تعذر رفع الملف — تأكد إنه صورة أو فيديو وحجمه أقل من 4MB");
+    } finally {
+      setIsUploadingGalleryItem(false);
+    }
+  };
+
+  const removeGalleryItem = (idx: number) => {
+    setGallery((prev) => prev.filter((_, i) => i !== idx));
+  };
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [videoUploadError, setVideoUploadError] = useState<string | null>(null);
+  const [newVideoUrlInput, setNewVideoUrlInput] = useState("");
 
   // Site background music (separate from the showcase video)
   const [siteAudioUrl, setSiteAudioUrl] = useState<string>("");
@@ -188,14 +216,29 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
       const res = await fetch("/api/upload", { method: "POST", body: formData });
       const data = await res.json();
       if (!data.success) throw new Error(data.message || "upload failed");
-      setSc({ ...sc, videoUrl: data.url });
-      commitShowcase({ ...sc, videoUrl: data.url });
+      const nextUrls = [...(sc.videoUrls ?? []), data.url];
+      setSc({ ...sc, videoUrls: nextUrls });
+      commitShowcase({ ...sc, videoUrls: nextUrls });
     } catch (err) {
       console.warn("Video upload error:", err);
       setVideoUploadError("تعذر رفع الفيديو — تأكد إنه أقل من 4MB");
     } finally {
       setIsUploadingVideo(false);
     }
+  };
+
+  const removeShowcaseVideo = (idx: number) => {
+    const nextUrls = (sc.videoUrls ?? []).filter((_, i) => i !== idx);
+    setSc({ ...sc, videoUrls: nextUrls });
+    commitShowcase({ ...sc, videoUrls: nextUrls });
+  };
+
+  const addShowcaseVideoUrl = (url: string) => {
+    const trimmed = url.trim();
+    if (!trimmed) return;
+    const nextUrls = [...(sc.videoUrls ?? []), trimmed];
+    setSc({ ...sc, videoUrls: nextUrls });
+    commitShowcase({ ...sc, videoUrls: nextUrls });
   };
 
   const handleFileUpload = async (file: File | undefined | null) => {
@@ -253,6 +296,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     setBrand(prod.brand);
     setBadge(prod.badge || "");
     setImageUrl(prod.image);
+    setGallery(prod.gallery ?? []);
     // Scroll form into view
     const formElem = document.getElementById("admin-product-form");
     if (formElem) {
@@ -269,6 +313,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     setBrand("");
     setBadge("");
     setImageUrl("/images/keyboard-custom-rgb.jpg");
+    setGallery([]);
   };
 
   const handleSaveProduct = async (e: React.FormEvent) => {
@@ -302,6 +347,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             brand: brand.trim() || "Nitro Games",
             badge: badge.trim() || null,
             image: imageUrl.trim(),
+            gallery,
           }),
         });
         const data = await res.json();
@@ -320,6 +366,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 brand: brand.trim() || "Nitro Games",
                 badge: badge.trim() || undefined,
                 image: imageUrl.trim() || "/images/keyboard-custom-rgb.jpg",
+                gallery,
               }
             : p
         );
@@ -345,6 +392,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             brand: brand.trim() || "Nitro Games",
             badge: badge.trim() || "جديد بالمتجر ⭐",
             image: imageUrl.trim(),
+            gallery,
           }),
         });
         const data = await res.json();
@@ -621,10 +669,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 </div>
               </div>
 
-              {/* video */}
+              {/* video(s) */}
               <div>
                 <label className="text-xs font-bold text-gray-300 block mb-1">
-                  فيديو (اختياري) — لو معبّى، بيظهر بدل صور المنتجات جوا المربع المميز
+                  فيديو (اختياري) — لو ضفت أكثر من فيديو، بيشتغلوا واحد ورا الثاني بالمربع المميز
+                  بدل صور المنتجات
                 </label>
 
                 <div className="flex items-center gap-2 mb-2">
@@ -635,52 +684,71 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         : "bg-[#00a3ff] text-black border-[#00a3ff] hover:brightness-110"
                     }`}
                   >
-                    {isUploadingVideo ? "جاري الرفع..." : "📁 اختر فيديو من جهازك"}
+                    {isUploadingVideo ? "جاري الرفع..." : "📁 أضف فيديو من جهازك"}
                     <input
                       type="file"
                       accept="video/*"
                       disabled={isUploadingVideo}
-                      onChange={(e) => handleVideoFileUpload(e.target.files?.[0])}
+                      onChange={(e) => {
+                        handleVideoFileUpload(e.target.files?.[0]);
+                        e.target.value = "";
+                      }}
                       className="hidden"
                     />
                   </label>
-                  {sc.videoUrl && sc.videoUrl.startsWith("/api/images/") && (
-                    <span className="text-[11px] text-green-400">✓ تم رفع الفيديو</span>
-                  )}
-                  {sc.videoUrl && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSc({ ...sc, videoUrl: undefined });
-                        commitShowcase({ ...sc, videoUrl: undefined });
-                      }}
-                      className="text-[11px] text-red-400 hover:text-red-300 underline"
-                    >
-                      إزالة الفيديو
-                    </button>
-                  )}
                 </div>
                 {videoUploadError && (
                   <p className="text-[11px] text-red-400 mb-2">{videoUploadError}</p>
                 )}
 
+                {(sc.videoUrls ?? []).length > 0 && (
+                  <div className="space-y-1.5 mb-3">
+                    {(sc.videoUrls ?? []).map((url, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center justify-between gap-2 bg-[#152034] border border-[#1c2942] rounded-lg px-3 py-2"
+                      >
+                        <span className="text-[11px] text-gray-300 font-mono truncate" dir="ltr">
+                          {idx + 1}. {url}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => removeShowcaseVideo(idx)}
+                          className="text-[11px] text-red-400 hover:text-red-300 underline shrink-0"
+                        >
+                          حذف
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
                 <label className="text-[11px] text-gray-400 block mb-1">
-                  أو الصق رابط فيديو مباشر:
+                  أو ألصق رابط فيديو مباشر وأضفه للقائمة:
                 </label>
-                <input
-                  type="text"
-                  value={sc.videoUrl ?? ""}
-                  onChange={(e) => setSc({ ...sc, videoUrl: e.target.value })}
-                  onBlur={(e) =>
-                    commitShowcase({ ...sc, videoUrl: e.target.value.trim() || undefined })
-                  }
-                  placeholder="https://example.com/video.mp4"
-                  dir="ltr"
-                  className="w-full bg-[#152034] border border-[#1c2942] text-xs text-white font-mono rounded-xl px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
-                />
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={newVideoUrlInput}
+                    onChange={(e) => setNewVideoUrlInput(e.target.value)}
+                    placeholder="https://example.com/video.mp4"
+                    dir="ltr"
+                    className="flex-1 bg-[#152034] border border-[#1c2942] text-xs text-white font-mono rounded-xl px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      addShowcaseVideoUrl(newVideoUrlInput);
+                      setNewVideoUrlInput("");
+                    }}
+                    className="text-[11px] font-bold px-3 py-2 rounded-lg bg-[#00a3ff] text-black hover:brightness-110"
+                  >
+                    إضافة
+                  </button>
+                </div>
                 <p className="text-[10px] text-gray-500 mt-1">
-                  الحد الأقصى لحجم الفيديو المرفوع 4MB. لفيديوهات أكبر، ارفعه على خدمة استضافة
-                  خارجية والصق رابطه المباشر هون بدل الرفع.
+                  الحد الأقصى لحجم كل فيديو مرفوع 4MB. لفيديوهات أكبر، ارفعها على خدمة استضافة
+                  خارجية وألصق روابطها المباشرة بدل الرفع.
                 </p>
               </div>
             </div>
@@ -1080,6 +1148,62 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       </button>
                     ))}
                   </div>
+                </div>
+
+                {/* Gallery: extra images/videos with prev/next arrows on the card */}
+                <div>
+                  <label className="text-xs font-bold text-gray-300 block mb-1">
+                    وسائط إضافية للمنتج (اختياري) — تظهر بسهمي التنقل ‹ › على بطاقة المنتج
+                  </label>
+                  <div className="flex items-center gap-2 mb-2">
+                    <label
+                      className={`text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer transition-all ${
+                        isUploadingGalleryItem
+                          ? "bg-[#152034] text-gray-500 border-[#27405f] cursor-not-allowed"
+                          : "bg-[#00a3ff] text-black border-[#00a3ff] hover:brightness-110"
+                      }`}
+                    >
+                      {isUploadingGalleryItem ? "جاري الرفع..." : "📁 أضف صورة/فيديو من جهازك"}
+                      <input
+                        type="file"
+                        accept="image/*,video/*"
+                        disabled={isUploadingGalleryItem}
+                        onChange={(e) => {
+                          handleGalleryFileUpload(e.target.files?.[0]);
+                          e.target.value = "";
+                        }}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
+                  {galleryUploadError && (
+                    <p className="text-[11px] text-red-400 mb-2">{galleryUploadError}</p>
+                  )}
+
+                  {gallery.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {gallery.map((item, idx) => (
+                        <div
+                          key={idx}
+                          className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#27405f] bg-[#0b1120] flex items-center justify-center"
+                        >
+                          {item.type === "video" ? (
+                            <video src={item.url} className="w-full h-full object-cover" muted />
+                          ) : (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={item.url} alt="" className="w-full h-full object-cover" />
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => removeGalleryItem(idx)}
+                            className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Badge text */}

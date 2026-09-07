@@ -65,6 +65,7 @@ export async function GET(request: Request) {
             originalPrice: p.originalPrice ?? undefined,
             discountPercent: p.discountPercent ?? undefined,
             image: p.image,
+            gallery: (p.gallery as { type: "image" | "video"; url: string }[]) ?? undefined,
             inStock: p.inStock,
             stockQuantity: p.stockQuantity,
             rating: p.rating,
@@ -103,7 +104,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const { title, category, price, description, image, brand, badge, originalPrice } = body;
+    const { title, category, price, description, image, gallery, brand, badge, originalPrice } = body;
 
     if (!title || !category || !price) {
       return NextResponse.json(
@@ -131,6 +132,7 @@ export async function POST(request: Request) {
         originalPrice: cleanOrigPrice,
         discountPercent: discount,
         image: image || "/images/keyboard-custom-rgb.jpg",
+        gallery: Array.isArray(gallery) ? gallery : null,
         inStock: true,
         stockQuantity: 10,
         rating: 5.0,
@@ -160,7 +162,7 @@ export async function POST(request: Request) {
 export async function PUT(request: Request) {
   try {
     const body = await request.json();
-    const { id, title, category, price, description, image, brand, badge, originalPrice } = body;
+    const { id, title, category, price, description, image, gallery, brand, badge, originalPrice } = body;
 
     if (!id || !title || !price) {
       return NextResponse.json(
@@ -186,6 +188,7 @@ export async function PUT(request: Request) {
         originalPrice: cleanOrigPrice,
         discountPercent: discount,
         image: image || "/images/keyboard-custom-rgb.jpg",
+        gallery: Array.isArray(gallery) ? gallery : null,
         badge: badge || null,
         description: description || "",
       })

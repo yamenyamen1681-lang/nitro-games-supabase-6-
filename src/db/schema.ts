@@ -11,6 +11,7 @@ export const products = pgTable("products", {
   originalPrice: integer("original_price"),
   discountPercent: integer("discount_percent").default(0),
   image: text("image").notNull(),
+  gallery: jsonb("gallery").$type<{ type: "image" | "video"; url: string }[]>(),
   inStock: boolean("in_stock").default(true).notNull(),
   stockQuantity: integer("stock_quantity").default(15).notNull(),
   rating: real("rating").default(5.0).notNull(),
@@ -104,6 +105,7 @@ const DDL = `
     original_price INTEGER,
     discount_percent INTEGER DEFAULT 0,
     image TEXT NOT NULL,
+    gallery JSONB,
     in_stock BOOLEAN NOT NULL DEFAULT true,
     stock_quantity INTEGER NOT NULL DEFAULT 15,
     rating REAL NOT NULL DEFAULT 5.0,
@@ -173,6 +175,10 @@ const DDL = `
   CREATE INDEX IF NOT EXISTS idx_products_featured  ON products(is_featured);
   CREATE INDEX IF NOT EXISTS idx_orders_created     ON orders(created_at DESC);
   CREATE INDEX IF NOT EXISTS idx_reviews_created    ON reviews(created_at DESC);
+
+  -- Safety net: adds columns introduced after the table already existed in
+  -- production, so older deployed databases pick them up automatically.
+  ALTER TABLE products ADD COLUMN IF NOT EXISTS gallery JSONB;
 `;
 
 /**

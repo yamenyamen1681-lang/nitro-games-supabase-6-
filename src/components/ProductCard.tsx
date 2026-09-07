@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Product, CATEGORIES_META } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
-import { ShoppingBag, Heart, Eye, Star, ShieldCheck } from "lucide-react";
+import { ShoppingBag, Heart, Eye, Star, ShieldCheck, ChevronLeft, ChevronRight } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
@@ -15,6 +15,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) 
   const { addToCart, wishlist, toggleWishlist, setQuickViewProduct } = useCart();
   const isWishlisted = wishlist.includes(product.id);
   const catName = CATEGORIES_META.find((c) => c.id === product.category)?.name ?? product.category;
+
+  const media: { type: "image" | "video"; url: string }[] = [
+    { type: "image", url: product.image },
+    ...(product.gallery ?? []),
+  ];
+  const [mediaIndex, setMediaIndex] = useState(0);
+  const current = media[mediaIndex] ?? media[0];
+
+  const goPrev = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMediaIndex((i) => (i - 1 + media.length) % media.length);
+  };
+  const goNext = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setMediaIndex((i) => (i + 1) % media.length);
+  };
 
   return (
     <div className="group relative grad-frame flex flex-col justify-between overflow-hidden">
@@ -54,26 +70,68 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index = 0 }) 
         </button>
       </div>
 
-      {/* Image */}
-      <div
-        className="relative h-44 sm:h-48 w-full cursor-pointer px-4 flex items-center justify-center"
-        onClick={() => setQuickViewProduct(product)}
-      >
-        <div className="relative w-full h-full">
-          <Image
-            src={product.image}
-            alt={product.title}
-            fill
-            className="object-contain transition-transform duration-500 group-hover:scale-110"
-          />
+      {/* Media (image or video) with prev/next arrows when there's more than one item */}
+      <div className="relative h-72 sm:h-80 w-full cursor-pointer px-4 flex items-center justify-center">
+        <div
+          className="relative w-full h-full"
+          onClick={() => setQuickViewProduct(product)}
+        >
+          {current.type === "video" ? (
+            <video
+              key={current.url}
+              src={current.url}
+              muted
+              loop
+              autoPlay
+              playsInline
+              className="absolute inset-0 w-full h-full object-contain transition-transform duration-500 group-hover:scale-110"
+            />
+          ) : (
+            <Image
+              src={current.url}
+              alt={product.title}
+              fill
+              className="object-contain transition-transform duration-500 group-hover:scale-110"
+            />
+          )}
         </div>
 
-        <div className="absolute inset-0 bg-[#05070d]/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        <div className="absolute inset-0 bg-[#05070d]/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
           <span className="px-3.5 py-2 rounded-xl btn-ghost text-[11px] font-bold flex items-center gap-1.5">
             <Eye className="w-3.5 h-3.5" />
             نظرة سريعة
           </span>
         </div>
+
+        {/* Prev/Next arrows — only when there's more than one media item */}
+        {media.length > 1 && (
+          <>
+            <button
+              onClick={goPrev}
+              aria-label="السابق"
+              className="absolute right-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-black/60 border border-[#22375a] text-white flex items-center justify-center hover:bg-[#00a3ff] hover:text-black transition-all"
+            >
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            <button
+              onClick={goNext}
+              aria-label="التالي"
+              className="absolute left-2 top-1/2 -translate-y-1/2 z-10 w-7 h-7 rounded-full bg-black/60 border border-[#22375a] text-white flex items-center justify-center hover:bg-[#00a3ff] hover:text-black transition-all"
+            >
+              <ChevronLeft className="w-4 h-4" />
+            </button>
+            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 z-10 flex items-center gap-1">
+              {media.map((_, i) => (
+                <span
+                  key={i}
+                  className={`w-1.5 h-1.5 rounded-full transition-all ${
+                    i === mediaIndex ? "bg-[#00a3ff] w-4" : "bg-gray-500/60"
+                  }`}
+                />
+              ))}
+            </div>
+          </>
+        )}
       </div>
 
       {/* Body */}

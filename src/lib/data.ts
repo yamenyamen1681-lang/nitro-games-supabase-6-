@@ -11,6 +11,8 @@ export interface Product {
   originalPrice?: number;
   discountPercent?: number;
   image: string;
+  /** Extra media shown in a mini carousel on the product card (images and/or videos) */
+  gallery?: { type: "image" | "video"; url: string }[];
   inStock: boolean;
   stockQuantity: number;
   rating: number;
@@ -30,8 +32,9 @@ export interface ShowcaseConfig {
   badgeText: string;
   headline: string;
   ctaLabel: string;
-  /** Optional: direct video URL (mp4/webm) to show instead of the product slideshow */
-  videoUrl?: string;
+  /** Optional: direct video URL(s) (mp4/webm) to show instead of the product slideshow.
+   *  When more than one is set, they play back-to-back like a playlist. */
+  videoUrls?: string[];
 }
 
 /* ===== Store contact info (single source of truth — change here and it updates everywhere) ===== */

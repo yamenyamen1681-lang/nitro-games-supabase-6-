@@ -36,6 +36,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [siteAudioUrl, setSiteAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
 
   useEffect(() => {
     (async () => {
@@ -189,7 +190,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
           {/* --- LEFT: Admin-controlled Dynamic Showcase --- */}
           <div className="lg:col-span-6">
-            {cfg.enabled && cfg.videoUrl ? (
+            {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative">
                 <div className="absolute -inset-6 bg-gradient-to-tr from-[#00a3ff]/15 via-transparent to-[#00e5ff]/15 blur-2xl rounded-full pointer-events-none" />
                 <div className="relative grad-frame p-1.5">
@@ -202,15 +203,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                     <div className="relative h-64 sm:h-80 w-full bg-black">
                       <video
-                        key={cfg.videoUrl}
-                        src={cfg.videoUrl}
+                        key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
+                        src={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
                         autoPlay
                         muted
-                        loop
+                        loop={cfg.videoUrls.length === 1}
                         playsInline
                         controls
+                        onEnded={() =>
+                          setShowcaseVideoIndex((i) => (i + 1) % cfg.videoUrls!.length)
+                        }
                         className="absolute inset-0 w-full h-full object-contain"
                       />
+                      {cfg.videoUrls.length > 1 && (
+                        <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/70 text-[#00e5ff] px-2 py-0.5 rounded-md border border-[#00e5ff]/30">
+                          {(showcaseVideoIndex % cfg.videoUrls.length) + 1}/{cfg.videoUrls.length}
+                        </span>
+                      )}
                       <span className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-[#00a3ff]/60 rounded-tr-md pointer-events-none" />
                       <span className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-[#00e5ff]/60 rounded-bl-md pointer-events-none" />
                     </div>
