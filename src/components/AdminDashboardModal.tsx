@@ -120,6 +120,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   const [imageUrl, setImageUrl] = useState("/images/keyboard-custom-rgb.jpg");
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [productVideoUrl, setProductVideoUrl] = useState<string>("");
+  const [isUploadingProductVideo, setIsUploadingProductVideo] = useState(false);
+  const [productVideoUploadError, setProductVideoUploadError] = useState<string | null>(null);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [videoUploadError, setVideoUploadError] = useState<string | null>(null);
 
@@ -198,6 +201,25 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     }
   };
 
+  const handleProductVideoUpload = async (file: File | undefined | null) => {
+    if (!file) return;
+    setProductVideoUploadError(null);
+    setIsUploadingProductVideo(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.message || "upload failed");
+      setProductVideoUrl(data.url);
+    } catch (err) {
+      console.warn("Product video upload error:", err);
+      setProductVideoUploadError("تعذر رفع الفيديو — تأكد إنه أقل من 4MB");
+    } finally {
+      setIsUploadingProductVideo(false);
+    }
+  };
+
   const handleFileUpload = async (file: File | undefined | null) => {
     if (!file) return;
     setUploadError(null);
@@ -253,6 +275,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     setBrand(prod.brand);
     setBadge(prod.badge || "");
     setImageUrl(prod.image);
+    setProductVideoUrl((prod as unknown as { video?: string }).video || "");
     // Scroll form into view
     const formElem = document.getElementById("admin-product-form");
     if (formElem) {
@@ -269,6 +292,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     setBrand("");
     setBadge("");
     setImageUrl("/images/keyboard-custom-rgb.jpg");
+    setProductVideoUrl("");
   };
 
   const handleSaveProduct = async (e: React.FormEvent) => {
@@ -302,6 +326,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             brand: brand.trim() || "Nitro Games",
             badge: badge.trim() || null,
             image: imageUrl.trim(),
+            video: productVideoUrl.trim() || null,
           }),
         });
         const data = await res.json();
@@ -320,6 +345,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 brand: brand.trim() || "Nitro Games",
                 badge: badge.trim() || undefined,
                 image: imageUrl.trim() || "/images/keyboard-custom-rgb.jpg",
+                video: productVideoUrl.trim() || undefined,
               }
             : p
         );
@@ -345,6 +371,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             brand: brand.trim() || "Nitro Games",
             badge: badge.trim() || "جديد بالمتجر ⭐",
             image: imageUrl.trim(),
+            video: productVideoUrl.trim() || null,
           }),
         });
         const data = await res.json();
@@ -1094,6 +1121,62 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     onChange={(e) => setBadge(e.target.value)}
                     className="w-full bg-[#16223a] border border-[#27405f] text-xs text-white rounded-xl px-3.5 py-2 focus:outline-none focus:border-[#00a3ff]"
                   />
+                </div>
+
+                {/* Product Video (optional) */}
+                <div>
+                  <label className="text-xs font-bold text-gray-300 block mb-1">
+                    فيديو للمنتج (اختياري) — بيظهر جوا بطاقة المنتج مع سهم للتنقل بينه وبين الصورة:
+                  </label>
+
+                  <div className="flex items-center gap-2 mb-2">
+                    <label
+                      className={`text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer transition-all ${
+                        isUploadingProductVideo
+                          ? "bg-[#152034] text-gray-500 border-[#27405f] cursor-not-allowed"
+                          : "bg-[#00a3ff] text-black border-[#00a3ff] hover:brightness-110"
+                      }`}
+                    >
+                      {isUploadingProductVideo ? "جاري الرفع..." : "📁 اختر فيديو من جهازك"}
+                      <input
+                        type="file"
+                        accept="video/*"
+                        disabled={isUploadingProductVideo}
+                        onChange={(e) => handleProductVideoUpload(e.target.files?.[0])}
+                        className="hidden"
+                      />
+                    </label>
+                    {productVideoUrl && (
+                      <>
+                        <span className="text-[11px] text-green-400">✓ فيه فيديو مرفوع</span>
+                        <button
+                          type="button"
+                          onClick={() => setProductVideoUrl("")}
+                          className="text-[11px] text-red-400 hover:text-red-300 underline"
+                        >
+                          إزالة الفيديو
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  {productVideoUploadError && (
+                    <p className="text-[11px] text-red-400 mb-2">{productVideoUploadError}</p>
+                  )}
+
+                  <label className="text-[11px] text-gray-400 block mb-1">
+                    أو الصق رابط فيديو مباشر:
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="https://example.com/video.mp4"
+                    value={productVideoUrl}
+                    onChange={(e) => setProductVideoUrl(e.target.value)}
+                    dir="ltr"
+                    className="w-full bg-[#16223a] border border-[#27405f] text-xs text-gray-200 font-mono rounded-xl px-3.5 py-2.5 focus:outline-none focus:border-[#00a3ff]"
+                  />
+                  <p className="text-[10px] text-gray-500 mt-1">
+                    الحد الأقصى لحجم الفيديو المرفوع 4MB. سيب الخانة فاضية لو ما بدك فيديو لهاد المنتج.
+                  </p>
                 </div>
 
                 {/* Submit button */}
