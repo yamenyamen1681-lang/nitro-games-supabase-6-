@@ -19,47 +19,34 @@ import { FloatingActions } from "@/components/FloatingActions";
 import { AdminDashboardModal } from "@/components/AdminDashboardModal";
 import { Product, INITIAL_PRODUCTS, ShowcaseConfig, DEFAULT_SHOWCASE } from "@/lib/data";
 
+// العبارات القديمة الأصلية للإشعارات
+const OLD_NOTIFICATIONS = [
+  "أسعارنا أحسن من غيرنا.. تصفح الأقسام وقارن بنفسك! 💰",
+  "نورتنا يا زائرنا الكريم، جاهز لترفع مستواك؟ ✨",
+  "أهلاً بك في متجر Nitro Games، عروض ممتازة بانتظارك! 🎮",
+  "بعدك ما نقّيت عتادك الاحترافي؟ تصفح المنتجات الآن ⚡",
+  "توصيل سريع لكافة مناطق فلسطين والداخل المحتل 🚚",
+  "ضمان حقيقي لمدة سنة كاملة على جميع المنتجات 🛡️",
+  "أقوى كيبوردات وماوسات الجيمنج صارت بين ايديك 🔥",
+  "خدمة العملاء جاهزة لمساعدتك بأي وقت.. لا تتردد بالسؤال 💬"
+];
+
 function NitroGamesApp() {
-  const { toastMessage, showToast } = useCart();
+  const { showToast } = useCart();
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
   const [showcase, setShowcase] = useState<ShowcaseConfig>(DEFAULT_SHOWCASE);
 
-  // Store Notifications State & Logic
-  const [currentNotif, setCurrentNotif] = useState<string>("");
-  const [isNotifVisible, setIsNotifVisible] = useState<boolean>(false);
+  // نظام تدوير الإشعارات القديمة تلقائياً ووضعها بعيداً عن الواتساب
+  const [currentNotifIndex, setCurrentNotifIndex] = useState(0);
 
   useEffect(() => {
-    const messages = [
-      "أسعارنا أحسن من غيرنا.. تصفح الأقسام وقارن بنفسك! 💰",
-      "نورتنا يا زائرنا الكريم، جاهز لترفع مستواك؟ ✨",
-      "أهلاً بك في متجر Nitro Games، عروض ممتازة بانتظارك! 🎮",
-      "بعدك ما نقّيت عتادك الاحترافي؟ تصفح المنتجات الآن ⚡",
-      "توصيل سريع لكافة مناطق فلسطين والداخل المحتل 🚚",
-      "ضمان حقيقي لمدة سنة كاملة على جميع المنتجات 🛡️",
-      "أقوى كيبوردات وماوسات الجيمنج صارت بين ايديك 🔥",
-      "خدمة العملاء جاهزة لمساعدتك بأي وقت.. لا تتردد بالسؤال 💬"
-    ];
-
-    const showRandomNotification = () => {
-      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
-      setCurrentNotif(randomMsg);
-      setIsNotifVisible(true);
-
-      setTimeout(() => {
-        setIsNotifVisible(false);
-      }, 4000);
-    };
-
-    const initialTimer = setTimeout(showRandomNotification, 3000);
-    const interval = setInterval(showRandomNotification, 12000);
-
-    return () => {
-      clearTimeout(initialTimer);
-      clearInterval(interval);
-    };
+    const interval = setInterval(() => {
+      setCurrentNotifIndex((prev) => (prev + 1) % OLD_NOTIFICATIONS.length);
+    }, 6000);
+    return () => clearInterval(interval);
   }, []);
 
   // Wrapped setters: update UI state AND mirror to localStorage as a fast-paint
@@ -172,41 +159,12 @@ function NitroGamesApp() {
         pointerEvents: 'none'
       }} />
 
-      {/* Inline styles for star animation */}
       <style jsx global>{`
         @keyframes moveStars {
           from { background-position: 0 0; }
           to { background-position: 0 10000px; }
         }
       `}</style>
-
-      {/* Animated Store Toast Notification */}
-      <div 
-        id="notification-box" 
-        className={`store-notification fixed bottom-6 left-6 z-50 transition-all duration-500 ease-in-out ${
-          isNotifVisible ? 'translate-y-0 opacity-100' : 'translate-y-28 opacity-0 pointer-events-none'
-        }`}
-        style={{
-          background: 'rgba(15, 15, 30, 0.95)',
-          border: '1px solid #00d2ff',
-          color: '#fff',
-          padding: '12px 18px',
-          borderRadius: '12px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          boxShadow: '0 10px 25px rgba(0, 210, 255, 0.2)',
-          direction: 'rtl'
-        }}
-      >
-        <div className="notif-icon text-xl">🎮</div>
-        <div className="notif-text">
-          <span style={{ display: 'block', fontWeight: 'bold', fontSize: '13px', color: '#00d2ff' }}>
-            {currentNotif}
-          </span>
-          <small style={{ fontSize: '10px', color: '#aaa' }}>موقع Nitro Games Palestine</small>
-        </div>
-      </div>
 
       {/* Animated aurora backdrop */}
       <div className="aurora-stage relative z-10">
@@ -216,15 +174,13 @@ function NitroGamesApp() {
         <div className="aurora-blob" style={{ width: 340, height: 340, bottom: "-6%", right: "28%", background: "#5b8cff", animationDelay: "-12s" }} />
       </div>
 
-      {/* Toast */}
-      {toastMessage && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50">
-          <div className="px-5 py-3 rounded-2xl panel border-[#00a3ff]/60 text-white text-xs sm:text-sm font-bold flex items-center gap-2.5 shadow-2xl">
-            <span className="w-2 h-2 rounded-full bg-[#00a3ff] animate-ping" />
-            <span>{toastMessage}</span>
-          </div>
+      {/* شريط الإشعارات القديم بتصميم أنيق ومناسب (بعيد عن زر الواتساب في الجانب الآخر) */}
+      <div className="fixed bottom-4 left-4 z-40 max-w-xs sm:max-w-sm animate-fade-in-down">
+        <div className="px-4 py-2.5 rounded-xl panel border-[#00a3ff]/40 bg-[#070b14]/95 text-white text-xs sm:text-sm font-medium flex items-center gap-2.5 shadow-xl">
+          <span className="w-2 h-2 rounded-full bg-[#00a3ff] animate-pulse shrink-0" />
+          <span className="truncate">{OLD_NOTIFICATIONS[currentNotifIndex]}</span>
         </div>
-      )}
+      </div>
 
       <div className="relative z-10 flex flex-col flex-1">
         <Header
