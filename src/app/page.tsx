@@ -16,7 +16,7 @@ import { CheckoutModal } from "@/components/CheckoutModal";
 import { QuickViewModal } from "@/components/QuickViewModal";
 import { LiveSalesToast } from "@/components/LiveSalesToast";
 import { FloatingActions } from "@/components/FloatingActions";
-import { AdminDashboardModal } from "@/components/AdminDashboardModal";
+import AdminDashboardModal from "@/components/AdminDashboardModal";
 import { Product, INITIAL_PRODUCTS, ShowcaseConfig, DEFAULT_SHOWCASE } from "@/lib/data";
 
 // العبارات القديمة الأصلية للإشعارات
