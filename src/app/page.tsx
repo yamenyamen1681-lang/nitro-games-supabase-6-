@@ -174,10 +174,10 @@ function NitroGamesApp() {
         <div className="aurora-blob" style={{ width: 340, height: 340, bottom: "-6%", right: "28%", background: "#5b8cff", animationDelay: "-12s" }} />
       </div>
 
-      {/* شريط الإشعارات القديم بتصميم أنيق ومناسب (بعيد عن زر الواتساب في الجانب الآخر) */}
-      <div className="fixed bottom-4 left-4 z-40 max-w-xs sm:max-w-sm animate-fade-in-down">
-        <div className="px-4 py-2.5 rounded-xl panel border-[#00a3ff]/40 bg-[#070b14]/95 text-white text-xs sm:text-sm font-medium flex items-center gap-2.5 shadow-xl">
-          <span className="w-2 h-2 rounded-full bg-[#00a3ff] animate-pulse shrink-0" />
+      {/* شريط الإشعارات القديم بحجم أصغر وأنيق في الزاوية السفلية */}
+      <div className="fixed bottom-3 left-3 z-40 max-w-[240px] sm:max-w-xs animate-fade-in-down">
+        <div className="px-3 py-1.5 rounded-lg panel border-[#00a3ff]/30 bg-[#070b14]/90 text-white text-[11px] sm:text-xs font-medium flex items-center gap-2 shadow-lg backdrop-blur-md">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#00a3ff] animate-pulse shrink-0" />
           <span className="truncate">{OLD_NOTIFICATIONS[currentNotifIndex]}</span>
         </div>
       </div>
