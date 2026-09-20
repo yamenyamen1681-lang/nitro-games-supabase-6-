@@ -66,7 +66,7 @@ export const LiveSalesToast: React.FC = () => {
   const Icon = ICONS[index % ICONS.length];
 
   return (
-    <div className="fixed bottom-24 sm:bottom-5 right-3 sm:right-5 z-40 max-w-[240px] sm:max-w-xs transition-all duration-500">
+    <div className="fixed bottom-5 right-3 sm:right-5 z-40 max-w-[240px] sm:max-w-xs transition-all duration-500">
       <div className="relative p-2.5 pr-2.5 pl-2 rounded-xl bg-[#0b1120] border border-[#00a3ff]/35 shadow-[0_10px_35px_rgba(0,0,0,.85),0_0_20px_rgba(0,163,255,.15)] flex items-center gap-2 text-right">
         {/* Glowing icon */}
         <div className="relative w-8 h-8 rounded-lg bg-[#152034] border border-[#00a3ff]/40 flex items-center justify-center flex-shrink-0 text-[#00a3ff]">
