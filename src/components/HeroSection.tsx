@@ -223,8 +223,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           {(showcaseVideoIndex % cfg.videoUrls.length) + 1}/{cfg.videoUrls.length}
                         </span>
                       )}
-                      <span className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-[#00a3ff]/60 rounded-tr-md pointer-events-none" />
-                      <span className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-[#00e5ff]/60 rounded-bl-md pointer-events-none" />
+                      <span className="absolute inset-0 bg-gradient-to-b from-[#00a3ff]/15 via-transparent to-[#00a3ff]/20 pointer-events-none mix-blend-overlay" />
+                      <span className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-[#00a3ff] rounded-tr-md pointer-events-none shadow-[0_0_10px_rgba(0,163,255,0.8)]" />
+                      <span className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-[#00a3ff] rounded-bl-md pointer-events-none shadow-[0_0_10px_rgba(0,163,255,0.8)]" />
                     </div>
 
                     <div className="px-4 py-3.5 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
