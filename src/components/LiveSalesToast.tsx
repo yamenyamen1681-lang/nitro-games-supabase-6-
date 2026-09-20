@@ -3,21 +3,38 @@
 import React, { useState, useEffect } from "react";
 import { Truck, X, Zap, ShieldCheck, Star, Gift, Mouse, Banknote, Headphones } from "lucide-react";
 
-const HIGHLIGHT_MESSAGES = [
-  { text: "عتاد أصلي 100% من الوكلاء المعتمدين", icon: Star },
-  { text: "ضمان حقيقي لمدة سنة على كل المنتجات ⭐", icon: ShieldCheck },
-  { text: "سويتشات Rapid Trigger باستجابة 0.1 ملم ⚡", icon: Zap },
-  { text: "خصم 10% فوري بكود: NITRO10", icon: Gift },
-  { text: "ماوسات لاسلكية بتردد 8000Hz 🖱️", icon: Mouse },
-  { text: "دفع عند الاستلام — افحص قبل ما تدفع 💵", icon: Banknote },
-  { text: "صوت محيطي 360° مع عزل ANC 🎧", icon: Headphones },
-  { text: "توصيل سريع لكافة مناطق فلسطين والداخل المحتل 🚚", icon: Truck },
+const DEFAULT_MESSAGES = [
+  "عتاد أصلي 100% من الوكلاء المعتمدين",
+  "ضمان حقيقي لمدة سنة على كل المنتجات ⭐",
+  "سويتشات Rapid Trigger باستجابة 0.1 ملم ⚡",
+  "خصم 10% فوري بكود: NITRO10",
+  "ماوسات لاسلكية بتردد 8000Hz 🖱️",
+  "دفع عند الاستلام — افحص قبل ما تدفع 💵",
+  "صوت محيطي 360° مع عزل ANC 🎧",
+  "توصيل سريع لكافة مناطق فلسطين والداخل المحتل 🚚",
 ];
+
+const ICONS = [Star, ShieldCheck, Zap, Gift, Mouse, Banknote, Headphones, Truck];
 
 export const LiveSalesToast: React.FC = () => {
   const [visible, setVisible] = useState(false);
   const [closedManually, setClosedManually] = useState(false);
   const [index, setIndex] = useState(0);
+  const [messages, setMessages] = useState<string[]>(DEFAULT_MESSAGES);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch("/api/settings?key=notifications", { cache: "no-store" });
+        const data = await res.json();
+        if (data.success && Array.isArray(data.value?.messages) && data.value.messages.length > 0) {
+          setMessages(data.value.messages);
+        }
+      } catch (err) {
+        console.warn("Failed to load notifications:", err);
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (closedManually) return;
@@ -27,7 +44,7 @@ export const LiveSalesToast: React.FC = () => {
 
     // Rotate the delivery message every 5s
     const rotator = setInterval(() => {
-      setIndex((i) => (i + 1) % HIGHLIGHT_MESSAGES.length);
+      setIndex((i) => (i + 1) % messages.length);
     }, 5000);
 
     // Hide / show cycle
@@ -41,15 +58,15 @@ export const LiveSalesToast: React.FC = () => {
       clearInterval(rotator);
       clearInterval(cycle);
     };
-  }, [closedManually]);
+  }, [closedManually, messages.length]);
 
-  if (closedManually || !visible) return null;
+  if (closedManually || !visible || messages.length === 0) return null;
 
-  const current = HIGHLIGHT_MESSAGES[index];
-  const Icon = current.icon;
+  const current = messages[index % messages.length];
+  const Icon = ICONS[index % ICONS.length];
 
   return (
-    <div className="fixed bottom-24 sm:bottom-5 inset-x-4 sm:inset-x-auto sm:right-5 z-40 max-w-[280px] sm:max-w-xs transition-all duration-500">
+    <div className="fixed bottom-24 sm:bottom-5 right-3 sm:right-5 z-40 max-w-[240px] sm:max-w-xs transition-all duration-500">
       <div className="relative p-2.5 pr-2.5 pl-2 rounded-xl bg-[#0b1120] border border-[#00a3ff]/35 shadow-[0_10px_35px_rgba(0,0,0,.85),0_0_20px_rgba(0,163,255,.15)] flex items-center gap-2 text-right">
         {/* Glowing icon */}
         <div className="relative w-8 h-8 rounded-lg bg-[#152034] border border-[#00a3ff]/40 flex items-center justify-center flex-shrink-0 text-[#00a3ff]">
@@ -73,7 +90,7 @@ export const LiveSalesToast: React.FC = () => {
             key={index}
             className="animate-fade-in-down text-[10px] sm:text-[11px] font-bold text-gray-100 leading-snug font-['Cairo'] line-clamp-2"
           >
-            {current.text}
+            {current}
           </p>
         </div>
 
