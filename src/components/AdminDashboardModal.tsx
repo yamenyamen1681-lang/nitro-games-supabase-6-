@@ -26,18 +26,15 @@ export default function AdminDashboardModal({
     "products" | "showcase" | "notifications"
   >("products");
 
-  // حالات إدارة المنتجات
   const [searchTerm, setSearchTerm] = useState("");
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
-  // نموذج المنتج
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] =
     useState<CategoryType>("keyboards");
   const [image, setImage] = useState("");
 
-  // حالات الإشعارات
   const [notifTitle, setNotifTitle] = useState("");
   const [notifBody, setNotifBody] = useState("");
   const [notifLink, setNotifLink] = useState("");
@@ -113,7 +110,6 @@ export default function AdminDashboardModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
       <div className="bg-[#0b0f19] border border-[#00a3ff]/30 w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]">
 
-        {/* رأس النافذة */}
         <div className="px-6 py-4 border-b border-gray-800 flex items-center justify-between bg-[#070b14]">
           <h2 className="text-lg font-bold text-white flex items-center gap-2">
             <span>⚙️</span>
@@ -128,7 +124,6 @@ export default function AdminDashboardModal({
           </button>
         </div>
 
-        {/* التبويبات */}
         <div className="flex border-b border-gray-800 bg-[#070b14]/50 px-6 gap-4 overflow-x-auto">
 
           <button
@@ -166,13 +161,11 @@ export default function AdminDashboardModal({
 
         </div>
 
-        {/* محتوى اللوحة */}
         <div className="p-6 overflow-y-auto flex-1 space-y-6">
 
           {activeTab === "products" ? (
             <div className="space-y-6">
 
-              {/* نموذج المنتج */}
               <form
                 onSubmit={handleSave}
                 className="bg-[#070b14] p-4 rounded-xl border border-gray-800 space-y-4"
@@ -241,7 +234,6 @@ export default function AdminDashboardModal({
                 </div>
               </form>
 
-              {/* البحث */}
               <div className="space-y-3">
 
                 <input
@@ -404,8 +396,4 @@ export default function AdminDashboardModal({
       </div>
     </div>
   );
-}
-
-التعديل الأساسي هو أن "category" أصبح من نوع "CategoryType" بدل "string"، وكذلك عند تعديل المنتج يتم تحميل "p.category" بشكل صحيح.
-
-إذا ظهر بعد هذا خطأ أن "CategoryType" غير موجود في "@/lib/data"، فالمشكلة ستكون في "data.ts" وليس هذا الملف.
+        }
