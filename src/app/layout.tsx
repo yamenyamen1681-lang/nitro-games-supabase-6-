@@ -10,13 +10,10 @@ const WHATSAPP = "972595852044";
 const description =
   "NITRO GAMES (نيترو قيمز) — خياركم الأفضل في فلسطين للعتاد الاحترافي: كيبورد، ماوس، ماوس باد، مايك، سماعات. توصيل لكافة مناطق فلسطين والداخل المحتل مع ضمان حقيقي لمدة سنة.";
 
-// ✅ ضبط العرض لجميع الهواتف ليظهر بمقاسات الشاشات الكبيرة
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 5,
-  userScalable: true,
-  themeColor: "#00a3ff",
+  maximumScale: 1,
 };
 
 export const metadata: Metadata = {
@@ -195,6 +192,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ar" dir="rtl" className="dark">
       <head>
+        {/* ✅ تحقق ملكية الموقع من Google Search Console */}
+        <meta
+          name="google-site-verification"
+          content="h76rf_kHvTkGfk9555FJHDcUsRzGri8qgwrGrYlYtqI"
+        />
+        <meta name="theme-color" content="#00a3ff" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
