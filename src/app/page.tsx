@@ -16,11 +16,11 @@ import { CheckoutModal } from "@/components/CheckoutModal";
 import { QuickViewModal } from "@/components/QuickViewModal";
 import { LiveSalesToast } from "@/components/LiveSalesToast";
 import { FloatingActions } from "@/components/FloatingActions";
-import AdminDashboardModal from "@/components/AdminDashboardModal";
+import { AdminDashboardModal } from "@/components/AdminDashboardModal";
 import { Product, INITIAL_PRODUCTS, ShowcaseConfig, DEFAULT_SHOWCASE } from "@/lib/data";
 
 function NitroGamesApp() {
-  const { showToast } = useCart();
+  const { toastMessage, showToast } = useCart();
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -28,6 +28,8 @@ function NitroGamesApp() {
   const [showcase, setShowcase] = useState<ShowcaseConfig>(DEFAULT_SHOWCASE);
 
   // Wrapped setters: update UI state AND mirror to localStorage as a fast-paint
+  // cache for next load. The database (via the API) is always the source of
+  // truth — the cache is only ever used for the first render, then overwritten.
   const applyProducts = (list: Product[]) => {
     setProducts(list);
     try {
@@ -46,7 +48,7 @@ function NitroGamesApp() {
     }
   };
 
-  // Showcase config effect
+  // Showcase config: paint instantly from cache, then reconcile with the DB
   useEffect(() => {
     try {
       const raw = localStorage.getItem("nitro_showcase_v2");
@@ -74,7 +76,8 @@ function NitroGamesApp() {
     loadShowcaseFromApi();
   }, []);
 
-  // Products effect
+  // Products: paint instantly from cache, then always reconcile with the DB
+  // (this is what makes admin edits show up on every device/browser)
   useEffect(() => {
     try {
       const cached = localStorage.getItem("nitro_products_v2");
@@ -115,74 +118,54 @@ function NitroGamesApp() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#05070d] text-gray-100 flex flex-col justify-between selection:bg-[#00a3ff] selection:text-black relative overflow-x-hidden" style={{ fontFamily: "'Cairo', sans-serif" }}>
-      {/* Animated Stars Background */}
-      <div className="stars-background" style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: 0,
-        backgroundImage: `
-          radial-gradient(2px 2px at 20px 30px, #ffffff, rgba(0,0,0,0)),
-          radial-gradient(2px 2px at 40px 70px, #00d2ff, rgba(0,0,0,0)),
-          radial-gradient(1px 1px at 90px 40px, #ffffff, rgba(0,0,0,0)),
-          radial-gradient(2px 2px at 160px 120px, #7000ff, rgba(0,0,0,0))
-        `,
-        backgroundRepeat: 'repeat',
-        backgroundSize: '200px 200px',
-        animation: 'moveStars 100s linear infinite',
-        opacity: 0.4,
-        pointerEvents: 'none'
-      }} />
-
-      <style jsx global>{`
-        @keyframes moveStars {
-          from { background-position: 0 0; }
-          to { background-position: 0 10000px; }
-        }
-      `}</style>
-
+    <div className="min-h-screen bg-[#05070d] text-gray-100 flex flex-col justify-between selection:bg-[#00a3ff] selection:text-black relative overflow-x-hidden">
       {/* Animated aurora backdrop */}
-      <div className="aurora-stage relative z-10">
+      <div className="aurora-stage">
         <div className="tech-grid" />
         <div className="aurora-blob" style={{ width: 420, height: 420, top: "-8%", right: "6%", background: "#00a3ff" }} />
-        <div className="aurora-blob" style={{ width: 380, height: 380, top: "-35%", left: "4%", background: "#00e5ff", animationDelay: "-6s" }} />
+        <div className="aurora-blob" style={{ width: 380, height: 380, top: "35%", left: "4%", background: "#00e5ff", animationDelay: "-6s" }} />
         <div className="aurora-blob" style={{ width: 340, height: 340, bottom: "-6%", right: "28%", background: "#5b8cff", animationDelay: "-12s" }} />
       </div>
 
-      <div className="relative z-10 flex flex-col flex-1">
-        <Header
-          onSearchChange={(q) => setSearchQuery(q)}
+      {/* Toast */}
+      {toastMessage && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 z-50">
+          <div className="px-5 py-3 rounded-2xl panel border-[#00a3ff]/60 text-white text-xs sm:text-sm font-bold flex items-center gap-2.5 shadow-2xl">
+            <span className="w-2 h-2 rounded-full bg-[#00a3ff] animate-ping" />
+            <span>{toastMessage}</span>
+          </div>
+        </div>
+      )}
+
+      <Header
+        onSearchChange={(q) => setSearchQuery(q)}
+        onCategorySelect={(cat) => setSelectedCategory(cat)}
+        onOpenAdmin={() => setIsAdminOpen(true)}
+      />
+
+      <main className="flex-1 relative z-10">
+        <HeroSection
+          products={products}
+          showcase={showcase}
           onCategorySelect={(cat) => setSelectedCategory(cat)}
-          onOpenAdmin={() => setIsAdminOpen(true)}
         />
+        <TrustBadges />
+        <DealsSection products={products} />
+        <CategoryGrid
+          selectedCategory={selectedCategory}
+          onSelectCategory={(cat) => setSelectedCategory(cat)}
+        />
+        <ProductSection
+          products={products}
+          selectedCategory={selectedCategory}
+          onSelectCategory={(cat) => setSelectedCategory(cat)}
+          searchQuery={searchQuery}
+        />
+        <CustomerReviews />
+        <NewsletterSection />
+      </main>
 
-        <main className="flex-1 relative z-10">
-          <HeroSection
-            products={products}
-            showcase={showcase}
-            onCategorySelect={(cat) => setSelectedCategory(cat)}
-          />
-          <TrustBadges />
-          <DealsSection products={products} />
-          <CategoryGrid
-            selectedCategory={selectedCategory}
-            onSelectCategory={(cat) => setSelectedCategory(cat)}
-          />
-          <ProductSection
-            products={products}
-            selectedCategory={selectedCategory}
-            onSelectCategory={(cat) => setSelectedCategory(cat)}
-            searchQuery={searchQuery}
-          />
-          <CustomerReviews />
-          <NewsletterSection />
-        </main>
-
-        <Footer onOpenAdmin={() => setIsAdminOpen(true)} onSelectCategory={(cat) => setSelectedCategory(cat)} />
-      </div>
+      <Footer onOpenAdmin={() => setIsAdminOpen(true)} onSelectCategory={(cat) => setSelectedCategory(cat)} />
 
       <CartDrawer />
       <CheckoutModal />
