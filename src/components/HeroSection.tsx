@@ -199,6 +199,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       <span className="text-[10px] font-tech text-[#00e5ff] flex items-center gap-1">
                         <Flame className="w-3 h-3" /> {cfg.badgeText}
                       </span>
+                      <span className="text-[10px] font-bold text-transparent bg-clip-text bg-gradient-to-l from-[#00a3ff] to-[#00e5ff] font-['Cairo'] tracking-wide" dir="ltr">
+                        Store Owner ⚡ 𝓨𝓪𝓶𝓔𝓷 ⚡
+                      </span>
                     </div>
 
                     <div className="relative h-64 sm:h-80 w-full bg-black">
@@ -213,7 +216,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         onEnded={() =>
                           setShowcaseVideoIndex((i) => (i + 1) % cfg.videoUrls!.length)
                         }
-                        className="absolute inset-0 w-full h-full object-contain"
+                        className="absolute inset-0 w-full h-full object-cover"
                       />
                       {cfg.videoUrls.length > 1 && (
                         <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/70 text-[#00e5ff] px-2 py-0.5 rounded-md border border-[#00e5ff]/30">
