@@ -49,7 +49,7 @@ export default function AdminDashboardModal({
     }
 
     const newProduct: Product = {
-      id: editingProduct ? editingProduct.id : Date.now().toString(),
+      id: editingProduct ? editingProduct.id : Date.now(), // تم تعديلها لتتوافق مع النوع الرقمي number
       title,
       price: parseFloat(price),
       category,
@@ -71,7 +71,7 @@ export default function AdminDashboardModal({
     setImage("");
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id: string | number) => {
     if (confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
       const updated = products.filter((p) => p.id !== id);
       onProductsUpdate(updated);
@@ -224,6 +224,7 @@ export default function AdminDashboardModal({
                       </div>
                       <div className="flex items-center gap-2">
                         <button
+                          type="button"
                           onClick={() => {
                             setEditingProduct(p);
                             setTitle(p.title);
@@ -235,6 +236,7 @@ export default function AdminDashboardModal({
                           تعديل
                         </button>
                         <button
+                          type="button"
                           onClick={() => handleDelete(p.id)}
                           className="px-3 py-1 bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs rounded-lg transition"
                         >
@@ -302,4 +304,4 @@ export default function AdminDashboardModal({
       </div>
     </div>
   );
-}
+              }
