@@ -21,7 +21,8 @@ import {
   ArrowDown,
   Play,
   Pause,
-  Music
+  Music,
+  Bell
 } from "lucide-react";
 
 interface AdminDashboardModalProps {
@@ -53,7 +54,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   onShowcaseUpdate,
 }) => {
   // ===== Featured Showcase editor state =====
-  const [tab, setTab] = useState<"products" | "showcase" | "audio">("products");
+  const [tab, setTab] = useState<"products" | "showcase" | "audio" | "notifications">("products");
   const [sc, setSc] = useState<ShowcaseConfig>(showcase ?? DEFAULT_SHOWCASE);
   const [pickerCat, setPickerCat] = useState<string>("all");
   const [pickerQuery, setPickerQuery] = useState("");
@@ -204,6 +205,78 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     } finally {
       setIsUploadingAudio(false);
     }
+  };
+
+  // Notification toast messages (bottom-right rotating "مزايا المتجر" popup)
+  const DEFAULT_NOTIFICATIONS = [
+    "عتاد أصلي 100% من الوكلاء المعتمدين",
+    "ضمان حقيقي لمدة سنة على كل المنتجات ⭐",
+    "سويتشات Rapid Trigger باستجابة 0.1 ملم ⚡",
+    "خصم 10% فوري بكود: NITRO10",
+    "ماوسات لاسلكية بتردد 8000Hz 🖱️",
+    "دفع عند الاستلام — افحص قبل ما تدفع 💵",
+    "صوت محيطي 360° مع عزل ANC 🎧",
+    "توصيل سريع لكافة مناطق فلسطين والداخل المحتل 🚚",
+  ];
+  const [notifications, setNotifications] = useState<string[]>([]);
+  const [notificationsLoaded, setNotificationsLoaded] = useState(false);
+  const [newNotificationInput, setNewNotificationInput] = useState("");
+
+  React.useEffect(() => {
+    if (tab !== "notifications" || notificationsLoaded) return;
+    (async () => {
+      try {
+        const res = await fetch("/api/settings?key=notifications", { cache: "no-store" });
+        const data = await res.json();
+        if (data.success && Array.isArray(data.value?.messages) && data.value.messages.length > 0) {
+          setNotifications(data.value.messages);
+        } else {
+          setNotifications(DEFAULT_NOTIFICATIONS);
+        }
+      } catch (err) {
+        console.warn("Failed to load notifications setting:", err);
+        setNotifications(DEFAULT_NOTIFICATIONS);
+      } finally {
+        setNotificationsLoaded(true);
+      }
+    })();
+  }, [tab, notificationsLoaded]);
+
+  const saveNotifications = async (messages: string[]) => {
+    try {
+      await fetch("/api/settings", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key: "notifications", value: { messages } }),
+      });
+      showToast("تم حفظ الإشعارات — بتبين عند كل الزوار 🔔");
+    } catch (err) {
+      console.warn("Failed to save notifications setting:", err);
+      showToast("تعذر حفظ الإشعارات ⚠️");
+    }
+  };
+
+  const addNotification = () => {
+    const text = newNotificationInput.trim();
+    if (!text) return;
+    const next = [...notifications, text];
+    setNotifications(next);
+    saveNotifications(next);
+    setNewNotificationInput("");
+  };
+
+  const removeNotification = (idx: number) => {
+    const next = notifications.filter((_, i) => i !== idx);
+    setNotifications(next);
+    saveNotifications(next);
+  };
+
+  const updateNotification = (idx: number, text: string) => {
+    setNotifications((prev) => prev.map((n, i) => (i === idx ? text : n)));
+  };
+
+  const commitNotificationEdit = (idx: number) => {
+    saveNotifications(notifications);
   };
 
   const handleVideoFileUpload = async (file: File | undefined | null) => {
@@ -514,6 +587,17 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             >
               <Music className="w-3.5 h-3.5" />
               <span>موسيقى الموقع</span>
+            </button>
+            <button
+              onClick={() => setTab("notifications")}
+              className={`px-4 py-2.5 text-xs font-bold rounded-t-xl cursor-pointer transition-all flex items-center gap-2 ${
+                tab === "notifications"
+                  ? "bg-[#0b1120] text-[#00a3ff] border-x border-t border-[#1c2942]"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              <Bell className="w-3.5 h-3.5" />
+              <span>الإشعارات</span>
             </button>
           </div>
         )}
@@ -954,6 +1038,69 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               {siteAudioUrl && (
                 <audio src={siteAudioUrl} controls className="w-full" />
               )}
+            </div>
+          </div>
+        ) : tab === "notifications" ? (
+          /* ===================== NOTIFICATIONS CONTROL PANEL ===================== */
+          <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+            <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-4">
+              <div className="flex items-center gap-2 border-b border-[#1c2942] pb-3">
+                <Bell className="w-4 h-4 text-[#00a3ff]" />
+                <h3 className="text-sm font-bold text-white">
+                  إشعارات "مزايا المتجر" (الصندوق العائم أسفل الموقع)
+                </h3>
+              </div>
+
+              <p className="text-[11px] text-gray-400 leading-relaxed">
+                هاي الرسائل بتتناوب تلقائياً بصندوق صغير أسفل يمين الموقع عند كل زائر. ضيف
+                أو احذف أو عدّل أي رسالة، وترتيبهم هون هو نفس ترتيب ظهورهم.
+              </p>
+
+              {notifications.length > 0 && (
+                <div className="space-y-2">
+                  {notifications.map((msg, idx) => (
+                    <div key={idx} className="flex items-center gap-2">
+                      <span className="text-[11px] text-gray-500 w-5 text-center shrink-0">
+                        {idx + 1}
+                      </span>
+                      <input
+                        type="text"
+                        value={msg}
+                        onChange={(e) => updateNotification(idx, e.target.value)}
+                        onBlur={() => commitNotificationEdit(idx)}
+                        className="flex-1 bg-[#152034] border border-[#1c2942] text-xs text-gray-100 rounded-lg px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeNotification(idx)}
+                        className="text-[11px] text-red-400 hover:text-red-300 underline shrink-0"
+                      >
+                        حذف
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center gap-2 pt-2 border-t border-[#1c2942]">
+                <input
+                  type="text"
+                  value={newNotificationInput}
+                  onChange={(e) => setNewNotificationInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") addNotification();
+                  }}
+                  placeholder="اكتب رسالة إشعار جديدة..."
+                  className="flex-1 bg-[#152034] border border-[#1c2942] text-xs text-white rounded-lg px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
+                />
+                <button
+                  type="button"
+                  onClick={addNotification}
+                  className="text-[11px] font-bold px-3.5 py-2 rounded-lg bg-[#00a3ff] text-black hover:brightness-110 shrink-0"
+                >
+                  + إضافة
+                </button>
+              </div>
             </div>
           </div>
         ) : (
