@@ -49,29 +49,29 @@ export const LiveSalesToast: React.FC = () => {
   const Icon = current.icon;
 
   return (
-    <div className="fixed bottom-5 right-5 z-40 max-w-sm transition-all duration-500">
-      <div className="relative p-4 pr-4 pl-3 rounded-2xl bg-[#0b1120] border border-[#00a3ff]/35 shadow-[0_10px_35px_rgba(0,0,0,.85),0_0_20px_rgba(0,163,255,.15)] flex items-center gap-3.5 text-right">
+    <div className="fixed bottom-24 sm:bottom-5 inset-x-4 sm:inset-x-auto sm:right-5 z-40 max-w-[280px] sm:max-w-xs transition-all duration-500">
+      <div className="relative p-2.5 pr-2.5 pl-2 rounded-xl bg-[#0b1120] border border-[#00a3ff]/35 shadow-[0_10px_35px_rgba(0,0,0,.85),0_0_20px_rgba(0,163,255,.15)] flex items-center gap-2 text-right">
         {/* Glowing icon */}
-        <div className="relative w-11 h-11 rounded-xl bg-[#152034] border border-[#00a3ff]/40 flex items-center justify-center flex-shrink-0 text-[#00a3ff]">
-          <Icon className="w-5 h-5" />
-          <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+        <div className="relative w-8 h-8 rounded-lg bg-[#152034] border border-[#00a3ff]/40 flex items-center justify-center flex-shrink-0 text-[#00a3ff]">
+          <Icon className="w-3.5 h-3.5" />
+          <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00a3ff] opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00a3ff]"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]"></span>
           </span>
         </div>
 
         {/* Message */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1.5 mb-1">
-            <span className="text-[10px] font-black text-[#02121f] bg-[#00e5ff] px-2 py-0.5 rounded-full font-tech">
+          <div className="flex items-center gap-1 mb-0.5">
+            <span className="text-[8px] font-black text-[#02121f] bg-[#00e5ff] px-1.5 py-0.5 rounded-full font-tech">
               NITRO GAMES
             </span>
-            <span className="text-[10px] font-bold text-[#00a3ff]">مزايا المتجر</span>
+            <span className="text-[8px] font-bold text-[#00a3ff]">مزايا المتجر</span>
           </div>
 
           <p
             key={index}
-            className="animate-fade-in-down text-xs sm:text-[13px] font-bold text-gray-100 leading-relaxed font-['Cairo']"
+            className="animate-fade-in-down text-[10px] sm:text-[11px] font-bold text-gray-100 leading-snug font-['Cairo'] line-clamp-2"
           >
             {current.text}
           </p>
@@ -83,11 +83,11 @@ export const LiveSalesToast: React.FC = () => {
             setVisible(false);
             setClosedManually(true);
           }}
-          className="p-1 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors self-start"
+          className="p-0.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors self-start"
           aria-label="إغلاق الإشعار"
           title="إغلاق الإشعار"
         >
-          <X className="w-4 h-4" />
+          <X className="w-3.5 h-3.5" />
         </button>
       </div>
     </div>
