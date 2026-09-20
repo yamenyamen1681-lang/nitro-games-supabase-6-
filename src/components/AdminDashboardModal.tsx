@@ -771,4 +771,4 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       <span className="w-7 h-7 rounded-lg bg-[#00a3ff]/15 text-[#00a3ff] border border-[#00a3ff]/30 flex items-center justify-center text-[11px] font-tech">
                         {i + 1}
                       </span>
-                      <div className="relative w-10 h-10 rounded-lg bg-black/50 border
+                      <div className="relative w-10 h-10 rounded-lg bg-black/50 border border-white/10">
