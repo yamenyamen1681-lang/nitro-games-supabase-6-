@@ -37,6 +37,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
   const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
+  const showcaseVideoRef = React.useRef<HTMLVideoElement | null>(null);
+
+  useEffect(() => {
+    const vid = showcaseVideoRef.current;
+    if (!vid) return;
+    // Force playback whenever the active video changes — some browsers don't
+    // reliably honor the `autoPlay` attribute on a remounted <video> element.
+    const playPromise = vid.play();
+    if (playPromise && typeof playPromise.catch === "function") {
+      playPromise.catch(() => {
+        /* Autoplay can still be blocked in some contexts — the visible
+           play button lets the visitor start it manually in that case. */
+      });
+    }
+  }, [showcaseVideoIndex, cfg.videoUrls]);
 
   useEffect(() => {
     (async () => {
@@ -204,28 +219,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </span>
                     </div>
 
-                    <div className="relative h-64 sm:h-80 w-full bg-black">
-                      <video
-                        key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
-                        src={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
-                        autoPlay
-                        muted
-                        loop={cfg.videoUrls.length === 1}
-                        playsInline
-                        controls
-                        onEnded={() =>
-                          setShowcaseVideoIndex((i) => (i + 1) % cfg.videoUrls!.length)
-                        }
-                        className="absolute inset-0 w-full h-full object-cover"
-                      />
-                      {cfg.videoUrls.length > 1 && (
-                        <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/70 text-[#00e5ff] px-2 py-0.5 rounded-md border border-[#00e5ff]/30">
-                          {(showcaseVideoIndex % cfg.videoUrls.length) + 1}/{cfg.videoUrls.length}
-                        </span>
-                      )}
-                      <span className="absolute inset-0 bg-gradient-to-b from-[#00a3ff]/15 via-transparent to-[#00a3ff]/20 pointer-events-none mix-blend-overlay" />
-                      <span className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-[#00a3ff] rounded-tr-md pointer-events-none shadow-[0_0_10px_rgba(0,163,255,0.8)]" />
-                      <span className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-[#00a3ff] rounded-bl-md pointer-events-none shadow-[0_0_10px_rgba(0,163,255,0.8)]" />
+                    <div className="relative h-64 sm:h-80 w-full bg-black p-2">
+                      <div className="relative w-full h-full rounded-2xl overflow-hidden">
+                        <video
+                          ref={showcaseVideoRef}
+                          key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
+                          src={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
+                          autoPlay
+                          muted
+                          loop={cfg.videoUrls.length === 1}
+                          playsInline
+                          controls
+                          onEnded={() =>
+                            setShowcaseVideoIndex((i) => (i + 1) % cfg.videoUrls!.length)
+                          }
+                          className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                        />
+                        {cfg.videoUrls.length > 1 && (
+                          <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/70 text-[#00e5ff] px-2 py-0.5 rounded-md border border-[#00e5ff]/30">
+                            {(showcaseVideoIndex % cfg.videoUrls.length) + 1}/{cfg.videoUrls.length}
+                          </span>
+                        )}
+                        <span className="absolute inset-0 bg-gradient-to-b from-[#00a3ff]/15 via-transparent to-[#00a3ff]/20 pointer-events-none mix-blend-overlay rounded-2xl" />
+                        <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/50 rounded-2xl pointer-events-none shadow-[inset_0_0_25px_rgba(0,163,255,0.25)]" />
+                      </div>
                     </div>
 
                     <div className="px-4 py-3.5 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
