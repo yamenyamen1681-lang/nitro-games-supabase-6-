@@ -16,6 +16,7 @@ import {
   Flame,
   Music,
   Volume2,
+  Percent,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -37,6 +38,40 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
   const showcaseVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  // إعدادات العداد التنازلي للخصم
+  const [timeLeft, setTimeLeft] = useState({ hours: 18, minutes: 45, seconds: 24 });
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
+        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
+        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        return prev;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // تصفية المنتجات التي تحتوي على خصم
+  const discountedProducts = React.useMemo(() => {
+    const discounted = products.filter((p) => p.originalPrice && p.originalPrice > p.price);
+    return discounted.length > 0 ? discounted : products.slice(0, 5);
+  }, [products]);
+
+  // حالة التبديل التلقائي لمنتج العروض الأسبوعية
+  const [discountSlide, setDiscountSlide] = useState(0);
+
+  useEffect(() => {
+    if (discountedProducts.length <= 1) return;
+    const interval = setInterval(() => {
+      setDiscountSlide((prev) => (prev + 1) % discountedProducts.length);
+    }, 4000); // التبديل كل 4 ثوانٍ
+    return () => clearInterval(interval);
+  }, [discountedProducts.length]);
+
+  const currentDiscountProduct = discountedProducts[discountSlide];
 
   useEffect(() => {
     const vid = showcaseVideoRef.current;
@@ -229,7 +264,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </span>
                     </div>
 
-                    <div className="relative h-64 sm:h-80 w-full bg-black p-2">
+                    <div className="relative h-56 sm:h-64 w-full bg-black p-2">
                       <div className="relative w-full h-full rounded-2xl overflow-hidden">
                         <video
                           ref={showcaseVideoRef}
@@ -255,7 +290,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </div>
                     </div>
 
-                    <div className="px-4 py-3.5 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
+                    <div className="px-4 py-3 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
                       <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
                         {cfg.headline}
                       </h3>
@@ -349,14 +384,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </div>
                     </div>
 
-                    <div className="relative h-64 sm:h-80 w-full bg-gradient-to-b from-[#0d1524] to-[#05070d]">
+                    <div className="relative h-56 sm:h-64 w-full bg-gradient-to-b from-[#0d1524] to-[#05070d]">
                       <div key={active.id} className="absolute inset-0 showcase-enter">
                         <Image
                           src={active.image}
                           alt={active.title}
                           fill
                           priority
-                          className="object-contain p-6"
+                          className="object-contain p-4"
                         />
                       </div>
 
@@ -369,7 +404,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                             {active.originalPrice.toLocaleString()} ₪
                           </span>
                         )}
-                        <span className="text-lg font-black font-mono text-[#02121f] bg-[#00a3ff] px-2.5 py-1 rounded-lg shadow-[0_0_20px_rgba(0,163,255,.5)]">
+                        <span className="text-base font-black font-mono text-[#02121f] bg-[#00a3ff] px-2 py-0.5 rounded-lg shadow-[0_0_20px_rgba(0,163,255,.5)]">
                           {active.price.toLocaleString()} ₪
                         </span>
                       </div>
@@ -379,7 +414,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </span>
                     </div>
 
-                    <div className="px-4 py-3.5 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
+                    <div className="px-4 py-3 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
                       <div className="min-w-0 text-right">
                         <div className="text-[10px] font-tech text-[#00a3ff] uppercase">{active.brand}</div>
                         <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
@@ -399,9 +434,109 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </div>
               </div>
             ) : (
-              <div className="panel rounded-2xl h-64 flex flex-col items-center justify-center gap-3 text-center">
+              <div className="panel rounded-2xl h-56 flex flex-col items-center justify-center gap-3 text-center">
                 <Zap className="w-10 h-10 text-[#00a3ff]/40" />
                 <p className="text-xs text-gray-400">المربع المميز معطّل حالياً من لوحة التحكم</p>
+              </div>
+            )}
+
+            {/* --- قسم عروض الفلاش المدمج (منتج واحد فقط بحجم متناسق وتبديل تلقائي) --- */}
+            {currentDiscountProduct && (
+              <div className="rounded-xl bg-[#070d1a] border border-[#1b345b] p-3 shadow-[0_0_20px_rgba(0,163,255,0.1)] space-y-2.5">
+                {/* الشريط العلوي مع العداد التنازلي */}
+                <div className="rounded-lg bg-gradient-to-r from-[#0d1e38] via-[#091528] to-[#0d1e38] border border-[#1c3862] p-2 text-right flex items-center justify-between gap-2">
+                  <div className="space-y-0.5">
+                    <div className="inline-flex items-center gap-1 text-[10px] font-bold text-[#00e5ff] font-['Cairo']">
+                      <Flame className="w-3 h-3 animate-bounce" />
+                      <span>عروض الفلاش الأسبوعية</span>
+                    </div>
+                    <h2 className="text-xs font-black text-white font-['Cairo']">
+                      وفر حتى <span className="text-[#00e5ff]">20%</span> على العتاد
+                    </h2>
+                  </div>
+
+                  {/* العداد التنازلي */}
+                  <div className="flex items-center gap-0.5 bg-[#050a14] px-1.5 py-0.5 rounded-md border border-[#172c4a]" dir="ltr">
+                    <div className="text-center px-0.5">
+                      <span className="text-[10px] font-black text-white font-mono">{String(timeLeft.hours).padStart(2, "0")}</span>
+                      <span className="block text-[6px] text-gray-400 font-['Cairo']">ساعة</span>
+                    </div>
+                    <span className="text-[8px] text-[#00a3ff] font-bold">:</span>
+                    <div className="text-center px-0.5">
+                      <span className="text-[10px] font-black text-white font-mono">{String(timeLeft.minutes).padStart(2, "0")}</span>
+                      <span className="block text-[6px] text-gray-400 font-['Cairo']">دقيقة</span>
+                    </div>
+                    <span className="text-[8px] text-[#00a3ff] font-bold">:</span>
+                    <div className="text-center px-0.5">
+                      <span className="text-[10px] font-black text-[#00e5ff] font-mono">{String(timeLeft.seconds).padStart(2, "0")}</span>
+                      <span className="block text-[6px] text-gray-400 font-['Cairo']">ثانية</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* كارت كيبورد/منتج واحد متناسق يتبدل تلقائياً */}
+                <div
+                  key={currentDiscountProduct.id}
+                  className="relative rounded-lg bg-[#091120] border border-[#182d4d] p-2.5 text-right hover:border-[#00e5ff]/50 transition-all duration-500 group overflow-hidden"
+                >
+                  <div className="flex items-center justify-between mb-1">
+                    {currentDiscountProduct.originalPrice && (
+                      <span className="bg-[#00e5ff] text-[#020b17] font-black text-[9px] px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                        <Percent className="w-2.5 h-2.5" />
+                        خصم {Math.round(((currentDiscountProduct.originalPrice - currentDiscountProduct.price) / currentDiscountProduct.originalPrice) * 100)}%
+                      </span>
+                    )}
+                    
+                    {/* مؤشرات التبديل التلقائي */}
+                    <div className="flex items-center gap-1">
+                      {discountedProducts.map((_, idx) => (
+                        <span
+                          key={idx}
+                          onClick={() => setDiscountSlide(idx)}
+                          className={`h-1.5 rounded-full cursor-pointer transition-all ${
+                            idx === discountSlide ? "w-3.5 bg-[#00e5ff]" : "w-1.5 bg-[#172c4a]"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="relative h-28 sm:h-32 w-full my-1 flex items-center justify-center">
+                    <Image
+                      src={currentDiscountProduct.image}
+                      alt={currentDiscountProduct.title}
+                      fill
+                      className="object-contain p-1 transition-transform duration-500 group-hover:scale-105"
+                    />
+                  </div>
+
+                  <div className="border-t border-[#152744] pt-2 flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="text-[8px] font-tech text-[#00a3ff] uppercase">{currentDiscountProduct.brand}</div>
+                      <h3 className="text-xs font-bold text-white truncate font-['Cairo']">
+                        {currentDiscountProduct.title}
+                      </h3>
+                      <div className="flex items-baseline gap-1.5 mt-0.5">
+                        <span className="text-xs font-black text-[#00e5ff] font-mono">
+                          {currentDiscountProduct.price.toLocaleString()} ₪
+                        </span>
+                        {currentDiscountProduct.originalPrice && (
+                          <span className="text-[9px] text-gray-400 line-through font-mono">
+                            {currentDiscountProduct.originalPrice.toLocaleString()} ₪
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => addToCart(currentDiscountProduct, 1)}
+                      className="btn-pink text-[10px] px-3 py-1.5 flex items-center gap-1 shrink-0"
+                    >
+                      <ShoppingBag className="w-3 h-3" />
+                      <span>إضافة للسلة</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
