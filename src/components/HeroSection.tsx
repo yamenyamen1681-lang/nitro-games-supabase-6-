@@ -13,7 +13,6 @@ import {
   Zap,
   CheckCircle2,
   ShoppingBag,
-  Sparkles,
   Flame,
   Music,
   Volume2,
@@ -42,14 +41,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   useEffect(() => {
     const vid = showcaseVideoRef.current;
     if (!vid) return;
-    // Force playback whenever the active video changes — some browsers don't
-    // reliably honor the `autoPlay` attribute on a remounted <video> element.
     const playPromise = vid.play();
     if (playPromise && typeof playPromise.catch === "function") {
-      playPromise.catch(() => {
-        /* Autoplay can still be blocked in some contexts — the visible
-           play button lets the visitor start it manually in that case. */
-      });
+      playPromise.catch(() => {});
     }
   }, [showcaseVideoIndex, cfg.videoUrls]);
 
@@ -80,7 +74,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Resolve showcase items: admin-picked order first, fallback to first 6 products
   const showcaseItems = React.useMemo(() => {
     if (cfg.productIds.length > 0) {
       const picked = cfg.productIds
@@ -108,7 +101,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     return () => clearInterval(t);
   }, [cfg.autoPlay, cfg.intervalMs, paused, go, showcaseItems.length]);
 
-  // Keep index in range when admin changes the list
   useEffect(() => {
     if (slide >= showcaseItems.length) setSlide(0);
   }, [showcaseItems.length, slide]);
@@ -175,14 +167,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <ShoppingBag className="w-5 h-5" />
                 <span>{cfg.ctaLabel || "تسوق الآن"}</span>
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              </button>
-
-              <button
-                onClick={() => scrollTo("categories")}
-                className="btn-ghost text-sm sm:text-base px-6 py-3.5 flex items-center gap-2 cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-[#00e5ff]" />
-                <span>الأقسام الخمسة</span>
               </button>
             </div>
 
@@ -407,47 +391,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <p className="text-xs text-gray-400">المربع المميز معطّل حالياً من لوحة التحكم</p>
               </div>
             )}
-          </div>
-        </div>
-
-        {/* 5 Categories */}
-        <div id="hero-categories" className="pt-12">
-          <div className="text-[11px] font-tech text-gray-400 uppercase tracking-[0.2em] mb-3.5 flex items-center justify-center gap-3">
-            <span className="w-10 h-px bg-gradient-to-l from-[#00a3ff]/50 to-transparent" />
-            الأقسام الخمسة
-            <span className="w-10 h-px bg-gradient-to-r from-[#00e5ff]/50 to-transparent" />
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {CATEGORIES_META.map((c, i) => {
-              const count = products.filter((p) => p.category === c.id).length;
-              return (
-                <button
-                  key={c.id}
-                  onClick={() => {
-                    onCategorySelect?.(c.id);
-                    scrollTo("products");
-                  }}
-                  className="group panel rounded-2xl px-4 py-4 text-right cursor-pointer flex items-center justify-between gap-3"
-                >
-                  <div>
-                    <div className="text-sm font-black text-white group-hover:text-[#00a3ff] transition-colors font-['Cairo']">
-                      {c.name}
-                    </div>
-                    <div className="text-[10px] text-gray-400 font-tech mt-0.5">{count} منتج</div>
-                  </div>
-                  <span
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-tech ${
-                      i % 2 === 0
-                        ? "bg-[#00a3ff]/10 text-[#00a3ff] border border-[#00a3ff]/30"
-                        : "bg-[#00e5ff]/10 text-[#00e5ff] border border-[#00e5ff]/30"
-                    } group-hover:scale-110 transition-transform`}
-                  >
-                    0{i + 1}
-                  </span>
-                </button>
-              );
-            })}
           </div>
         </div>
       </div>
