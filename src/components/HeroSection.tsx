@@ -108,14 +108,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const active = showcaseItems[slide];
 
   const stats = [
-    { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا", glow: "from-[#00a3ff]/20" },
-    { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي", glow: "from-[#00e5ff]/20" },
-    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد", glow: "from-[#00a3ff]/20" },
-    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع", glow: "from-[#00e5ff]/20" },
+    { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
+    { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
+    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
+    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
   ];
 
   return (
     <section id="hero" className="relative overflow-hidden pt-10 pb-16 lg:pt-14 lg:pb-24 bg-[#05070d] border-b border-[#16223a]">
+      {/* تضمين كود الحركة التلقائي ليعمل في كل المتصفحات ودون الحاجة لتعديل globals.css */}
+      <style>{`
+        @keyframes marqueeLoop {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(50%); }
+        }
+        .animate-marquee-infinite {
+          display: flex;
+          width: max-content;
+          animation: marqueeLoop 10s linear infinite;
+        }
+        .animate-marquee-infinite:hover {
+          animation-play-state: paused;
+        }
+      `}</style>
+
       <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
       <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00a3ff]/10 blur-[130px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/10 blur-[130px] rounded-full pointer-events-none" />
@@ -174,17 +190,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* الإحصائيات - شريط متحرّك أسرع بتصميم فخم وساحر */}
-            <div className="w-full overflow-hidden pt-3 [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
-              <div className="flex gap-3.5 animate-marquee [animation-duration:12s] hover:[animation-play-state:paused] whitespace-nowrap w-max">
-                {[...stats, ...stats, ...stats].map((s, i) => (
+            {/* الشريط المتحرك المتصل بدون انقطاع */}
+            <div className="w-full overflow-hidden pt-3 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+              <div className="animate-marquee-infinite gap-3.5">
+                {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
                   <div
                     key={i}
-                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/60 rounded-xl px-4 py-2.5 text-right flex items-center gap-3 shrink-0 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/60 rounded-xl px-4 py-2.5 text-right flex items-center gap-3 shrink-0 ml-3 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
                   >
-                    {/* خلفية توهج خفيفة عند التحويم */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#00a3ff]/0 via-[#00e5ff]/5 to-[#00a3ff]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
                     <div className="text-base font-black text-white font-tech flex items-center gap-2 relative z-10">
                       <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-75" />
@@ -201,7 +214,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* --- LEFT: Admin-controlled Dynamic Showcase --- */}
+          {/* --- LEFT: Dynamic Showcase --- */}
           <div className="lg:col-span-6">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative">
