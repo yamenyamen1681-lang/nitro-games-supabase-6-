@@ -155,11 +155,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </span>
             </h1>
 
-            <p className="text-sm sm:text-base text-gray-300 max-w-xl leading-relaxed">
-              توصيل لكافة مناطق فلسطين والداخل المحتل 🚚 | ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
-            </p>
-
-            <div className="flex flex-wrap items-center gap-3.5">
+            {/* الأزرار بعد رفعها مباشرة بعد العنوان */}
+            <div className="flex flex-wrap items-center gap-3.5 pt-2">
               <button
                 onClick={() => scrollTo("products")}
                 className="btn-neon text-sm sm:text-base px-7 py-3.5 flex items-center gap-2.5 cursor-pointer group"
@@ -170,6 +167,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
+            {/* الإحصائيات */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
               {[
                 { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
