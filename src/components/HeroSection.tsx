@@ -16,7 +16,6 @@ import {
   Flame,
   Music,
   Volume2,
-  Percent,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -38,27 +37,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
   const showcaseVideoRef = useRef<HTMLVideoElement | null>(null);
-
-  // إعدادات العداد التنازلي للخصم
-  const [timeLeft, setTimeLeft] = useState({ hours: 18, minutes: 45, seconds: 24 });
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
-        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return prev;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  // تصفية المنتجات التي تحتوى على خصم
-  const discountedProducts = React.useMemo(() => {
-    const discounted = products.filter((p) => p.originalPrice && p.originalPrice > p.price);
-    return discounted.length > 0 ? discounted : products.slice(0, 4);
-  }, [products]);
 
   useEffect(() => {
     const vid = showcaseVideoRef.current;
@@ -211,7 +189,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* الشريط المتحرك المتصل بدون انقطاع */}
+            {/* الشريط المتحرك */}
             <div className="w-full overflow-hidden pt-3 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
               <div className="animate-marquee-infinite gap-3.5">
                 {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
@@ -235,7 +213,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* --- LEFT: Dynamic Showcase + Discount Banner & Products --- */}
+          {/* --- LEFT: Dynamic Showcase --- */}
           <div className="lg:col-span-6 space-y-4">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative">
@@ -426,97 +404,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <p className="text-xs text-gray-400">المربع المميز معطّل حالياً من لوحة التحكم</p>
               </div>
             )}
-
-            {/* --- قسم بنر الخصم + كروت المنتجات المخفضة المميزة --- */}
-            <div className="rounded-2xl bg-[#070d1a] border border-[#1b345b] p-3 sm:p-4 shadow-[0_0_25px_rgba(0,163,255,0.1)] space-y-3">
-              {/* شريط الخصم مع العداد التنازلي */}
-              <div className="rounded-xl bg-gradient-to-r from-[#0d1e38] via-[#091528] to-[#0d1e38] border border-[#1c3862] p-3 text-right flex flex-col sm:flex-row items-center justify-between gap-3">
-                <div className="space-y-0.5">
-                  <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#00e5ff] font-['Cairo']">
-                    <Flame className="w-3.5 h-3.5 animate-bounce" />
-                    <span>عروض الفلاش الأسبوعية • خصومات حصرية لفترة محدودة</span>
-                  </div>
-                  <h2 className="text-sm sm:text-base font-black text-white font-['Cairo']">
-                    وفر حتى <span className="text-[#00e5ff]">20%</span> على نخبة عتاد البطولات
-                  </h2>
-                </div>
-
-                {/* العداد التنازلي */}
-                <div className="flex items-center gap-1.5 bg-[#050a14] px-2.5 py-1.5 rounded-lg border border-[#172c4a]" dir="ltr">
-                  <div className="text-center px-1">
-                    <span className="text-xs font-black text-white font-mono">{String(timeLeft.hours).padStart(2, "0")}</span>
-                    <span className="block text-[7px] text-gray-400 font-['Cairo']">ساعة</span>
-                  </div>
-                  <span className="text-[10px] text-[#00a3ff] font-bold">:</span>
-                  <div className="text-center px-1">
-                    <span className="text-xs font-black text-white font-mono">{String(timeLeft.minutes).padStart(2, "0")}</span>
-                    <span className="block text-[7px] text-gray-400 font-['Cairo']">دقيقة</span>
-                  </div>
-                  <span className="text-[10px] text-[#00a3ff] font-bold">:</span>
-                  <div className="text-center px-1">
-                    <span className="text-xs font-black text-[#00e5ff] font-mono">{String(timeLeft.seconds).padStart(2, "0")}</span>
-                    <span className="block text-[7px] text-gray-400 font-['Cairo']">ثانية</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* كروت المنتجات الخاضعة للعرض */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {discountedProducts.slice(0, 2).map((prod) => (
-                  <div
-                    key={prod.id}
-                    className="relative rounded-xl bg-[#091120] border border-[#182d4d] p-2.5 text-right hover:border-[#00e5ff]/50 transition-all group"
-                  >
-                    <div className="flex items-center justify-between mb-1">
-                      {prod.originalPrice && (
-                        <span className="bg-[#00e5ff] text-[#020b17] font-black text-[9px] px-1.5 py-0.5 rounded-full flex items-center gap-0.5">
-                          <Percent className="w-2.5 h-2.5" />
-                          خصم {Math.round(((prod.originalPrice - prod.price) / prod.originalPrice) * 100)}%
-                        </span>
-                      )}
-                      <span className="text-[8px] font-bold text-gray-300 bg-[#12223c] px-1.5 py-0.5 rounded-full">
-                        متبقي {prod.inStock ?? 8} قطع
-                      </span>
-                    </div>
-
-                    <div className="relative h-28 sm:h-32 w-full my-1 flex items-center justify-center">
-                      <Image
-                        src={prod.image}
-                        alt={prod.title}
-                        fill
-                        className="object-contain p-1 transition-transform duration-300 group-hover:scale-105"
-                      />
-                    </div>
-
-                    <div className="border-t border-[#152744] pt-2 flex items-center justify-between gap-2">
-                      <div className="min-w-0">
-                        <h3 className="text-[11px] font-bold text-white truncate font-['Cairo']">
-                          {prod.title}
-                        </h3>
-                        <div className="flex items-baseline gap-1 mt-0.5">
-                          <span className="text-xs font-black text-[#00e5ff] font-mono">
-                            {prod.price.toLocaleString()} ₪
-                          </span>
-                          {prod.originalPrice && (
-                            <span className="text-[9px] text-gray-400 line-through font-mono">
-                              {prod.originalPrice.toLocaleString()} ₪
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <button
-                        onClick={() => addToCart(prod, 1)}
-                        className="btn-pink text-[10px] px-2.5 py-1.5 flex items-center gap-1 shrink-0"
-                      >
-                        <ShoppingBag className="w-3 h-3" />
-                        <span>إضافة</span>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </div>
