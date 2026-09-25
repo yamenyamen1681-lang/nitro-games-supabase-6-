@@ -107,6 +107,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const active = showcaseItems[slide];
 
+  const stats = [
+    { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
+    { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
+    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
+    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
+  ];
+
   return (
     <section id="hero" className="relative overflow-hidden pt-10 pb-16 lg:pt-14 lg:pb-24 bg-[#05070d] border-b border-[#16223a]">
       <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
@@ -155,7 +162,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </span>
             </h1>
 
-            {/* الأزرار بعد رفعها مباشرة بعد العنوان */}
+            {/* الأزرار */}
             <div className="flex flex-wrap items-center gap-3.5 pt-2">
               <button
                 onClick={() => scrollTo("products")}
@@ -167,21 +174,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* الإحصائيات */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
-              {[
-                { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
-                { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
-                { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
-                { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
-              ].map((s, i) => (
-                <div key={i} className="panel rounded-xl px-3 py-2.5 text-right">
-                  <div className="text-base font-black text-white font-tech flex items-center justify-end gap-1.5">
-                    {s.big} {s.icon}
+            {/* الإحصائيات (شريط متحرّك بعمود/سطر واحد) */}
+            <div className="w-full overflow-hidden pt-2 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+              <div className="flex gap-3 animate-marquee hover:[animation-play-state:paused] whitespace-nowrap w-max">
+                {[...stats, ...stats].map((s, i) => (
+                  <div
+                    key={i}
+                    className="panel rounded-xl px-4 py-2.5 text-right flex items-center gap-3 shrink-0"
+                  >
+                    <div className="text-base font-black text-white font-tech flex items-center gap-1.5">
+                      {s.big} {s.icon}
+                    </div>
+                    <div className="text-[11px] text-gray-400 font-bold">{s.small}</div>
                   </div>
-                  <div className="text-[10px] text-gray-400 mt-0.5">{s.small}</div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
