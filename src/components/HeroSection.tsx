@@ -108,10 +108,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const active = showcaseItems[slide];
 
   const stats = [
-    { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
-    { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
-    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
-    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
+    { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا", glow: "from-[#00a3ff]/20" },
+    { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي", glow: "from-[#00e5ff]/20" },
+    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد", glow: "from-[#00a3ff]/20" },
+    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع", glow: "from-[#00e5ff]/20" },
   ];
 
   return (
@@ -174,18 +174,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* الإحصائيات (شريط متحرّك بعمود/سطر واحد) */}
-            <div className="w-full overflow-hidden pt-2 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-              <div className="flex gap-3 animate-marquee hover:[animation-play-state:paused] whitespace-nowrap w-max">
-                {[...stats, ...stats].map((s, i) => (
+            {/* الإحصائيات - شريط متحرّك أسرع بتصميم فخم وساحر */}
+            <div className="w-full overflow-hidden pt-3 [mask-image:linear-gradient(to_right,transparent,black_12%,black_88%,transparent)]">
+              <div className="flex gap-3.5 animate-marquee [animation-duration:12s] hover:[animation-play-state:paused] whitespace-nowrap w-max">
+                {[...stats, ...stats, ...stats].map((s, i) => (
                   <div
                     key={i}
-                    className="panel rounded-xl px-4 py-2.5 text-right flex items-center gap-3 shrink-0"
+                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/60 rounded-xl px-4 py-2.5 text-right flex items-center gap-3 shrink-0 transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
                   >
-                    <div className="text-base font-black text-white font-tech flex items-center gap-1.5">
+                    {/* خلفية توهج خفيفة عند التحويم */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#00a3ff]/0 via-[#00e5ff]/5 to-[#00a3ff]/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    
+                    <div className="text-base font-black text-white font-tech flex items-center gap-2 relative z-10">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-75" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
+                      </span>
                       {s.big} {s.icon}
                     </div>
-                    <div className="text-[11px] text-gray-400 font-bold">{s.small}</div>
+                    <div className="text-[11px] text-gray-300 font-bold font-['Cairo'] relative z-10 border-r border-[#1e345b] pr-3">
+                      {s.small}
+                    </div>
                   </div>
                 ))}
               </div>
