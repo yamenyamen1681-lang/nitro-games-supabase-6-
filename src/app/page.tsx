@@ -4,12 +4,8 @@ import React, { useState, useEffect } from "react";
 import { CartProvider, useCart } from "@/context/CartContext";
 import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
-import { TrustBadges } from "@/components/TrustBadges";
 import { DealsSection } from "@/components/DealsSection";
-import { CategoryGrid } from "@/components/CategoryGrid";
 import { ProductSection } from "@/components/ProductSection";
-import { CustomerReviews } from "@/components/CustomerReviews";
-import { NewsletterSection } from "@/components/NewsletterSection";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
 import { CheckoutModal } from "@/components/CheckoutModal";
@@ -27,9 +23,6 @@ function NitroGamesApp() {
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
   const [showcase, setShowcase] = useState<ShowcaseConfig>(DEFAULT_SHOWCASE);
 
-  // Wrapped setters: update UI state AND mirror to localStorage as a fast-paint
-  // cache for next load. The database (via the API) is always the source of
-  // truth — the cache is only ever used for the first render, then overwritten.
   const applyProducts = (list: Product[]) => {
     setProducts(list);
     try {
@@ -48,7 +41,6 @@ function NitroGamesApp() {
     }
   };
 
-  // Showcase config: paint instantly from cache, then reconcile with the DB
   useEffect(() => {
     try {
       const raw = localStorage.getItem("nitro_showcase_v2");
@@ -76,8 +68,6 @@ function NitroGamesApp() {
     loadShowcaseFromApi();
   }, []);
 
-  // Products: paint instantly from cache, then always reconcile with the DB
-  // (this is what makes admin edits show up on every device/browser)
   useEffect(() => {
     try {
       const cached = localStorage.getItem("nitro_products_v2");
@@ -105,7 +95,6 @@ function NitroGamesApp() {
     loadFromApi();
   }, []);
 
-  // Secret shortcut: Ctrl + Shift + A
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.shiftKey && (e.key === "A" || e.key === "a")) {
@@ -149,20 +138,15 @@ function NitroGamesApp() {
           showcase={showcase}
           onCategorySelect={(cat) => setSelectedCategory(cat)}
         />
-        <TrustBadges />
         <DealsSection products={products} />
-        <CategoryGrid
-          selectedCategory={selectedCategory}
-          onSelectCategory={(cat) => setSelectedCategory(cat)}
-        />
         <ProductSection
           products={products}
           selectedCategory={selectedCategory}
           onSelectCategory={(cat) => setSelectedCategory(cat)}
           searchQuery={searchQuery}
         />
-        <CustomerReviews />
-        <NewsletterSection />
+        
+        {/* هنا يمكنك إضافة مكون التعليقات التفاعلي الجديد مستقبلاً */}
       </main>
 
       <Footer onOpenAdmin={() => setIsAdminOpen(true)} onSelectCategory={(cat) => setSelectedCategory(cat)} />
