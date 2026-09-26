@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { CartProvider, useCart } from "@/context/CartContext";
 import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
-import { DealsSection } from "@/components/DealsSection";
 import { ProductSection } from "@/components/ProductSection";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -138,7 +137,6 @@ function NitroGamesApp() {
           showcase={showcase}
           onCategorySelect={(cat) => setSelectedCategory(cat)}
         />
-        <DealsSection products={products} />
         <ProductSection
           products={products}
           selectedCategory={selectedCategory}
