@@ -1,238 +1,2734 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import Image from "next/image";
 import {
-  Star,
-  MessageSquarePlus,
-  ShieldCheck,
-  Loader2,
-} from "lucide-react";
-import { supabase } from "@/lib/supabase";
+  Product,
+  CategoryType,
+  CATEGORIES_META,
+  ShowcaseConfig,
+  DEFAULT_SHOWCASE,
+} from "@/lib/data";
 
-interface ReviewItem {
-  id: string | number;
-  author: string;
-  city: string;
-  rating: number;
-  comment: string;
-  verifiedPurchase: boolean;
-  itemBought?: string;
-  date: string;
+import {
+  X,
+  Lock,
+  Unlock,
+  Plus,
+  Edit,
+  Trash2,
+  Save,
+  AlertCircle,
+  Search,
+  LogOut,
+  ShieldAlert,
+  Monitor,
+  ArrowUp,
+  ArrowDown,
+  Play,
+  Pause,
+  Music,
+  Bell,
+  MessageSquare,
+} from "lucide-react";
+
+import AdminReviews from "@/components/AdminReviews";
+
+interface AdminDashboardModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  products: Product[];
+  onProductsUpdate: (updatedList: Product[]) => void;
+  showToast: (msg: string) => void;
+  showcase?: ShowcaseConfig;
+  onShowcaseUpdate?: (cfg: ShowcaseConfig) => void;
 }
 
-export const CustomerReviews: React.FC = () => {
-  const [reviewsList, setReviewsList] = useState<ReviewItem[]>([]);
-  const [loading, setLoading] = useState(true);
+const PRESET_IMAGES = [
+  { label: "كيبورد RGB", url: "/images/keyboard-custom-rgb.jpg" },
+  { label: "ماوس 8K", url: "/images/mouse-pro-8k.jpg" },
+  { label: "ماوس باد ياباني", url: "/images/mousepad-pro.jpg" },
+  { label: "ماوس باد سرعة", url: "/images/mousepad-speed.jpg" },
+  { label: "مايكروفون استوديو", url: "/images/microphone-pro.jpg" },
+  { label: "سماعة محيطية", url: "/images/headset-pro.jpg" },
+];
 
-  const [author, setAuthor] = useState("");
-  const [city, setCity] = useState("");
-  const [rating, setRating] = useState(5);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [comment, setComment] = useState("");
-  const [itemBought, setItemBought] = useState("");
+type AdminTab =
+  | "products"
+  | "showcase"
+  | "audio"
+  | "notifications"
+  | "reviews";
 
-  const [submitting, setSubmitting] = useState(false);
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
+  isOpen,
+  onClose,
+  products,
+  onProductsUpdate,
+  showToast,
+  showcase,
+  onShowcaseUpdate,
+}) => {
+  // =========================================================
+  // TABS
+  // =========================================================
 
-  const loadReviews = async () => {
-    try {
-      const response = await fetch("/api/reviews", {
-        method: "GET",
-        cache: "no-store",
-      });
+  const [tab, setTab] = useState<AdminTab>("products");
 
-      const data = await response.json();
+  // =========================================================
+  // SHOWCASE
+  // =========================================================
 
-      if (!response.ok || !data.success) {
-        throw new Error(
-          data.message || "تعذر تحميل التقييمات"
-        );
-      }
+  const [sc, setSc] = useState<ShowcaseConfig>(
+    showcase ?? DEFAULT_SHOWCASE
+  );
 
-      setReviewsList(data.reviews || []);
-    } catch (error) {
-      console.warn("Failed to load reviews:", error);
-    } finally {
-      setLoading(false);
+  const [pickerCat, setPickerCat] = useState<string>("all");
+  const [pickerQuery, setPickerQuery] = useState("");
+
+  React.useEffect(() => {
+    if (isOpen && showcase) {
+      setSc(showcase);
     }
-  };
+  }, [isOpen, showcase]);
 
-  useEffect(() => {
-    loadReviews();
+  const commitShowcase = async (next: ShowcaseConfig) => {
+    setSc(next);
 
-    // تحديث التعليقات مباشرة عند إضافة أو حذف تعليق
-    const channel = supabase
-      .channel("reviews-live-updates")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "reviews",
-        },
-        () => {
-          loadReviews();
-        }
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, []);
-
-  const handleSubmit = async (
-    e: React.FormEvent
-  ) => {
-    e.preventDefault();
-
-    setErrorMsg("");
-    setSuccessMsg("");
-
-    if (
-      !author.trim() ||
-      !city.trim() ||
-      !comment.trim()
-    ) {
-      setErrorMsg(
-        "يرجى تعبئة الاسم والمدينة والتعليق"
-      );
-      return;
-    }
-
-    setSubmitting(true);
+    onShowcaseUpdate?.(next);
 
     try {
-      const response = await fetch("/api/reviews", {
-        method: "POST",
+      const res = await fetch("/api/settings", {
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          author: author.trim(),
-          city: city.trim(),
-          rating,
-          comment: comment.trim(),
-          itemBought:
-            itemBought.trim() ||
-            "منتج من المتجر",
+          key: "showcase",
+          value: next,
         }),
       });
 
-      const data = await response.json();
+      const data = await res.json();
 
-      if (!response.ok || !data.success) {
-        throw new Error(
-          data.message ||
-            "تعذر إرسال التقييم"
-        );
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "save failed");
       }
-
-      setSuccessMsg(
-        "شكراً لتقييمك! تم نشر رأيك للجميع 🎉"
+    } catch (err) {
+      console.warn("Showcase save error:", err);
+      showToast(
+        "تعذر حفظ إعدادات المربع المميز في قاعدة البيانات ⚠️"
       );
-
-      setAuthor("");
-      setCity("");
-      setComment("");
-      setItemBought("");
-      setRating(5);
-      setHoverRating(0);
-
-      // تحديث فوري لصاحب التعليق
-      loadReviews();
-    } catch (error) {
-      console.warn(
-        "Review submit error:",
-        error
-      );
-
-      setErrorMsg(
-        "تعذر إرسال التقييم الآن — حاول مرة أخرى"
-      );
-    } finally {
-      setSubmitting(false);
     }
   };
 
+  const togglePick = (id: number) => {
+    const has = sc.productIds.includes(id);
+
+    const ids = has
+      ? sc.productIds.filter((x) => x !== id)
+      : [...sc.productIds, id];
+
+    commitShowcase({
+      ...sc,
+      productIds: ids,
+    });
+  };
+
+  const moveItem = (index: number, dir: -1 | 1) => {
+    const arr = [...sc.productIds];
+    const target = index + dir;
+
+    if (target < 0 || target >= arr.length) return;
+
+    [arr[index], arr[target]] = [arr[target], arr[index]];
+
+    commitShowcase({
+      ...sc,
+      productIds: arr,
+    });
+  };
+
+  const removeFromShowcase = (id: number) => {
+    commitShowcase({
+      ...sc,
+      productIds: sc.productIds.filter((x) => x !== id),
+    });
+  };
+
+  const pickerList = products
+    .filter((p) =>
+      pickerCat === "all" ? true : p.category === pickerCat
+    )
+    .filter((p) =>
+      p.title.toLowerCase().includes(pickerQuery.toLowerCase())
+    );
+
+  const showcaseProducts = sc.productIds
+    .map((id) => products.find((p) => p.id === id))
+    .filter((p): p is Product => Boolean(p));
+
+  // =========================================================
+  // AUTHENTICATION
+  // =========================================================
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [passwordInput, setPasswordInput] = useState("");
+  const [authError, setAuthError] = useState("");
+
+  // =========================================================
+  // PRODUCT FORM
+  // =========================================================
+
+  const [editingProduct, setEditingProduct] =
+    useState<Product | null>(null);
+
+  const [title, setTitle] = useState("");
+  const [category, setCategory] =
+    useState<CategoryType>("keyboards");
+  const [price, setPrice] = useState<string>("");
+  const [originalPrice, setOriginalPrice] =
+    useState<string>("");
+  const [description, setDescription] = useState("");
+  const [brand, setBrand] = useState("");
+  const [badge, setBadge] = useState("");
+
+  const [imageUrl, setImageUrl] = useState(
+    "/images/keyboard-custom-rgb.jpg"
+  );
+
+  const [isUploadingImage, setIsUploadingImage] =
+    useState(false);
+
+  const [uploadError, setUploadError] =
+    useState<string | null>(null);
+
+  const [gallery, setGallery] = useState<
+    { type: "image" | "video"; url: string }[]
+  >([]);
+
+  const [isUploadingGalleryItem, setIsUploadingGalleryItem] =
+    useState(false);
+
+  const [galleryUploadError, setGalleryUploadError] =
+    useState<string | null>(null);
+
+  // =========================================================
+  // GALLERY UPLOAD
+  // =========================================================
+
+  const handleGalleryFileUpload = async (
+    file: File | undefined | null
+  ) => {
+    if (!file) return;
+
+    setGalleryUploadError(null);
+    setIsUploadingGalleryItem(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "upload failed");
+      }
+
+      const type: "image" | "video" =
+        file.type.startsWith("video/")
+          ? "video"
+          : "image";
+
+      setGallery((prev) => [
+        ...prev,
+        {
+          type,
+          url: data.url,
+        },
+      ]);
+    } catch (err) {
+      console.warn("Gallery upload error:", err);
+
+      setGalleryUploadError(
+        "تعذر رفع الملف — تأكد إنه صورة أو فيديو وحجمه أقل من 4MB"
+      );
+    } finally {
+      setIsUploadingGalleryItem(false);
+    }
+  };
+
+  const removeGalleryItem = (idx: number) => {
+    setGallery((prev) =>
+      prev.filter((_, i) => i !== idx)
+    );
+  };
+
+  // =========================================================
+  // SHOWCASE VIDEO
+  // =========================================================
+
+  const [isUploadingVideo, setIsUploadingVideo] =
+    useState(false);
+
+  const [videoUploadError, setVideoUploadError] =
+    useState<string | null>(null);
+
+  const [newVideoUrlInput, setNewVideoUrlInput] =
+    useState("");
+
+  // =========================================================
+  // SITE AUDIO
+  // =========================================================
+
+  const [siteAudioUrl, setSiteAudioUrl] =
+    useState<string>("");
+
+  const [isUploadingAudio, setIsUploadingAudio] =
+    useState(false);
+
+  const [audioUploadError, setAudioUploadError] =
+    useState<string | null>(null);
+
+  const [audioLoaded, setAudioLoaded] =
+    useState(false);
+
+  React.useEffect(() => {
+    if (tab !== "audio" || audioLoaded) return;
+
+    (async () => {
+      try {
+        const res = await fetch(
+          "/api/settings?key=site_audio",
+          {
+            cache: "no-store",
+          }
+        );
+
+        const data = await res.json();
+
+        if (data.success && data.value?.url) {
+          setSiteAudioUrl(data.value.url);
+        }
+      } catch (err) {
+        console.warn(
+          "Failed to load site audio setting:",
+          err
+        );
+      } finally {
+        setAudioLoaded(true);
+      }
+    })();
+  }, [tab, audioLoaded]);
+
+  const saveSiteAudio = async (url: string) => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: "site_audio",
+          value: {
+            url: url || null,
+          },
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "save failed");
+      }
+
+      showToast(
+        url
+          ? "تم حفظ الموسيقى — بتشتغل عند كل الزوار 🎵"
+          : "تم إيقاف موسيقى الموقع"
+      );
+    } catch (err) {
+      console.warn(
+        "Failed to save site audio setting:",
+        err
+      );
+
+      showToast(
+        "تعذر حفظ إعدادات الموسيقى ⚠️"
+      );
+    }
+  };
+
+  const handleAudioFileUpload = async (
+    file: File | undefined | null
+  ) => {
+    if (!file) return;
+
+    setAudioUploadError(null);
+    setIsUploadingAudio(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "upload failed");
+      }
+
+      setSiteAudioUrl(data.url);
+
+      await saveSiteAudio(data.url);
+    } catch (err) {
+      console.warn("Audio upload error:", err);
+
+      setAudioUploadError(
+        "تعذر رفع الملف — تأكد إنه صوت وحجمه أقل من 4MB"
+      );
+    } finally {
+      setIsUploadingAudio(false);
+    }
+  };
+
+  // =========================================================
+  // NOTIFICATIONS
+  // =========================================================
+
+  const DEFAULT_NOTIFICATIONS = [
+    "عتاد أصلي 100% من الوكلاء المعتمدين",
+    "ضمان حقيقي لمدة سنة على كل المنتجات ⭐",
+    "سويتشات Rapid Trigger باستجابة 0.1 ملم ⚡",
+    "خصم 10% فوري بكود: NITRO10",
+    "ماوسات لاسلكية بتردد 8000Hz 🖱️",
+    "دفع عند الاستلام — افحص قبل ما تدفع 💵",
+    "صوت محيطي 360° مع عزل ANC 🎧",
+    "توصيل سريع لكافة مناطق فلسطين والداخل المحتل 🚚",
+  ];
+
+  const [notifications, setNotifications] =
+    useState<string[]>([]);
+
+  const [notificationsLoaded, setNotificationsLoaded] =
+    useState(false);
+
+  const [newNotificationInput, setNewNotificationInput] =
+    useState("");
+
+  React.useEffect(() => {
+    if (
+      tab !== "notifications" ||
+      notificationsLoaded
+    ) {
+      return;
+    }
+
+    (async () => {
+      try {
+        const res = await fetch(
+          "/api/settings?key=notifications",
+          {
+            cache: "no-store",
+          }
+        );
+
+        const data = await res.json();
+
+        if (
+          data.success &&
+          Array.isArray(data.value?.messages) &&
+          data.value.messages.length > 0
+        ) {
+          setNotifications(data.value.messages);
+        } else {
+          setNotifications(DEFAULT_NOTIFICATIONS);
+        }
+      } catch (err) {
+        console.warn(
+          "Failed to load notifications setting:",
+          err
+        );
+
+        setNotifications(DEFAULT_NOTIFICATIONS);
+      } finally {
+        setNotificationsLoaded(true);
+      }
+    })();
+  }, [tab, notificationsLoaded]);
+
+  const saveNotifications = async (
+    messages: string[]
+  ) => {
+    try {
+      const res = await fetch("/api/settings", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          key: "notifications",
+          value: {
+            messages,
+          },
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "save failed");
+      }
+
+      showToast(
+        "تم حفظ الإشعارات — بتبين عند كل الزوار 🔔"
+      );
+    } catch (err) {
+      console.warn(
+        "Failed to save notifications setting:",
+        err
+      );
+
+      showToast(
+        "تعذر حفظ الإشعارات ⚠️"
+      );
+    }
+  };
+
+  const addNotification = () => {
+    const text = newNotificationInput.trim();
+
+    if (!text) return;
+
+    const next = [
+      ...notifications,
+      text,
+    ];
+
+    setNotifications(next);
+    saveNotifications(next);
+    setNewNotificationInput("");
+  };
+
+  const removeNotification = (idx: number) => {
+    const next = notifications.filter(
+      (_, i) => i !== idx
+    );
+
+    setNotifications(next);
+    saveNotifications(next);
+  };
+
+  const updateNotification = (
+    idx: number,
+    text: string
+  ) => {
+    setNotifications((prev) =>
+      prev.map((n, i) =>
+        i === idx ? text : n
+      )
+    );
+  };
+
+  const commitNotificationEdit = () => {
+    saveNotifications(notifications);
+  };
+
+  // =========================================================
+  // VIDEO UPLOAD
+  // =========================================================
+
+  const handleVideoFileUpload = async (
+    file: File | undefined | null
+  ) => {
+    if (!file) return;
+
+    setVideoUploadError(null);
+    setIsUploadingVideo(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "upload failed");
+      }
+
+      const nextUrls = [
+        ...(sc.videoUrls ?? []),
+        data.url,
+      ];
+
+      commitShowcase({
+        ...sc,
+        videoUrls: nextUrls,
+      });
+    } catch (err) {
+      console.warn("Video upload error:", err);
+
+      setVideoUploadError(
+        "تعذر رفع الفيديو — تأكد إنه أقل من 4MB"
+      );
+    } finally {
+      setIsUploadingVideo(false);
+    }
+  };
+
+  const removeShowcaseVideo = (idx: number) => {
+    const nextUrls = (
+      sc.videoUrls ?? []
+    ).filter((_, i) => i !== idx);
+
+    commitShowcase({
+      ...sc,
+      videoUrls: nextUrls,
+    });
+  };
+
+  const addShowcaseVideoUrl = (url: string) => {
+    const trimmed = url.trim();
+
+    if (!trimmed) return;
+
+    const nextUrls = [
+      ...(sc.videoUrls ?? []),
+      trimmed,
+    ];
+
+    commitShowcase({
+      ...sc,
+      videoUrls: nextUrls,
+    });
+  };
+
+  // =========================================================
+  // PRODUCT IMAGE UPLOAD
+  // =========================================================
+
+  const handleFileUpload = async (
+    file: File | undefined | null
+  ) => {
+    if (!file) return;
+
+    setUploadError(null);
+    setIsUploadingImage(true);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "upload failed");
+      }
+
+      setImageUrl(data.url);
+    } catch (err) {
+      console.warn(
+        "Image upload error:",
+        err
+      );
+
+      setUploadError(
+        "تعذر رفع الملف — تأكد إنه صورة أو فيديو وحجمه أقل من 4MB"
+      );
+    } finally {
+      setIsUploadingImage(false);
+    }
+  };
+
+  // =========================================================
+  // ADMIN SEARCH
+  // =========================================================
+
+  const [filterCategory, setFilterCategory] =
+    useState<string>("all");
+
+  const [searchTerm, setSearchTerm] =
+    useState<string>("");
+
+  // =========================================================
+  // LOGIN
+  // =========================================================
+
+  if (!isOpen) return null;
+
+  const handleLogin = (
+    e: React.FormEvent
+  ) => {
+    e.preventDefault();
+
+    const entered =
+      passwordInput.trim();
+
+    // Keep your existing admin password here.
+    if (entered === "Yamen2009Yamen") {
+      setIsAuthenticated(true);
+      setAuthError("");
+      setPasswordInput("");
+
+      showToast(
+        "تم التحقق بنجاح.. أهلاً بك في لوحة تحكم المشرف ⚡"
+      );
+    } else {
+      setAuthError(
+        "كلمة المرور غير صحيحة! يرجى إعادة المحاولة."
+      );
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setEditingProduct(null);
+    setTab("products");
+    onClose();
+  };
+
+  // =========================================================
+  // EDIT PRODUCT
+  // =========================================================
+
+  const startEditProduct = (
+    prod: Product
+  ) => {
+    setEditingProduct(prod);
+    setTitle(prod.title);
+    setCategory(prod.category);
+    setPrice(String(prod.price));
+
+    setOriginalPrice(
+      prod.originalPrice
+        ? String(prod.originalPrice)
+        : ""
+    );
+
+    setDescription(prod.description);
+    setBrand(prod.brand);
+    setBadge(prod.badge || "");
+    setImageUrl(prod.image);
+    setGallery(prod.gallery ?? []);
+
+    const formElem =
+      document.getElementById(
+        "admin-product-form"
+      );
+
+    if (formElem) {
+      formElem.scrollIntoView({
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const cancelEdit = () => {
+    setEditingProduct(null);
+    setTitle("");
+    setPrice("");
+    setOriginalPrice("");
+    setDescription("");
+    setBrand("");
+    setBadge("");
+    setImageUrl(
+      "/images/keyboard-custom-rgb.jpg"
+    );
+    setGallery([]);
+  };
+
+  // =========================================================
+  // SAVE PRODUCT
+  // =========================================================
+
+  const handleSaveProduct = async (
+    e: React.FormEvent
+  ) => {
+    e.preventDefault();
+
+    if (!title.trim() || !price) {
+      alert(
+        "يرجى إدخال اسم المنتج والسعر بالشيكل ₪"
+      );
+      return;
+    }
+
+    const numPrice = Number(price);
+
+    const numOrigPrice =
+      originalPrice
+        ? Number(originalPrice)
+        : undefined;
+
+    const discount =
+      numOrigPrice &&
+      numOrigPrice > numPrice
+        ? Math.round(
+            ((numOrigPrice - numPrice) /
+              numOrigPrice) *
+              100
+          )
+        : 0;
+
+    // EDIT
+    if (editingProduct) {
+      try {
+        const res = await fetch(
+          "/api/products",
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            body: JSON.stringify({
+              id: editingProduct.id,
+              title: title.trim(),
+              category,
+              price: numPrice,
+              originalPrice:
+                numOrigPrice,
+              description:
+                description.trim(),
+              brand:
+                brand.trim() ||
+                "Nitro Games",
+              badge:
+                badge.trim() ||
+                null,
+              image:
+                imageUrl.trim(),
+              gallery,
+            }),
+          }
+        );
+
+        const data =
+          await res.json();
+
+        if (!res.ok || !data.success) {
+          throw new Error(
+            data.message ||
+              "update failed"
+          );
+        }
+
+        const updatedProducts =
+          products.map((p) =>
+            p.id === editingProduct.id
+              ? {
+                  ...p,
+                  title:
+                    title.trim(),
+                  category,
+                  price:
+                    numPrice,
+                  originalPrice:
+                    numOrigPrice,
+                  discountPercent:
+                    discount,
+                  description:
+                    description.trim(),
+                  brand:
+                    brand.trim() ||
+                    "Nitro Games",
+                  badge:
+                    badge.trim() ||
+                    undefined,
+                  image:
+                    imageUrl.trim() ||
+                    "/images/keyboard-custom-rgb.jpg",
+                  gallery,
+                }
+              : p
+          );
+
+        onProductsUpdate(
+          updatedProducts
+        );
+
+        showToast(
+          `تم تحديث بيانات "${title.slice(
+            0,
+            24
+          )}..." على كل الأجهزة! 💾`
+        );
+      } catch (err) {
+        console.warn(
+          "Product update error:",
+          err
+        );
+
+        showToast(
+          "تعذر حفظ التعديل في قاعدة البيانات — حاول مرة أخرى ⚠️"
+        );
+
+        return;
+      }
+    }
+
+    // ADD
+    else {
+      try {
+        const res = await fetch(
+          "/api/products",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+            body: JSON.stringify({
+              title: title.trim(),
+              category,
+              price: numPrice,
+              originalPrice:
+                numOrigPrice,
+              description:
+                description.trim(),
+              brand:
+                brand.trim() ||
+                "Nitro Games",
+              badge:
+                badge.trim() ||
+                "جديد بالمتجر ⭐",
+              image:
+                imageUrl.trim(),
+              gallery,
+            }),
+          }
+        );
+
+        const data =
+          await res.json();
+
+        if (
+          !res.ok ||
+          !data.success ||
+          !data.product
+        ) {
+          throw new Error(
+            data.message ||
+              "insert failed"
+          );
+        }
+
+        onProductsUpdate([
+          data.product as Product,
+          ...products,
+        ]);
+
+        showToast(
+          `تمت إضافة "${title.slice(
+            0,
+            24
+          )}..." إلى المتجر على كل الأجهزة! 🚀`
+        );
+      } catch (err) {
+        console.warn(
+          "Product insert error:",
+          err
+        );
+
+        showToast(
+          "تعذر إضافة المنتج في قاعدة البيانات — حاول مرة أخرى ⚠️"
+        );
+
+        return;
+      }
+    }
+
+    cancelEdit();
+  };
+
+  // =========================================================
+  // DELETE PRODUCT
+  // =========================================================
+
+  const handleDeleteProduct = async (
+    id: number,
+    prodTitle: string
+  ) => {
+    if (
+      !confirm(
+        `هل أنت متأكد من حذف المنتج: "${prodTitle}" من المتجر نهائياً؟`
+      )
+    ) {
+      return;
+    }
+
+    try {
+      const res = await fetch(
+        `/api/products?id=${id}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      const data =
+        await res.json();
+
+      if (!res.ok || !data.success) {
+        throw new Error(
+          data.message ||
+            "delete failed"
+        );
+      }
+
+      onProductsUpdate(
+        products.filter(
+          (p) => p.id !== id
+        )
+      );
+
+      showToast(
+        "تم حذف المنتج من المتجر على كل الأجهزة 🗑️"
+      );
+    } catch (err) {
+      console.warn(
+        "Product delete error:",
+        err
+      );
+
+      showToast(
+        "تعذر حذف المنتج من قاعدة البيانات — حاول مرة أخرى ⚠️"
+      );
+    }
+  };
+
+  // =========================================================
+  // FILTER PRODUCTS
+  // =========================================================
+
+  const filteredList =
+    products
+      .filter((p) =>
+        filterCategory === "all"
+          ? true
+          : p.category ===
+            filterCategory
+      )
+      .filter(
+        (p) =>
+          p.title
+            .toLowerCase()
+            .includes(
+              searchTerm.toLowerCase()
+            ) ||
+          p.brand
+            .toLowerCase()
+            .includes(
+              searchTerm.toLowerCase()
+            )
+      );
+
+  // =========================================================
+  // UI
+  // =========================================================
+
   return (
-    <section
-      id="reviews"
-      className="relative py-16 sm:py-20 border-t border-[#16223a]"
-    >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-10">
-          <div className="text-[11px] font-tech text-gray-400 uppercase tracking-[0.2em] mb-3 flex items-center justify-center gap-3">
-            <span className="w-10 h-px bg-gradient-to-l from-[#00a3ff]/50 to-transparent" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-5xl rounded-2xl bg-[#0b1120] border border-[#00a3ff]/30 shadow-[0_0_40px_rgba(0,163,255,0.2)] overflow-hidden my-8 text-right">
 
-            آراء عملائنا
+        {/* =====================================================
+            HEADER
+        ===================================================== */}
 
-            <span className="w-10 h-px bg-gradient-to-r from-[#00e5ff]/50 to-transparent" />
+        <div className="p-6 pb-4 border-b border-[#1c2942] bg-[#120e09] flex items-center justify-between">
+
+          <div className="flex items-center gap-3">
+
+            <button
+              onClick={onClose}
+              className="p-2 rounded-xl bg-[#1e170e] text-gray-400 hover:text-white hover:bg-[#253048] transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {isAuthenticated && (
+              <button
+                onClick={handleLogout}
+                className="px-3.5 py-1.5 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-bold flex items-center gap-1.5 hover:bg-rose-500/25 transition-all"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>تسجيل الخروج</span>
+              </button>
+            )}
+
           </div>
 
-          <h2 className="text-2xl sm:text-3xl font-black text-white font-['Cairo']">
-            شو قالوا عنا؟
-          </h2>
+          <div className="flex items-center gap-3">
 
-          <p className="text-xs sm:text-sm text-gray-400 mt-2">
-            تقييمات حقيقية من عملاء NITRO GAMES بفلسطين
-          </p>
+            <div className="text-right">
+
+              <div className="flex items-center gap-2">
+
+                <span className="text-base font-black text-white font-['Cairo']">
+                  لوحة تحكم إدارة المتجر السرية
+                </span>
+
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#00a3ff]/15 text-[#00a3ff] border border-[#00a3ff]/30 font-mono">
+                  ADMIN ONLY
+                </span>
+
+              </div>
+
+              <div className="text-xs text-gray-400">
+                إدارة كاملة لمنتجات NITRO GAMES
+                والتعليقات والإعدادات
+              </div>
+
+            </div>
+
+            <div className="w-11 h-11 rounded-xl bg-[#1e170e] border border-[#00a3ff]/40 flex items-center justify-center text-[#00a3ff] shadow-[0_0_15px_rgba(0,163,255,0.3)]">
+              {isAuthenticated ? (
+                <Unlock className="w-5 h-5" />
+              ) : (
+                <Lock className="w-5 h-5" />
+              )}
+            </div>
+
+          </div>
+
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
-          {/* Reviews */}
-          <div className="lg:col-span-3 space-y-4 max-h-[560px] overflow-y-auto pr-1">
-            {loading ? (
-              <div className="flex items-center justify-center py-16 text-gray-400 text-sm gap-2">
-                <Loader2 className="w-4 h-4 animate-spin" />
-                جاري تحميل التقييمات...
-              </div>
-            ) : reviewsList.length === 0 ? (
-              <p className="text-center text-gray-400 text-sm py-16">
-                لا توجد تقييمات بعد — كن أول من يقيّم! ⭐
+        {/* =====================================================
+            TABS
+        ===================================================== */}
+
+        {isAuthenticated && (
+          <div className="px-6 pt-5 flex items-center gap-2 border-b border-[#1c2942] overflow-x-auto">
+
+            <button
+              onClick={() =>
+                setTab("products")
+              }
+              className={`px-4 py-2.5 text-xs font-bold rounded-t-xl cursor-pointer transition-all flex items-center gap-2 whitespace-nowrap ${
+                tab === "products"
+                  ? "bg-[#0b1120] text-[#00a3ff] border-x border-t border-[#1c2942]"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              <Plus className="w-3.5 h-3.5" />
+              <span>إدارة المنتجات</span>
+            </button>
+
+            <button
+              onClick={() =>
+                setTab("showcase")
+              }
+              className={`px-4 py-2.5 text-xs font-bold rounded-t-xl cursor-pointer transition-all flex items-center gap-2 whitespace-nowrap ${
+                tab === "showcase"
+                  ? "bg-[#0b1120] text-[#00a3ff] border-x border-t border-[#1c2942]"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              <Monitor className="w-3.5 h-3.5" />
+              <span>
+                المربع المميز
+              </span>
+            </button>
+
+            <button
+              onClick={() =>
+                setTab("audio")
+              }
+              className={`px-4 py-2.5 text-xs font-bold rounded-t-xl cursor-pointer transition-all flex items-center gap-2 whitespace-nowrap ${
+                tab === "audio"
+                  ? "bg-[#0b1120] text-[#00a3ff] border-x border-t border-[#1c2942]"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              <Music className="w-3.5 h-3.5" />
+              <span>
+                موسيقى الموقع
+              </span>
+            </button>
+
+            <button
+              onClick={() =>
+                setTab("notifications")
+              }
+              className={`px-4 py-2.5 text-xs font-bold rounded-t-xl cursor-pointer transition-all flex items-center gap-2 whitespace-nowrap ${
+                tab === "notifications"
+                  ? "bg-[#0b1120] text-[#00a3ff] border-x border-t border-[#1c2942]"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              <Bell className="w-3.5 h-3.5" />
+              <span>
+                الإشعارات
+              </span>
+            </button>
+
+            {/* NEW: REVIEWS */}
+            <button
+              onClick={() =>
+                setTab("reviews")
+              }
+              className={`px-4 py-2.5 text-xs font-bold rounded-t-xl cursor-pointer transition-all flex items-center gap-2 whitespace-nowrap ${
+                tab === "reviews"
+                  ? "bg-[#0b1120] text-[#00a3ff] border-x border-t border-[#1c2942]"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+              <span>
+                التعليقات
+              </span>
+            </button>
+
+          </div>
+        )}
+
+        {/* =====================================================
+            BODY
+        ===================================================== */}
+
+        {!isAuthenticated ? (
+
+          /* ================= LOGIN ================= */
+
+          <div className="p-8 sm:p-12 max-w-md mx-auto text-center space-y-6">
+
+            <div className="w-16 h-16 rounded-2xl bg-[#1e170e] border border-[#00a3ff]/30 flex items-center justify-center mx-auto text-[#00a3ff] shadow-[0_0_20px_rgba(0,163,255,0.2)]">
+              <Lock className="w-8 h-8" />
+            </div>
+
+            <div className="space-y-1.5">
+
+              <h3 className="text-xl font-black text-white font-['Cairo']">
+                منطقة المشرف المحمية
+              </h3>
+
+              <p className="text-xs text-gray-400">
+                أدخل كلمة المرور السرية للمشرف للوصول إلى لوحة التحكم.
               </p>
-            ) : (
-              reviewsList.map((r) => (
-                <div
-                  key={r.id}
-                  className="panel rounded-2xl p-5 text-right"
+
+            </div>
+
+            <form
+              onSubmit={handleLogin}
+              className="space-y-4 text-right"
+            >
+
+              <div>
+
+                <label className="text-xs font-bold text-gray-300 block mb-1.5">
+                  كلمة المرور السرية:
+                </label>
+
+                <input
+                  type="password"
+                  required
+                  placeholder="أدخل كلمة المرور..."
+                  value={passwordInput}
+                  onChange={(e) => {
+                    setPasswordInput(
+                      e.target.value
+                    );
+                    setAuthError("");
+                  }}
+                  className="w-full bg-[#152034] border border-[#27405f] text-sm text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#00a3ff] text-center tracking-widest font-mono"
+                  autoFocus
+                />
+
+              </div>
+
+              {authError && (
+                <div className="flex items-center gap-1.5 text-xs text-rose-400 justify-center">
+                  <AlertCircle className="w-4 h-4" />
+                  <span>
+                    {authError}
+                  </span>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full btn-cyber-cyan text-black font-black text-sm py-3.5 rounded-xl cursor-pointer"
+              >
+                دخول لوحة التحكم 🚀
+              </button>
+
+              <div className="flex items-center justify-center gap-1.5 text-[11px] text-gray-500 font-mono pt-1">
+                <ShieldAlert className="w-3.5 h-3.5 text-[#00a3ff]" />
+                <span>
+                  الوصول مخصص للمشرف فقط
+                </span>
+              </div>
+
+            </form>
+
+          </div>
+
+        ) : tab === "reviews" ? (
+
+          /* =================================================
+             REVIEWS / COMMENTS
+          ================================================= */
+
+          <div className="p-6 max-h-[75vh] overflow-y-auto">
+
+            <AdminReviews
+              showToast={showToast}
+            />
+
+          </div>
+
+        ) : tab === "showcase" ? (
+
+          /* =================================================
+             SHOWCASE
+          ================================================= */
+
+          <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+
+            <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-5">
+
+              <div className="flex items-center justify-between border-b border-[#1c2942] pb-3">
+
+                <span className="text-[11px] text-gray-400 font-mono">
+                  {showcaseProducts.length} منتج في المربع المميز
+                </span>
+
+                <h4 className="text-sm font-black text-white flex items-center gap-1.5 font-['Cairo']">
+                  <Monitor className="w-4 h-4 text-[#00a3ff]" />
+                  إعدادات المربع المميز
+                </h4>
+
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+
+                <label className="flex items-center justify-between p-3.5 rounded-xl bg-[#101a2e] border border-[#1c2942] cursor-pointer hover:border-[#00a3ff]/60 transition-colors">
+
+                  <span className="text-xs font-bold text-gray-200">
+                    إظهار المربع في الشاشة الرئيسية
+                  </span>
+
+                  <input
+                    type="checkbox"
+                    checked={sc.enabled}
+                    onChange={(e) =>
+                      commitShowcase({
+                        ...sc,
+                        enabled:
+                          e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 accent-[#00a3ff] cursor-pointer"
+                  />
+
+                </label>
+
+                <label className="flex items-center justify-between p-3.5 rounded-xl bg-[#101a2e] border border-[#1c2942] cursor-pointer hover:border-[#00a3ff]/60 transition-colors">
+
+                  <span className="text-xs font-bold text-gray-200 flex items-center gap-1.5">
+                    {sc.autoPlay ? (
+                      <Play className="w-3.5 h-3.5 text-[#00a3ff]" />
+                    ) : (
+                      <Pause className="w-3.5 h-3.5 text-gray-400" />
+                    )}
+                    تدوير تلقائي للصور
+                  </span>
+
+                  <input
+                    type="checkbox"
+                    checked={sc.autoPlay}
+                    onChange={(e) =>
+                      commitShowcase({
+                        ...sc,
+                        autoPlay:
+                          e.target.checked,
+                      })
+                    }
+                    className="w-4 h-4 accent-[#00a3ff] cursor-pointer"
+                  />
+
+                </label>
+
+              </div>
+
+              <div>
+
+                <div className="flex items-center justify-between mb-2">
+
+                  <label className="text-xs font-bold text-gray-300">
+                    سرعة تبديل الصور
+                  </label>
+
+                  <span className="text-xs font-mono font-bold text-[#00a3ff]">
+                    {(
+                      sc.intervalMs /
+                      1000
+                    ).toFixed(1)}{" "}
+                    ثانية
+                  </span>
+
+                </div>
+
+                <input
+                  type="range"
+                  min={1500}
+                  max={9000}
+                  step={500}
+                  value={sc.intervalMs}
+                  onChange={(e) =>
+                    commitShowcase({
+                      ...sc,
+                      intervalMs:
+                        Number(
+                          e.target.value
+                        ),
+                    })
+                  }
+                  className="w-full accent-[#00a3ff] cursor-pointer"
+                />
+
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+
+                <div>
+                  <label className="text-xs font-bold text-gray-300 block mb-1">
+                    نص الشارة
+                  </label>
+
+                  <input
+                    type="text"
+                    value={sc.badgeText}
+                    onChange={(e) =>
+                      setSc({
+                        ...sc,
+                        badgeText:
+                          e.target.value,
+                      })
+                    }
+                    onBlur={(e) =>
+                      commitShowcase({
+                        ...sc,
+                        badgeText:
+                          e.target.value,
+                      })
+                    }
+                    className="w-full bg-[#152034] border border-[#1c2942] text-xs text-white rounded-xl px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-gray-300 block mb-1">
+                    نص الشريط السفلي
+                  </label>
+
+                  <input
+                    type="text"
+                    value={sc.headline}
+                    onChange={(e) =>
+                      setSc({
+                        ...sc,
+                        headline:
+                          e.target.value,
+                      })
+                    }
+                    onBlur={(e) =>
+                      commitShowcase({
+                        ...sc,
+                        headline:
+                          e.target.value,
+                      })
+                    }
+                    className="w-full bg-[#152034] border border-[#1c2942] text-xs text-white rounded-xl px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-bold text-gray-300 block mb-1">
+                    نص الزر الرئيسي
+                  </label>
+
+                  <input
+                    type="text"
+                    value={sc.ctaLabel}
+                    onChange={(e) =>
+                      setSc({
+                        ...sc,
+                        ctaLabel:
+                          e.target.value,
+                      })
+                    }
+                    onBlur={(e) =>
+                      commitShowcase({
+                        ...sc,
+                        ctaLabel:
+                          e.target.value,
+                      })
+                    }
+                    className="w-full bg-[#152034] border border-[#1c2942] text-xs text-white rounded-xl px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
+                  />
+                </div>
+
+              </div>
+
+              {/* SHOWCASE VIDEOS */}
+
+              <div>
+
+                <label className="text-xs font-bold text-gray-300 block mb-2">
+                  فيديوهات المربع المميز
+                </label>
+
+                <label
+                  className={`inline-block text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer ${
+                    isUploadingVideo
+                      ? "bg-[#152034] text-gray-500 border-[#27405f]"
+                      : "bg-[#00a3ff] text-black border-[#00a3ff]"
+                  }`}
                 >
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center gap-1">
-                      {Array.from({
-                        length: 5,
-                      }).map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-3.5 h-3.5 ${
-                            i < r.rating
-                              ? "fill-amber-400 text-amber-400"
-                              : "text-gray-600"
-                          }`}
-                        />
-                      ))}
-                    </div>
+                  {isUploadingVideo
+                    ? "جاري الرفع..."
+                    : "📁 أضف فيديو من جهازك"}
 
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-bold text-white">
-                        {r.author}
-                      </span>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    disabled={
+                      isUploadingVideo
+                    }
+                    onChange={(e) => {
+                      handleVideoFileUpload(
+                        e.target.files?.[0]
+                      );
+                      e.target.value = "";
+                    }}
+                    className="hidden"
+                  />
+                </label>
 
-                      <span className="text-[10px] text-gray-500">
-                        {r.city}
-                      </span>
-                    </div>
+                {videoUploadError && (
+                  <p className="text-[11px] text-red-400 mt-2">
+                    {videoUploadError}
+                  </p>
+                )}
+
+                {(sc.videoUrls ?? [])
+                  .length > 0 && (
+                  <div className="space-y-1.5 mt-3">
+
+                    {(sc.videoUrls ?? []).map(
+                      (url, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between gap-2 bg-[#152034] border border-[#1c2942] rounded-lg px-3 py-2"
+                        >
+                          <span
+                            className="text-[11px] text-gray-300 font-mono truncate"
+                            dir="ltr"
+                          >
+                            {idx + 1}. {url}
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              removeShowcaseVideo(
+                                idx
+                              )
+                            }
+                            className="text-[11px] text-red-400 hover:text-red-300 underline shrink-0"
+                          >
+                            حذف
+                          </button>
+                        </div>
+                      )
+                    )}
+
+                  </div>
+                )}
+
+                <div className="mt-3">
+
+                  <label className="text-[11px] text-gray-400 block mb-1">
+                    أو ألصق رابط فيديو مباشر:
+                  </label>
+
+                  <div className="flex items-center gap-2">
+
+                    <input
+                      type="text"
+                      value={
+                        newVideoUrlInput
+                      }
+                      onChange={(e) =>
+                        setNewVideoUrlInput(
+                          e.target.value
+                        )
+                      }
+                      placeholder="https://example.com/video.mp4"
+                      dir="ltr"
+                      className="flex-1 bg-[#152034] border border-[#1c2942] text-xs text-white font-mono rounded-xl px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
+                    />
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        addShowcaseVideoUrl(
+                          newVideoUrlInput
+                        );
+                        setNewVideoUrlInput("");
+                      }}
+                      className="text-[11px] font-bold px-3 py-2 rounded-lg bg-[#00a3ff] text-black"
+                    >
+                      إضافة
+                    </button>
+
                   </div>
 
-                  <p className="text-xs sm:text-sm text-gray-300 leading-relaxed mb-3">
-                    {r.comment}
-                  </p>
+                </div>
 
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-gray-500">
-                      {r.date}
+              </div>
+
+            </div>
+
+            {/* CURRENT SHOWCASE */}
+
+            <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-3">
+
+              <h4 className="text-sm font-black text-white font-['Cairo']">
+                ترتيب المنتجات في المربع
+              </h4>
+
+              {showcaseProducts.length === 0 ? (
+                <p className="text-xs text-gray-400 p-4 text-center bg-[#101a2e] rounded-xl border border-[#1c2942]">
+                  لم تختر أي منتج بعد — سيعود العرض التلقائي.
+                </p>
+              ) : (
+                <div className="space-y-2">
+
+                  {showcaseProducts.map(
+                    (p, i) => (
+                      <div
+                        key={p.id}
+                        className="flex items-center gap-3 p-2.5 rounded-xl bg-[#101a2e] border border-[#1c2942]"
+                      >
+
+                        <span className="w-7 h-7 rounded-lg bg-[#00a3ff]/15 text-[#00a3ff] border border-[#00a3ff]/30 flex items-center justify-center text-[11px] font-bold">
+                          {i + 1}
+                        </span>
+
+                        <div className="relative w-10 h-10 rounded-lg bg-black/50 border border-[#1c2942] overflow-hidden flex-shrink-0">
+
+                          <Image
+                            src={p.image}
+                            alt={p.title}
+                            fill
+                            className="object-contain p-1"
+                          />
+
+                        </div>
+
+                        <h5 className="flex-1 min-w-0 text-xs font-bold text-white truncate">
+                          {p.title}
+                        </h5>
+
+                        <span className="text-xs font-mono text-[#00a3ff] font-black">
+                          {p.price} ₪
+                        </span>
+
+                        <div className="flex items-center gap-1">
+
+                          <button
+                            onClick={() =>
+                              moveItem(i, -1)
+                            }
+                            disabled={i === 0}
+                            className="p-1.5 rounded-lg bg-[#152034] hover:bg-[#00a3ff] hover:text-black text-gray-300 disabled:opacity-25"
+                          >
+                            <ArrowUp className="w-3.5 h-3.5" />
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              moveItem(i, 1)
+                            }
+                            disabled={
+                              i ===
+                              showcaseProducts.length -
+                                1
+                            }
+                            className="p-1.5 rounded-lg bg-[#152034] hover:bg-[#00a3ff] hover:text-black text-gray-300 disabled:opacity-25"
+                          >
+                            <ArrowDown className="w-3.5 h-3.5" />
+                          </button>
+
+                          <button
+                            onClick={() =>
+                              removeFromShowcase(
+                                p.id
+                              )
+                            }
+                            className="p-1.5 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-rose-300"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+
+                        </div>
+
+                      </div>
+                    )
+                  )}
+
+                </div>
+              )}
+
+            </div>
+
+            {/* PRODUCT PICKER */}
+
+            <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-3">
+
+              <h4 className="text-sm font-black text-white font-['Cairo']">
+                اختر المنتجات للمربع
+              </h4>
+
+              <div className="flex flex-col sm:flex-row gap-2.5">
+
+                <div className="relative flex-1">
+
+                  <input
+                    type="text"
+                    placeholder="ابحث عن منتج..."
+                    value={pickerQuery}
+                    onChange={(e) =>
+                      setPickerQuery(
+                        e.target.value
+                      )
+                    }
+                    className="w-full bg-[#101a2e] border border-[#1c2942] text-xs text-white rounded-xl pl-8 pr-3 py-2"
+                  />
+
+                  <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+
+                </div>
+
+                <select
+                  value={pickerCat}
+                  onChange={(e) =>
+                    setPickerCat(
+                      e.target.value
+                    )
+                  }
+                  className="bg-[#101a2e] border border-[#1c2942] text-xs font-bold text-[#00a3ff] rounded-xl px-3 py-2"
+                >
+                  <option value="all">
+                    كل الأقسام
+                  </option>
+
+                  {CATEGORIES_META.map(
+                    (c) => (
+                      <option
+                        key={c.id}
+                        value={c.id}
+                      >
+                        {c.name}
+                      </option>
+                    )
+                  )}
+
+                </select>
+
+              </div>
+
+              <div className="max-h-72 overflow-y-auto rounded-xl border border-[#1c2942] divide-y divide-[#1c2942]">
+
+                {pickerList.length > 0 ? (
+                  pickerList.map((p) => {
+
+                    const picked =
+                      sc.productIds.includes(
+                        p.id
+                      );
+
+                    return (
+                      <button
+                        key={p.id}
+                        onClick={() =>
+                          togglePick(p.id)
+                        }
+                        className={`w-full p-3 flex items-center gap-3 text-right ${
+                          picked
+                            ? "bg-[#00a3ff]/10"
+                            : "bg-[#12100a]"
+                        }`}
+                      >
+
+                        <div className="relative w-10 h-10 rounded-lg bg-black/50 border border-[#1c2942] overflow-hidden flex-shrink-0">
+
+                          <Image
+                            src={p.image}
+                            alt={p.title}
+                            fill
+                            className="object-contain p-1"
+                          />
+
+                        </div>
+
+                        <div className="flex-1 min-w-0">
+
+                          <div className="text-[10px] font-bold text-[#00a3ff] uppercase">
+                            {p.brand}
+                          </div>
+
+                          <h5 className="text-xs font-bold text-white truncate">
+                            {p.title}
+                          </h5>
+
+                        </div>
+
+                        <span className="text-xs font-mono text-gray-300 font-bold">
+                          {p.price} ₪
+                        </span>
+
+                        <span
+                          className={`w-5 h-5 rounded-md border flex items-center justify-center text-[10px] font-black ${
+                            picked
+                              ? "bg-[#00a3ff] text-black border-[#00a3ff]"
+                              : "border-[#1c2942] text-transparent"
+                          }`}
+                        >
+                          ✓
+                        </span>
+
+                      </button>
+                    );
+                  })
+                ) : (
+                  <p className="p-6 text-center text-xs text-gray-400">
+                    لا توجد منتجات مطابقة
+                  </p>
+                )}
+
+              </div>
+
+            </div>
+
+            <button
+              onClick={() =>
+                commitShowcase({
+                  ...sc,
+                  productIds: [],
+                })
+              }
+              className="w-full py-3 rounded-xl bg-[#101a2e] hover:bg-[#1c2942] border border-[#1c2942] text-gray-300 text-xs font-bold"
+            >
+              تفريغ المربع المميز
+            </button>
+
+          </div>
+
+        ) : tab === "audio" ? (
+
+          /* =================================================
+             AUDIO
+          ================================================= */
+
+          <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+
+            <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-4">
+
+              <div className="flex items-center gap-2 border-b border-[#1c2942] pb-3">
+
+                <Music className="w-4 h-4 text-[#00a3ff]" />
+
+                <h3 className="text-sm font-bold text-white">
+                  موسيقى خلفية للموقع
+                </h3>
+
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-[#1e170e] border border-[#00a3ff]/20 text-[11px] text-gray-300 leading-relaxed">
+                ⚠️ المتصفحات تمنع تشغيل الصوت تلقائياً بدون تفاعل الزائر.
+              </div>
+
+              <div className="flex items-center gap-2">
+
+                <label
+                  className={`text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer ${
+                    isUploadingAudio
+                      ? "bg-[#152034] text-gray-500"
+                      : "bg-[#00a3ff] text-black"
+                  }`}
+                >
+                  {isUploadingAudio
+                    ? "جاري الرفع..."
+                    : "📁 اختر ملف صوت من جهازك"}
+
+                  <input
+                    type="file"
+                    accept="audio/*"
+                    disabled={
+                      isUploadingAudio
+                    }
+                    onChange={(e) =>
+                      handleAudioFileUpload(
+                        e.target.files?.[0]
+                      )
+                    }
+                    className="hidden"
+                  />
+                </label>
+
+                {siteAudioUrl && (
+                  <span className="text-[11px] text-green-400">
+                    ✓ فيه موسيقى مفعّلة
+                  </span>
+                )}
+
+                {siteAudioUrl && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSiteAudioUrl("");
+                      saveSiteAudio("");
+                    }}
+                    className="text-[11px] text-red-400 underline"
+                  >
+                    إيقاف الموسيقى
+                  </button>
+                )}
+
+              </div>
+
+              {audioUploadError && (
+                <p className="text-[11px] text-red-400">
+                  {audioUploadError}
+                </p>
+              )}
+
+              <div>
+
+                <label className="text-[11px] text-gray-400 block mb-1">
+                  أو الصق رابط ملف صوت مباشر:
+                </label>
+
+                <input
+                  type="text"
+                  value={siteAudioUrl}
+                  onChange={(e) =>
+                    setSiteAudioUrl(
+                      e.target.value
+                    )
+                  }
+                  onBlur={(e) =>
+                    saveSiteAudio(
+                      e.target.value.trim()
+                    )
+                  }
+                  placeholder="https://example.com/song.mp3"
+                  dir="ltr"
+                  className="w-full bg-[#152034] border border-[#1c2942] text-xs text-white font-mono rounded-xl px-3 py-2"
+                />
+
+              </div>
+
+              {siteAudioUrl && (
+                <audio
+                  src={siteAudioUrl}
+                  controls
+                  className="w-full"
+                />
+              )}
+
+            </div>
+
+          </div>
+
+        ) : tab === "notifications" ? (
+
+          /* =================================================
+             NOTIFICATIONS
+          ================================================= */
+
+          <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
+
+            <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-4">
+
+              <div className="flex items-center gap-2 border-b border-[#1c2942] pb-3">
+
+                <Bell className="w-4 h-4 text-[#00a3ff]" />
+
+                <h3 className="text-sm font-bold text-white">
+                  إشعارات "مزايا المتجر"
+                </h3>
+
+              </div>
+
+              <p className="text-[11px] text-gray-400 leading-relaxed">
+                هاي الرسائل بتتناوب تلقائياً عند الزوار.
+              </p>
+
+              {notifications.length > 0 && (
+                <div className="space-y-2">
+
+                  {notifications.map(
+                    (msg, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-center gap-2"
+                      >
+
+                        <span className="text-[11px] text-gray-500 w-5 text-center">
+                          {idx + 1}
+                        </span>
+
+                        <input
+                          type="text"
+                          value={msg}
+                          onChange={(e) =>
+                            updateNotification(
+                              idx,
+                              e.target.value
+                            )
+                          }
+                          onBlur={() =>
+                            commitNotificationEdit(
+                              idx
+                            )
+                          }
+                          className="flex-1 bg-[#152034] border border-[#1c2942] text-xs text-gray-100 rounded-lg px-3 py-2"
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() =>
+                            removeNotification(
+                              idx
+                            )
+                          }
+                          className="text-[11px] text-red-400 underline"
+                        >
+                          حذف
+                        </button>
+
+                      </div>
+                    )
+                  )}
+
+                </div>
+              )}
+
+              <div className="flex items-center gap-2 pt-2 border-t border-[#1c2942]">
+
+                <input
+                  type="text"
+                  value={
+                    newNotificationInput
+                  }
+                  onChange={(e) =>
+                    setNewNotificationInput(
+                      e.target.value
+                    )
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      addNotification();
+                    }
+                  }}
+                  placeholder="اكتب رسالة إشعار جديدة..."
+                  className="flex-1 bg-[#152034] border border-[#1c2942] text-xs text-white rounded-lg px-3 py-2"
+                />
+
+                <button
+                  type="button"
+                  onClick={addNotification}
+                  className="text-[11px] font-bold px-3.5 py-2 rounded-lg bg-[#00a3ff] text-black"
+                >
+                  + إضافة
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        ) : (
+
+          /* =================================================
+             PRODUCTS
+          ================================================= */
+
+          <div className="p-6 space-y-8 max-h-[75vh] overflow-y-auto">
+
+            {/* PRODUCT FORM */}
+
+            <div
+              id="admin-product-form"
+              className="p-6 rounded-2xl bg-[#101a2e] border border-[#1c2942] space-y-5"
+            >
+
+              <div className="flex items-center justify-between border-b border-[#1c2942] pb-3">
+
+                <div className="flex items-center gap-2">
+
+                  <span className="text-xs font-bold text-gray-400">
+                    {editingProduct
+                      ? "تعديل المنتج المحدد:"
+                      : "نموذج إضافة منتج جديد:"}
+                  </span>
+
+                  {editingProduct && (
+                    <span className="text-xs font-bold text-[#00a3ff]">
+                      #{editingProduct.id}
+                    </span>
+                  )}
+
+                </div>
+
+                <div className="flex items-center gap-2">
+
+                  {editingProduct && (
+                    <button
+                      onClick={cancelEdit}
+                      className="text-xs text-gray-400 hover:text-white px-2.5 py-1 rounded-lg bg-[#1c2942]"
+                    >
+                      إلغاء التعديل
+                    </button>
+                  )}
+
+                  <h4 className="text-sm font-black text-white flex items-center gap-1.5">
+                    <Plus className="w-4 h-4 text-[#00a3ff]" />
+
+                    <span>
+                      {editingProduct
+                        ? "تعديل بيانات المنتج"
+                        : "إضافة منتج جديد للكتالوج"}
+                    </span>
+                  </h4>
+
+                </div>
+
+              </div>
+
+              <form
+                onSubmit={
+                  handleSaveProduct
+                }
+                className="space-y-4"
+              >
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+                  <div>
+
+                    <label className="text-xs font-bold text-gray-300 block mb-1">
+                      اسم المنتج الكامل *
+                    </label>
+
+                    <input
+                      type="text"
+                      required
+                      placeholder="مثال: كيبورد Wooting 60HE+"
+                      value={title}
+                      onChange={(e) =>
+                        setTitle(
+                          e.target.value
+                        )
+                      }
+                      className="w-full bg-[#16223a] border border-[#27405f] text-xs sm:text-sm text-white rounded-xl px-3.5 py-2.5"
+                    />
+
+                  </div>
+
+                  <div>
+
+                    <label className="text-xs font-bold text-gray-300 block mb-1">
+                      الفئة
+                    </label>
+
+                    <select
+                      value={category}
+                      onChange={(e) =>
+                        setCategory(
+                          e.target
+                            .value as CategoryType
+                        )
+                      }
+                      className="w-full bg-[#16223a] border border-[#27405f] text-xs sm:text-sm font-bold text-[#00a3ff] rounded-xl px-3.5 py-2.5"
+                    >
+                      <option value="keyboards">
+                        ⌨️ كيبورد
+                      </option>
+                      <option value="mice">
+                        🖱️ ماوس
+                      </option>
+                      <option value="mousepads">
+                        ⬛ ماوس باد
+                      </option>
+                      <option value="microphones">
+                        🎙️ مايك
+                      </option>
+                      <option value="headsets">
+                        🎧 سماعات
+                      </option>
+                    </select>
+
+                  </div>
+
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+                  <div>
+
+                    <label className="text-xs font-bold text-gray-300 block mb-1">
+                      السعر بالشيكل *
+                    </label>
+
+                    <input
+                      type="number"
+                      required
+                      min="1"
+                      value={price}
+                      onChange={(e) =>
+                        setPrice(
+                          e.target.value
+                        )
+                      }
+                      className="w-full bg-[#16223a] border border-[#27405f] text-sm font-mono font-bold text-[#00a3ff] rounded-xl px-3.5 py-2.5"
+                    />
+
+                  </div>
+
+                  <div>
+
+                    <label className="text-xs font-bold text-gray-300 block mb-1">
+                      السعر القديم
+                    </label>
+
+                    <input
+                      type="number"
+                      min="1"
+                      value={
+                        originalPrice
+                      }
+                      onChange={(e) =>
+                        setOriginalPrice(
+                          e.target.value
+                        )
+                      }
+                      className="w-full bg-[#16223a] border border-[#27405f] text-sm font-mono text-gray-400 rounded-xl px-3.5 py-2.5"
+                    />
+
+                  </div>
+
+                  <div>
+
+                    <label className="text-xs font-bold text-gray-300 block mb-1">
+                      العلامة التجارية
+                    </label>
+
+                    <input
+                      type="text"
+                      value={brand}
+                      onChange={(e) =>
+                        setBrand(
+                          e.target.value
+                        )
+                      }
+                      className="w-full bg-[#16223a] border border-[#27405f] text-xs sm:text-sm text-white rounded-xl px-3.5 py-2.5"
+                    />
+
+                  </div>
+
+                </div>
+
+                <div>
+
+                  <label className="text-xs font-bold text-gray-300 block mb-1">
+                    وصف المنتج
+                  </label>
+
+                  <textarea
+                    rows={2}
+                    value={description}
+                    onChange={(e) =>
+                      setDescription(
+                        e.target.value
+                      )
+                    }
+                    className="w-full bg-[#16223a] border border-[#27405f] text-xs sm:text-sm text-gray-200 rounded-xl p-3"
+                  />
+
+                </div>
+
+                {/* MAIN IMAGE */}
+
+                <div>
+
+                  <label className="text-xs font-bold text-gray-300 block mb-1">
+                    صورة المنتج
+                  </label>
+
+                  <div className="flex items-center gap-2 mb-2">
+
+                    <label
+                      className={`text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer ${
+                        isUploadingImage
+                          ? "bg-[#152034] text-gray-500"
+                          : "bg-[#00a3ff] text-black"
+                      }`}
+                    >
+                      {isUploadingImage
+                        ? "جاري الرفع..."
+                        : "📁 اختر صورة من جهازك"}
+
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={
+                          isUploadingImage
+                        }
+                        onChange={(e) =>
+                          handleFileUpload(
+                            e.target
+                              .files?.[0]
+                          )
+                        }
+                        className="hidden"
+                      />
+
+                    </label>
+
+                    {imageUrl.startsWith(
+                      "/api/images/"
+                    ) && (
+                      <span className="text-[11px] text-green-400">
+                        ✓ تم رفع الصورة
+                      </span>
+                    )}
+
+                  </div>
+
+                  {uploadError && (
+                    <p className="text-[11px] text-red-400 mb-2">
+                      {uploadError}
+                    </p>
+                  )}
+
+                  <input
+                    type="text"
+                    value={imageUrl}
+                    onChange={(e) =>
+                      setImageUrl(
+                        e.target.value
+                      )
+                    }
+                    placeholder="رابط الصورة المباشر"
+                    className="w-full bg-[#16223a] border border-[#27405f] text-xs text-gray-200 font-mono rounded-xl px-3.5 py-2.5 mb-2"
+                  />
+
+                  <div className="flex flex-wrap gap-2">
+
+                    {PRESET_IMAGES.map(
+                      (preset, idx) => (
+                        <button
+                          type="button"
+                          key={idx}
+                          onClick={() =>
+                            setImageUrl(
+                              preset.url
+                            )
+                          }
+                          className={`text-[11px] px-2.5 py-1 rounded-lg border ${
+                            imageUrl ===
+                            preset.url
+                              ? "bg-[#00a3ff] text-black"
+                              : "bg-[#152034] text-gray-300 border-[#27405f]"
+                          }`}
+                        >
+                          {preset.label}
+                        </button>
+                      )
+                    )}
+
+                  </div>
+
+                </div>
+
+                {/* GALLERY */}
+
+                <div>
+
+                  <label className="text-xs font-bold text-gray-300 block mb-1">
+                    وسائط إضافية للمنتج
+                  </label>
+
+                  <label
+                    className={`inline-block text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer ${
+                      isUploadingGalleryItem
+                        ? "bg-[#152034] text-gray-500"
+                        : "bg-[#00a3ff] text-black"
+                    }`}
+                  >
+                    {isUploadingGalleryItem
+                      ? "جاري الرفع..."
+                      : "📁 أضف صورة/فيديو"}
+
+                    <input
+                      type="file"
+                      accept="image/*,video/*"
+                      disabled={
+                        isUploadingGalleryItem
+                      }
+                      onChange={(e) => {
+                        handleGalleryFileUpload(
+                          e.target
+                            .files?.[0]
+                        );
+
+                        e.target.value =
+                          "";
+                      }}
+                      className="hidden"
+                    />
+
+                  </label>
+
+                  {galleryUploadError && (
+                    <p className="text-[11px] text-red-400 mt-2">
+                      {galleryUploadError}
+                    </p>
+                  )}
+
+                  {gallery.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mt-2">
+
+                      {gallery.map(
+                        (item, idx) => (
+                          <div
+                            key={idx}
+                            className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#27405f] bg-[#0b1120]"
+                          >
+
+                            {item.type ===
+                            "video" ? (
+                              <video
+                                src={
+                                  item.url
+                                }
+                                className="w-full h-full object-cover"
+                                muted
+                              />
+                            ) : (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={
+                                  item.url
+                                }
+                                alt=""
+                                className="w-full h-full object-cover"
+                              />
+                            )}
+
+                            <button
+                              type="button"
+                              onClick={() =>
+                                removeGalleryItem(
+                                  idx
+                                )
+                              }
+                              className="absolute top-0.5 right-0.5 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] flex items-center justify-center"
+                            >
+                              ×
+                            </button>
+
+                          </div>
+                        )
+                      )}
+
+                    </div>
+                  )}
+
+                </div>
+
+                {/* BADGE */}
+
+                <div>
+
+                  <label className="text-xs font-bold text-gray-300 block mb-1">
+                    شارة ترويجية
+                  </label>
+
+                  <input
+                    type="text"
+                    value={badge}
+                    onChange={(e) =>
+                      setBadge(
+                        e.target.value
+                      )
+                    }
+                    placeholder="الأكثر طلباً 🔥"
+                    className="w-full bg-[#16223a] border border-[#27405f] text-xs text-white rounded-xl px-3.5 py-2"
+                  />
+
+                </div>
+
+                <div className="flex items-center justify-end gap-3 pt-2">
+
+                  {editingProduct && (
+                    <button
+                      type="button"
+                      onClick={cancelEdit}
+                      className="px-4 py-2.5 rounded-xl bg-[#1c2942] text-gray-300 text-xs font-bold"
+                    >
+                      إلغاء التعديل
+                    </button>
+                  )}
+
+                  <button
+                    type="submit"
+                    className="btn-cyber-cyan text-black font-black text-xs sm:text-sm px-6 py-2.5 rounded-xl flex items-center gap-2"
+                  >
+                    <Save className="w-4 h-4" />
+
+                    <span>
+                      {editingProduct
+                        ? "حفظ التعديلات ونشرها فوراً"
+                        : "إضافة المنتج للمتجر فوراً"}
                     </span>
 
-                    {r.verifiedPurchase && (
-                      <span className="
+                  </button>
+
+                </div>
+
+              </form>
+
+            </div>
+
+            {/* =================================================
+                PRODUCTS LIST
+            ================================================= */}
+
+            <div className="space-y-4">
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1c2942] pb-3">
+
+                <span className="text-xs text-[#00a3ff] font-bold bg-[#00a3ff]/10 px-3 py-1.5 rounded-lg border border-[#00a3ff]/30 font-mono">
+                  إجمالي المنتجات المدارة:{" "}
+                  {products.length}
+                </span>
+
+                <h4 className="text-sm font-black text-white">
+                  قائمة المنتجات الحالية بالمتجر
+                </h4>
+
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
+
+                <div className="relative w-full sm:w-64">
+
+                  <input
+                    type="text"
+                    placeholder="ابحث في الكتالوج..."
+                    value={searchTerm}
+                    onChange={(e) =>
+                      setSearchTerm(
+                        e.target.value
+                      )
+                    }
+                    className="w-full bg-[#152034] border border-[#27405f] text-xs text-white rounded-xl pl-8 pr-3 py-2"
+                  />
+
+                  <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
+
+                </div>
+
+                <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1">
+
+                  <button
+                    onClick={() =>
+                      setFilterCategory(
+                        "all"
+                      )
+                    }
+                    className={`text-xs px-3 py-1 rounded-lg font-bold ${
+                      filterCategory ===
+                      "all"
+                        ? "bg-[#00a3ff] text-black"
+                        : "bg-[#152034] text-gray-400"
+                    }`}
+                  >
+                    الكل ({products.length})
+                  </button>
+
+                  {CATEGORIES_META.map(
+                    (c) => (
+                      <button
+                        key={c.id}
+                        onClick={() =>
+                          setFilterCategory(
+                            c.id
+                          )
+                        }
+                        className={`text-xs px-2.5 py-1 rounded-lg font-bold whitespace-nowrap ${
+                          filterCategory ===
+                          c.id
+                            ? "bg-[#00a3ff] text-black"
+                            : "bg-[#152034] text-gray-400"
+                        }`}
+                      >
+                        {c.name}
+                      </button>
+                    )
+                  )}
+
+                </div>
+
+              </div>
+
+              <div className="rounded-xl border border-[#1c2942] overflow-hidden bg-[#0b1120]">
+
+                <div className="divide-y divide-[#1c2942] max-h-96 overflow-y-auto">
+
+                  {filteredList.length >
+                  0 ? (
+                    filteredList.map(
+                      (prod) => (
+                        <div
+                          key={prod.id}
+                          className="p-3.5 flex items-center justify-between gap-4 hover:bg-[#101a2e]"
+                        >
+
+                          <div className="flex items-center gap-3 min-w-0">
+
+                            <div className="relative w-12 h-12 rounded-xl bg-black/50 border border-[#27405f] flex-shrink-0 overflow-hidden">
+
+                              <Image
+                                src={
+                                  prod.image
+                                }
+                                alt={
+                                  prod.title
+                                }
+                                fill
+                                className="object-contain p-1"
+                              />
+
+                            </div>
+
+                            <div className="min-w-0">
+
+                              <div className="flex items-center gap-2">
+
+                                <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#00a3ff]/10 text-[#00a3ff] border border-[#00a3ff]/30">
+                                  {
+                                    prod.category
+                                  }
+                                </span>
+
+                                <span className="text-[10px] text-gray-400 font-mono uppercase">
+                                  {
+                                    prod.brand
+                                  }
+                                </span>
+
+                              </div>
+
+                              <h5 className="text-xs font-bold text-white truncate max-w-sm sm:max-w-md mt-0.5">
+                                {
+                                  prod.title
+                                }
+                              </h5>
+
+                            </div>
+
+                          </div>
+
+                          <div className="flex items-center gap-3 flex-shrink-0">
+
+                            <div className="text-left font-mono">
+
+                              <span className="text-sm font-black text-[#00a3ff]">
+                                {prod.price.toLocaleString()}
+                              </span>
+
+                              <span className="text-xs text-gray-400 font-bold mr-1">
+                                ₪
+                              </span>
+
+                            </div>
+
+                            <div className="flex items-center gap-1.5">
+
+                              <button
+                                onClick={() =>
+                                  startEditProduct(
+                                    prod
+                                  )
+                                }
+                                className="p-2 rounded-lg bg-[#152034] hover:bg-[#203355] text-[#00a3ff]"
+                                title="تعديل بيانات المنتج"
+                              >
+                                <Edit className="w-3.5 h-3.5" />
+                              </button>
+
+                              <button
+                                onClick={() =>
+                                  handleDeleteProduct(
+                                    prod.id,
+                                    prod.title
+                                  )
+                                }
+                                className="p-2 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-rose-300"
+                                title="حذف المنتج"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+
+                            </div>
+
+                          </div>
+
+                        </div>
+                      )
+                    )
+                  ) : (
+                    <div className="p-8 text-center text-gray-400 text-xs">
+                      لا توجد منتجات مطابقة
+                    </div>
+                  )}
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
