@@ -12,6 +12,7 @@ import { QuickViewModal } from "@/components/QuickViewModal";
 import { LiveSalesToast } from "@/components/LiveSalesToast";
 import { FloatingActions } from "@/components/FloatingActions";
 import { AdminDashboardModal } from "@/components/AdminDashboardModal";
+import { CustomerReviews } from "@/components/CustomerReviews";
 import { Product, INITIAL_PRODUCTS, ShowcaseConfig, DEFAULT_SHOWCASE } from "@/lib/data";
 
 function NitroGamesApp() {
@@ -143,8 +144,7 @@ function NitroGamesApp() {
           onSelectCategory={(cat) => setSelectedCategory(cat)}
           searchQuery={searchQuery}
         />
-        
-        {/* هنا يمكنك إضافة مكون التعليقات التفاعلي الجديد مستقبلاً */}
+        <CustomerReviews />
       </main>
 
       <Footer onOpenAdmin={() => setIsAdminOpen(true)} onSelectCategory={(cat) => setSelectedCategory(cat)} />
