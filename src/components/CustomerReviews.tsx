@@ -2,15 +2,16 @@
 
 import React, { useState, useEffect } from "react";
 import { Star, MessageSquarePlus, ShieldCheck, Loader2 } from "lucide-react";
+import { supabase } from "@/lib/supabase"; // تأكد من صحة مسار ملف الـ supabase لديك
 
 interface ReviewItem {
-  id: number;
+  id: string | number;
   author: string;
   city: string;
   rating: number;
   comment: string;
   verifiedPurchase: boolean;
-  itemBought: string;
+  itemBought?: string;
   date: string;
 }
 
@@ -28,11 +29,30 @@ export const CustomerReviews: React.FC = () => {
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
 
+  // جلب التعليقات مباشرة من جدول Supabase
   const loadReviews = async () => {
     try {
-      const res = await fetch("/api/reviews", { cache: "no-store" });
-      const data = await res.json();
-      if (data.success) setReviewsList(data.reviews || []);
+      const { data, error } = await supabase
+        .from("reviews")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+
+      if (data) {
+        // مطابقة الحقول من جدول قاعدة البيانات مع تصميم الواجهة
+        const formatted = data.map((r: any) => ({
+          id: r.id,
+          author: r.name || r.author,
+          city: r.city || "فلسطين",
+          rating: r.rating || 5,
+          comment: r.comment,
+          verifiedPurchase: true,
+          itemBought: r.product_tag || r.itemBought || "منتج من المتجر",
+          date: new Date(r.created_at).toLocaleDateString("ar-EG"),
+        }));
+        setReviewsList(formatted);
+      }
     } catch (e) {
       console.warn("Failed to load reviews:", e);
     } finally {
@@ -42,6 +62,22 @@ export const CustomerReviews: React.FC = () => {
 
   useEffect(() => {
     loadReviews();
+
+    // تحديث مباشر عند إضافة أي شخص لتعليق جديد (Realtime)
+    const channel = supabase
+      .channel("public:reviews")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "reviews" },
+        () => {
+          loadReviews();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,21 +92,20 @@ export const CustomerReviews: React.FC = () => {
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/reviews", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          author: author.trim(),
+      // إرسال البيانات مباشرة إلى جدول reviews في Supabase
+      const { error } = await supabase.from("reviews").insert([
+        {
+          name: author.trim(),
           city: city.trim(),
           rating,
           comment: comment.trim(),
-          itemBought: itemBought.trim() || undefined,
-        }),
-      });
-      const data = await res.json();
-      if (!data.success) throw new Error(data.message || "failed");
+          product_tag: itemBought.trim() || "منتج من المتجر",
+        },
+      ]);
 
-      setSuccessMsg(data.message || "شكراً لتقييمك! تم نشر رأيك 🎉");
+      if (error) throw error;
+
+      setSuccessMsg("شكراً لتقييمك! تم نشر رأيك للجميع 🎉");
       setAuthor("");
       setCity("");
       setComment("");
