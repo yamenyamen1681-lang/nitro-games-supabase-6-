@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { CartProvider, useCart } from "@/context/CartContext";
 import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
+import { DealsSection } from "@/components/DealsSection"; // تم استدعاء قسم العروض القوي هنا
 import { ProductSection } from "@/components/ProductSection";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -106,6 +107,9 @@ function NitroGamesApp() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // تصفية المنتجات التي توجد بها خصومات أو عروض خاصة لتقديمها في قسم العروض
+  const dealProducts = products.filter((p) => p.originalPrice && p.originalPrice > p.price);
+
   return (
     <div className="min-h-screen bg-[#05070d] text-gray-100 flex flex-col justify-between selection:bg-[#00a3ff] selection:text-black relative overflow-x-hidden">
       {/* الخلفية المضيئة المزخرفة والتأكد من منع التمدد الجانبي الشاذ على الجوال */}
@@ -134,12 +138,16 @@ function NitroGamesApp() {
       />
 
       {/* المحتوى الرئيسي للمتجر */}
-      <main className="flex-1 relative z-10 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+      <main className="flex-1 relative z-10 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 space-y-10">
         <HeroSection
           products={products}
           showcase={showcase}
           onCategorySelect={(cat) => setSelectedCategory(cat)}
         />
+        
+        {/* قسم العروض الفلاش الأسطوري الجديد */}
+        <DealsSection dealProducts={dealProducts.length > 0 ? dealProducts : products} />
+
         <ProductSection
           products={products}
           selectedCategory={selectedCategory}
