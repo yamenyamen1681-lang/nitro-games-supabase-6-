@@ -3,10 +3,11 @@
 import React from "react";
 import { Product } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
-import { Heart, ShoppingBag, Eye, Star, ShieldCheck, Zap } from "lucide-react";
+import { Heart, ShoppingBag, Eye, Star, ShieldCheck } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
+  index?: number; // أضيفت لحل خطأ TypeScript في Vercel
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
@@ -80,7 +81,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </h3>
       </div>
 
-      {/* ===== 3. صورة الكيبورد / المنتج ===== */}
+      {/* ===== 3. صورة المنتج ===== */}
       <div
         onClick={() => setQuickViewProduct(product)}
         className="relative z-10 w-full aspect-square rounded-xl bg-[#030509]/80 border border-[#1c2942] overflow-hidden flex items-center justify-center p-3 cursor-pointer group-hover:border-[#00a3ff]/40 transition-all shadow-inner my-1"
