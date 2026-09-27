@@ -13,7 +13,7 @@ export async function GET() {
       .from(reviews)
       .orderBy(desc(reviews.createdAt));
 
-    // إضافة التقييمات الافتراضية مرة واحدة إذا الجدول فارغ
+    // إضافة التقييمات الافتراضية إذا كان الجدول فارغاً
     if (dbReviews.length === 0) {
       try {
         for (const rev of INITIAL_REVIEWS) {
@@ -36,35 +36,23 @@ export async function GET() {
       }
     }
 
-    const formatted =
-      dbReviews.length > 0
-        ? dbReviews.map((r) => ({
-            id: r.id,
-            author: r.author,
-            city: r.city,
-            rating: r.rating,
-            comment: r.comment,
-            verifiedPurchase: r.verifiedPurchase,
-            itemBought: r.itemBought || "منتج من المتجر",
-            date: r.createdAt
-              ? new Date(r.createdAt).toLocaleDateString("ar-EG")
-              : "مؤخرًا",
-          }))
-        : INITIAL_REVIEWS;
+    const formatted = dbReviews.map((r) => ({
+      id: r.id,
+      author: r.author,
+      city: r.city,
+      rating: r.rating,
+      comment: r.comment,
+      verifiedPurchase: r.verifiedPurchase,
+      itemBought: r.itemBought || "منتج من المتجر",
+      createdAt: r.createdAt ? new Date(r.createdAt).toISOString() : new Date().toISOString(),
+    }));
 
-    return NextResponse.json({
-      success: true,
-      reviews: formatted,
-    });
+    // إرجاع المصفوفة مباشرة لتتوافق مع لوحة التحكم AdminReviews
+    return NextResponse.json(formatted);
   } catch (error) {
     console.error("Reviews GET error:", error);
-
     return NextResponse.json(
-      {
-        success: false,
-        reviews: [],
-        message: "تعذر تحميل التقييمات",
-      },
+      { error: "تعذر تحميل التقييمات" },
       { status: 500 }
     );
   }
@@ -80,17 +68,11 @@ export async function POST(request: Request) {
     const city = String(body.city || "").trim();
     const comment = String(body.comment || "").trim();
     const itemBought = String(body.itemBought || "").trim();
-    const rating = Math.min(
-      5,
-      Math.max(1, Number(body.rating) || 5)
-    );
+    const rating = Math.min(5, Math.max(1, Number(body.rating) || 5));
 
     if (!author || !city || !comment) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "يرجى تعبئة الاسم والمدينة والتعليق",
-        },
+        { error: "يرجى تعبئة الاسم والمدينة والتعليق" },
         { status: 400 }
       );
     }
@@ -107,19 +89,11 @@ export async function POST(request: Request) {
       })
       .returning();
 
-    return NextResponse.json({
-      success: true,
-      review: newReview,
-      message: "شكراً لتقييمك! تم نشر رأيك للجميع 🎉",
-    });
+    return NextResponse.json(newReview);
   } catch (error) {
     console.error("Reviews POST error:", error);
-
     return NextResponse.json(
-      {
-        success: false,
-        message: "تعذر حفظ التقييم حالياً",
-      },
+      { error: "تعذر حفظ التقييم حالياً" },
       { status: 500 }
     );
   }
@@ -129,15 +103,18 @@ export async function DELETE(request: Request) {
   try {
     await ensureDbReady();
 
+    // استقبال الـ id سواء جاء في الـ Body أو عبر الـ URL params
     const { searchParams } = new URL(request.url);
-    const id = searchParams.get("id");
+    let id = searchParams.get("id");
+
+    if (!id) {
+      const body = await request.json().catch(() => ({}));
+      id = body.id;
+    }
 
     if (!id) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "معرّف التعليق مطلوب",
-        },
+        { error: "معرّف التعليق مطلوب" },
         { status: 400 }
       );
     }
@@ -146,10 +123,7 @@ export async function DELETE(request: Request) {
 
     if (!Number.isInteger(reviewId)) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "معرّف التعليق غير صحيح",
-        },
+        { error: "معرّف التعليق غير صحيح" },
         { status: 400 }
       );
     }
@@ -161,10 +135,7 @@ export async function DELETE(request: Request) {
 
     if (deleted.length === 0) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "التعليق غير موجود",
-        },
+        { error: "التعليق غير موجود" },
         { status: 404 }
       );
     }
@@ -176,12 +147,8 @@ export async function DELETE(request: Request) {
     });
   } catch (error) {
     console.error("Reviews DELETE error:", error);
-
     return NextResponse.json(
-      {
-        success: false,
-        message: "تعذر حذف التعليق",
-      },
+      { error: "تعذر حذف التعليق" },
       { status: 500 }
     );
   }
