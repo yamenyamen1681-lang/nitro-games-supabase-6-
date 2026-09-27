@@ -1,259 +1,205 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { Product } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
-import {
-  Flame,
-  ShoppingBag,
-  Zap,
-  ShieldCheck,
-  ChevronRight,
-  ChevronLeft,
-  Eye,
-  Percent,
-  Sparkles,
-} from "lucide-react";
+import { Product } from "@/lib/data";
+import { ShoppingBag, Flame, ShieldCheck, Zap, Heart, Eye } from "lucide-react";
 
 interface DealsSectionProps {
-  dealProducts: Product[];
-  onQuickView?: (product: Product) => void;
+  dealProducts?: Product[];
 }
 
-export const DealsSection: React.FC<DealsSectionProps> = ({
-  dealProducts,
-  onQuickView,
-}) => {
-  const { addToCart } = useCart();
-  const [currentIndex, setCurrentIndex] = useState(0);
+export const DealsSection: React.FC<DealsSectionProps> = ({ dealProducts = [] }) => {
+  const { addToCart, wishlist, toggleWishlist, setQuickViewProduct } = useCart();
 
-  // عداد تنازلي حقيقي
-  const [timeLeft, setTimeLeft] = useState({ hours: 19, minutes: 59, seconds: 23 });
+  const [timeLeft, setTimeLeft] = useState({ hours: 18, minutes: 59, seconds: 30 });
 
   useEffect(() => {
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
         if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
-        if (prev.hours > 0) return { hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        return prev;
+        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
+        return { hours: 24, minutes: 0, seconds: 0 };
       });
     }, 1000);
     return () => clearInterval(timer);
   }, []);
 
-  const activeProducts = dealProducts.length > 0 ? dealProducts : [];
-  const currentProduct = activeProducts[currentIndex];
+  const featuredProduct = dealProducts[0] || {
+    id: "flash-1",
+    title: "X82PRO HE Comic Cyber Edition",
+    brand: "ATTACK SHARK",
+    category: "KEYBOARDS",
+    price: 5555,
+    originalPrice: 55555,
+    image: "/images/keyboard.png",
+    rating: 5.0,
+    description: "كيبورد احترافي بخصم خيالي وتصميم سايبر مع استجابة فائقة للغاية للجيمرز",
+  };
 
-  if (!currentProduct) return null;
-
-  const discountPercent = currentProduct.originalPrice
-    ? Math.round(
-        ((currentProduct.originalPrice - currentProduct.price) /
-          currentProduct.originalPrice) *
-          100
-      )
+  const isWishlisted = wishlist.some((id) => id === featuredProduct.id);
+  const discountPercent = featuredProduct.originalPrice
+    ? Math.round(((featuredProduct.originalPrice - featuredProduct.price) / featuredProduct.originalPrice) * 100)
     : 90;
 
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % activeProducts.length);
-  };
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + activeProducts.length) % activeProducts.length);
-  };
-
   return (
-    <section className="relative overflow-hidden my-10 px-2 sm:px-4">
-      {/* هالة الضوء النيون الخلفية */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-r from-[#ff0055]/20 via-[#00a3ff]/20 to-[#00e5ff]/20 blur-[140px] pointer-events-none rounded-full" />
-
-      <div className="relative max-w-4xl mx-auto rounded-3xl bg-[#050a15]/95 backdrop-blur-2xl border-2 border-[#162e52] hover:border-[#00e5ff]/60 shadow-[0_0_60px_rgba(0,163,255,0.2)] transition-all duration-500 overflow-hidden">
+    <section className="py-4">
+      {/* Container */}
+      <div className="relative bg-[#040814] border-2 border-[#00a3ff]/60 hover:border-[#00e5ff] rounded-3xl p-5 sm:p-8 shadow-[0_0_40px_rgba(0,163,255,0.3)] overflow-hidden transition-all duration-500">
         
-        {/* زوايا ديكورية سايبر (HUD Corner Accents) */}
-        <span className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-2xl z-20 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
-        <span className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#ff0055] rounded-bl-2xl z-20 pointer-events-none shadow-[0_0_10px_#ff0055]" />
+        {/* Neon Lights Background */}
+        <div className="absolute -top-32 -right-32 w-80 h-80 bg-[#00a3ff]/25 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute -bottom-32 -left-32 w-80 h-80 bg-[#0066ff]/25 rounded-full blur-[100px] pointer-events-none" />
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#00a3ff_1.5px,transparent_1.5px)] [background-size:16px_16px] pointer-events-none" />
 
-        {/* الهيدر العلوي للعروض الحماسية */}
-        <div className="p-5 sm:p-6 border-b border-[#132747] bg-gradient-to-r from-[#0a1326] via-[#050b17] to-[#0a1326] flex flex-col md:flex-row items-center justify-between gap-5 text-center md:text-right">
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-gradient-to-r from-[#ff0055]/20 to-[#ff5500]/20 border border-[#ff0055]/50 text-[#ff0055] text-xs font-black font-tech shadow-[0_0_15px_rgba(255,0,85,0.4)]">
-              <Flame className="w-4 h-4 animate-bounce text-[#ff0055]" />
-              <span>NITRO FLASH DEALS</span>
-              <Sparkles className="w-3.5 h-3.5 text-[#ff5500]" />
+        {/* Header */}
+        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#00a3ff]/30">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="px-3 py-1 rounded-full bg-red-500/20 border border-red-500/50 text-red-400 font-black text-xs flex items-center gap-1 shadow-[0_0_10px_rgba(239,68,68,0.4)] animate-pulse">
+                <Flame className="w-4 h-4 fill-red-500" />
+                عروض الفلاش الأسبوعية
+              </span>
+              <span className="text-xs text-[#00e5ff] font-bold tracking-wide">
+                NITRO FLASH DEALS
+              </span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-white font-['Cairo'] tracking-wide">
-              عروض الفلاش <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-[#00a3ff] to-[#ff0055]">الأسبوعية</span>
+            <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+              وفر حتى <span className="text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,0.8)]">20% إلى {discountPercent}%</span> على العتاد
             </h2>
-            <p className="text-xs text-gray-400 font-['Cairo']">
-              وفر حتى <span className="text-[#00e5ff] font-bold text-sm">90%</span> على العتاد الاحترافي
-            </p>
           </div>
 
-          {/* العداد التنازلي المضيء */}
-          <div className="flex items-center gap-2.5 bg-[#030712] px-5 py-3 rounded-2xl border border-[#1a355d] shadow-[inset_0_0_20px_rgba(0,0,0,0.8)]" dir="ltr">
-            <div className="text-center min-w-[45px]">
-              <span className="text-xl sm:text-2xl font-black text-white font-mono leading-none block drop-shadow-[0_0_10px_#ffffff]">
-                {String(timeLeft.hours).padStart(2, "0")}
-              </span>
-              <span className="text-[9px] text-gray-400 font-['Cairo'] mt-1 block">ساعة</span>
-            </div>
-            <span className="text-lg font-bold text-[#ff0055] animate-pulse">:</span>
-            <div className="text-center min-w-[45px]">
-              <span className="text-xl sm:text-2xl font-black text-white font-mono leading-none block drop-shadow-[0_0_10px_#ffffff]">
-                {String(timeLeft.minutes).padStart(2, "0")}
-              </span>
-              <span className="text-[9px] text-gray-400 font-['Cairo'] mt-1 block">دقيقة</span>
-            </div>
-            <span className="text-lg font-bold text-[#00e5ff] animate-pulse">:</span>
-            <div className="text-center min-w-[45px]">
-              <span className="text-xl sm:text-2xl font-black text-[#00e5ff] font-mono leading-none block drop-shadow-[0_0_15px_#00e5ff]">
-                {String(timeLeft.seconds).padStart(2, "0")}
-              </span>
-              <span className="text-[9px] text-gray-400 font-['Cairo'] mt-1 block">ثانية</span>
+          {/* Timer */}
+          <div className="flex items-center gap-3 bg-[#080f24] border border-[#00a3ff]/40 p-3 rounded-2xl shadow-[0_0_15px_rgba(0,163,255,0.2)] shrink-0">
+            <div className="flex items-center gap-2 font-mono">
+              <div className="flex flex-col items-center">
+                <div className="w-11 h-10 rounded-xl bg-[#030610] border border-red-500/50 text-red-400 text-lg font-black flex items-center justify-center shadow-[inset_0_0_10px_rgba(239,68,68,0.3)]">
+                  {String(timeLeft.hours).padStart(2, "0")}
+                </div>
+                <span className="text-[9px] text-gray-400 font-bold mt-1">ساعة</span>
+              </div>
+              <span className="text-red-500 font-black text-lg -mt-3">:</span>
+
+              <div className="flex flex-col items-center">
+                <div className="w-11 h-10 rounded-xl bg-[#030610] border border-red-500/50 text-red-400 text-lg font-black flex items-center justify-center shadow-[inset_0_0_10px_rgba(239,68,68,0.3)]">
+                  {String(timeLeft.minutes).padStart(2, "0")}
+                </div>
+                <span className="text-[9px] text-gray-400 font-bold mt-1">دقيقة</span>
+              </div>
+              <span className="text-red-500 font-black text-lg -mt-3">:</span>
+
+              <div className="flex flex-col items-center">
+                <div className="w-11 h-10 rounded-xl bg-[#030610] border border-red-500/50 text-red-400 text-lg font-black flex items-center justify-center shadow-[inset_0_0_10px_rgba(239,68,68,0.3)] animate-pulse">
+                  {String(timeLeft.seconds).padStart(2, "0")}
+                </div>
+                <span className="text-[9px] text-gray-400 font-bold mt-1">ثانية</span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* جسم العرض الرئيسي - حاوية المنتج */}
-        <div className="p-5 sm:p-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+        {/* Product Card Showcase */}
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center mt-6">
           
-          {/* حاوية العرض مع خلفية النقاط التكنولوجية (Dot Grid Matrix) */}
-          <div className="md:col-span-6 relative">
-            <div className="relative h-64 sm:h-80 w-full rounded-2xl bg-[#060c19]/90 border border-[#1a3863] p-4 flex items-center justify-center group overflow-hidden shadow-inner">
-              
-              {/* 🎯 شبكة النقاط خلف الكيبورد */}
-              <div 
-                className="absolute inset-0 opacity-40 pointer-events-none"
-                style={{
-                  backgroundImage: "radial-gradient(rgba(0, 163, 255, 0.35) 1.5px, transparent 1.5px)",
-                  backgroundSize: "18px 18px",
-                }}
-              />
-
-              {/* وسام الخصم النيون */}
-              <div className="absolute top-3 right-3 z-10 flex items-center gap-1 bg-gradient-to-r from-[#ff0055] via-[#ff2a00] to-[#ff5500] text-white text-xs sm:text-sm font-black px-3.5 py-1.5 rounded-full shadow-[0_0_20px_rgba(255,0,85,0.8)] border border-white/20 animate-pulse">
-                <Percent className="w-4 h-4" />
-                <span>خصم {discountPercent}%</span>
-              </div>
-
-              {/* أزرار الإجراءات السريعة */}
-              <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
-                {onQuickView && (
-                  <button
-                    onClick={() => onQuickView(currentProduct)}
-                    className="p-2.5 rounded-xl bg-[#060e1d]/80 border border-[#1c3a66] text-gray-300 hover:text-white hover:border-[#00e5ff] transition-all cursor-pointer backdrop-blur-md shadow-lg"
-                    title="معاينة سريعة"
-                  >
-                    <Eye className="w-4 h-4" />
-                  </button>
-                )}
-              </div>
-
-              {/* صورة المنتج مع زوم خفيف عند التمرير */}
-              <div className="relative w-full h-full z-10 transition-transform duration-700 ease-out group-hover:scale-110 drop-shadow-[0_15px_30px_rgba(0,0,0,0.9)]">
-                <Image
-                  src={currentProduct.image}
-                  alt={currentProduct.title}
-                  fill
-                  className="object-contain p-2"
-                  priority
-                />
-              </div>
-
-              {/* حالة التوفر النيون */}
-              <span className="absolute bottom-3 right-3 z-10 text-[10px] font-bold text-[#00e5ff] bg-[#030914]/90 border border-[#00e5ff]/40 px-3 py-1 rounded-full backdrop-blur-md shadow-[0_0_10px_rgba(0,229,255,0.2)]">
-                متوفر حالياً في المخزن
-              </span>
+          {/* Image Box */}
+          <div className="lg:col-span-6 relative flex items-center justify-center min-h-[260px] sm:min-h-[320px] bg-gradient-to-b from-[#081026] to-[#030612] border border-[#00a3ff]/40 rounded-2xl p-6 group overflow-hidden shadow-[inset_0_0_30px_rgba(0,163,255,0.25)]">
+            
+            <div className="absolute top-4 right-4 z-20 px-3 py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-amber-500 text-white text-xs font-black tracking-wider shadow-[0_0_15px_rgba(239,68,68,0.6)] animate-bounce">
+              %{discountPercent} خصم-
             </div>
 
-            {/* أزرار التبديل للمنتجات */}
-            {activeProducts.length > 1 && (
-              <div className="flex items-center justify-between mt-3 px-1">
-                <div className="flex items-center gap-1.5">
-                  {activeProducts.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrentIndex(idx)}
-                      className={`h-2 rounded-full transition-all cursor-pointer ${
-                        idx === currentIndex ? "w-7 bg-[#00e5ff] shadow-[0_0_10px_#00e5ff]" : "w-2 bg-[#12243e]"
-                      }`}
-                    />
-                  ))}
-                </div>
-                <div className="flex items-center gap-2">
-                  <button
-                    onClick={handlePrev}
-                    className="p-2 rounded-xl bg-[#091426] border border-[#1c3860] hover:border-[#00e5ff] text-gray-300 transition-colors shadow-md"
-                  >
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                  <button
-                    onClick={handleNext}
-                    className="p-2 rounded-xl bg-[#091426] border border-[#1c3860] hover:border-[#00e5ff] text-gray-300 transition-colors shadow-md"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
-            )}
+            <div className="absolute top-4 left-4 z-20 flex items-center gap-2">
+              <button
+                onClick={() => toggleWishlist(featuredProduct.id)}
+                className={`p-2 rounded-xl border transition-all ${
+                  isWishlisted
+                    ? "bg-red-500/20 border-red-500 text-red-500 shadow-[0_0_12px_rgba(239,68,68,0.5)]"
+                    : "bg-[#060c1d] border-[#00a3ff]/40 text-gray-300 hover:text-red-400"
+                }`}
+              >
+                <Heart className={`w-4 h-4 ${isWishlisted ? "fill-red-500" : ""}`} />
+              </button>
+              <button
+                onClick={() => setQuickViewProduct(featuredProduct)}
+                className="p-2 rounded-xl bg-[#060c1d] border border-[#00a3ff]/40 text-gray-300 hover:text-[#00e5ff] transition-all"
+              >
+                <Eye className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Neon Glow behind the product */}
+            <div className="absolute w-52 h-52 bg-[#00a3ff]/40 rounded-full blur-3xl group-hover:scale-125 group-hover:bg-[#00e5ff]/60 transition-all duration-700 pointer-events-none" />
+            <div className="absolute inset-0 opacity-30 bg-[radial-gradient(#00e5ff_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
+
+            <img
+              src={featuredProduct.image}
+              alt={featuredProduct.title}
+              className="relative z-10 max-h-[220px] sm:max-h-[280px] object-contain drop-shadow-[0_15px_30px_rgba(0,0,0,0.95)] transform group-hover:scale-105 transition-transform duration-500"
+            />
+
+            <div className="absolute bottom-4 right-4 z-20 px-3 py-1 rounded-lg bg-[#040814]/90 border border-[#00a3ff]/40 flex items-center gap-1.5 text-xs text-emerald-400 font-bold backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              متوفر حالياً
+            </div>
           </div>
 
-          {/* تفاصيل العرض والأسعار والزر */}
-          <div className="md:col-span-6 text-right space-y-5">
-            <div>
-              <div className="inline-block text-[11px] font-tech text-[#00e5ff] font-bold uppercase bg-[#00e5ff]/10 px-3 py-0.5 rounded-md border border-[#00e5ff]/30 mb-2">
-                {currentProduct.brand || "ATTACK SHARK"}
+          {/* Details */}
+          <div className="lg:col-span-6 space-y-4">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black text-[#00e5ff] tracking-widest uppercase bg-[#00a3ff]/15 px-3 py-1 rounded-md border border-[#00a3ff]/30">
+                  {featuredProduct.brand}
+                </span>
+                <span className="text-xs text-gray-400 font-bold flex items-center gap-1">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#00e5ff]" />
+                  ضمان رسمي 12 شهر
+                </span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-black text-white leading-snug font-['Cairo']">
-                {currentProduct.title}
+
+              <h3 className="text-2xl sm:text-3xl font-black text-white hover:text-[#00e5ff] transition-colors leading-tight">
+                {featuredProduct.title}
               </h3>
+
+              <p className="text-xs sm:text-sm text-gray-400 leading-relaxed line-clamp-2">
+                {featuredProduct.description || "عتاد ألعاب عالي الأداء مع وقت استجابة سريع للغاية وإضاءة متجاوبة."}
+              </p>
             </div>
 
-            {/* شريط الضمان */}
-            <div className="flex items-center gap-2.5 text-xs text-gray-200 font-['Cairo'] bg-[#071120] p-3 rounded-xl border border-[#172e50]">
-              <ShieldCheck className="w-5 h-5 text-[#00e5ff] shrink-0" />
-              <span>ضمان رسمي لمدة 12 شهر شامل الصيانة والتطوير</span>
-            </div>
-
-            {/* عرض السعر */}
-            <div className="flex items-baseline gap-4 pt-1">
-              <span className="text-3xl sm:text-4xl font-black text-[#00e5ff] font-mono drop-shadow-[0_0_18px_rgba(0,229,255,0.6)]">
-                {currentProduct.price.toLocaleString()} ₪
-              </span>
-              {currentProduct.originalPrice && (
-                <span className="text-base font-mono text-gray-400 line-through">
-                  {currentProduct.originalPrice.toLocaleString()} ₪
+            {/* Stock Progress Bar */}
+            <div className="bg-[#080e22] border border-[#00a3ff]/30 p-3 rounded-2xl space-y-2">
+              <div className="flex justify-between text-xs font-bold">
+                <span className="text-gray-300 flex items-center gap-1">
+                  <Zap className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+                  المتبقي في العرض:
                 </span>
-              )}
-            </div>
-
-            {/* شريط الكمية المتبقية الحراري */}
-            <div className="space-y-2 pt-1">
-              <div className="flex items-center justify-between text-xs font-['Cairo']">
-                <span className="text-gray-400">الكمية المتبقية للعرض:</span>
-                <span className="text-[#ff0055] font-black flex items-center gap-1 text-sm animate-pulse">
-                  <Flame className="w-4 h-4" /> متبقي 3 قطع فقط!
-                </span>
+                <span className="text-red-400 font-black">3 قطع فقط!</span>
               </div>
-              <div className="w-full h-2.5 bg-[#071120] rounded-full overflow-hidden border border-[#193256] p-0.5">
-                <div
-                  className="h-full bg-gradient-to-r from-[#00a3ff] via-[#ff0055] to-[#ff5500] rounded-full shadow-[0_0_10px_#ff0055]"
-                  style={{ width: "25%" }}
-                />
+              <div className="w-full h-2.5 bg-[#030612] rounded-full overflow-hidden p-0.5 border border-[#00a3ff]/20">
+                <div className="h-full bg-gradient-to-r from-red-500 via-amber-500 to-[#00e5ff] rounded-full w-[85%] animate-pulse" />
               </div>
             </div>
 
-            {/* زر الشراء */}
-            <div className="pt-2">
+            {/* Price & Action */}
+            <div className="pt-2 flex items-center justify-between gap-4">
+              <div className="flex flex-col">
+                <span className="text-xs text-gray-500 line-through font-mono">
+                  {featuredProduct.originalPrice} ₪
+                </span>
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-black text-white font-mono tracking-tight drop-shadow-[0_0_10px_rgba(0,229,255,0.5)]">
+                    {featuredProduct.price}
+                  </span>
+                  <span className="text-sm font-bold text-[#00e5ff]">₪</span>
+                </div>
+              </div>
+
               <button
-                onClick={() => addToCart(currentProduct, 1)}
-                className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-[#00a3ff] via-[#00e5ff] to-[#00a3ff] hover:from-[#00e5ff] hover:to-[#00a3ff] text-black font-black text-base flex items-center justify-center gap-3 cursor-pointer shadow-[0_0_30px_rgba(0,163,255,0.4)] hover:shadow-[0_0_45px_rgba(0,229,255,0.7)] transition-all duration-300 font-['Cairo'] group"
+                onClick={() => addToCart(featuredProduct)}
+                className="flex-1 max-w-[200px] py-3.5 px-5 rounded-2xl bg-gradient-to-r from-[#00a3ff] via-[#0080ff] to-[#00e5ff] hover:from-[#00c3ff] hover:to-[#00a3ff] text-black font-black text-sm flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,163,255,0.6)] active:scale-95 transition-all cursor-pointer"
               >
-                <ShoppingBag className="w-5 h-5 group-hover:scale-110 transition-transform" />
-                <span>إضافة السلعة إلى السلة فوراً</span>
-                <Zap className="w-5 h-5 fill-black" />
+                <ShoppingBag className="w-4 h-4" />
+                <span>إضافة للسلة</span>
               </button>
             </div>
 
