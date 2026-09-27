@@ -69,15 +69,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
   showcase,
   onShowcaseUpdate,
 }) => {
-  // =========================================================
-  // TABS
-  // =========================================================
-
   const [tab, setTab] = useState<AdminTab>("products");
-
-  // =========================================================
-  // SHOWCASE
-  // =========================================================
 
   const [sc, setSc] = useState<ShowcaseConfig>(
     showcase ?? DEFAULT_SHOWCASE
@@ -168,17 +160,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     .map((id) => products.find((p) => p.id === id))
     .filter((p): p is Product => Boolean(p));
 
-  // =========================================================
-  // AUTHENTICATION
-  // =========================================================
-
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
   const [authError, setAuthError] = useState("");
-
-  // =========================================================
-  // PRODUCT FORM
-  // =========================================================
 
   const [editingProduct, setEditingProduct] =
     useState<Product | null>(null);
@@ -212,10 +196,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
   const [galleryUploadError, setGalleryUploadError] =
     useState<string | null>(null);
-
-  // =========================================================
-  // GALLERY UPLOAD
-  // =========================================================
 
   const handleGalleryFileUpload = async (
     file: File | undefined | null
@@ -269,10 +249,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     );
   };
 
-  // =========================================================
-  // SHOWCASE VIDEO
-  // =========================================================
-
   const [isUploadingVideo, setIsUploadingVideo] =
     useState(false);
 
@@ -281,10 +257,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
   const [newVideoUrlInput, setNewVideoUrlInput] =
     useState("");
-
-  // =========================================================
-  // SITE AUDIO
-  // =========================================================
 
   const [siteAudioUrl, setSiteAudioUrl] =
     useState<string>("");
@@ -400,10 +372,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
       setIsUploadingAudio(false);
     }
   };
-
-  // =========================================================
-  // NOTIFICATIONS
-  // =========================================================
 
   const DEFAULT_NOTIFICATIONS = [
     "عتاد أصلي 100% من الوكلاء المعتمدين",
@@ -543,10 +511,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     saveNotifications(notifications);
   };
 
-  // =========================================================
-  // VIDEO UPLOAD
-  // =========================================================
-
   const handleVideoFileUpload = async (
     file: File | undefined | null
   ) => {
@@ -617,10 +581,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     });
   };
 
-  // =========================================================
-  // PRODUCT IMAGE UPLOAD
-  // =========================================================
-
   const handleFileUpload = async (
     file: File | undefined | null
   ) => {
@@ -659,19 +619,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     }
   };
 
-  // =========================================================
-  // ADMIN SEARCH
-  // =========================================================
-
   const [filterCategory, setFilterCategory] =
     useState<string>("all");
 
   const [searchTerm, setSearchTerm] =
     useState<string>("");
-
-  // =========================================================
-  // LOGIN
-  // =========================================================
 
   if (!isOpen) return null;
 
@@ -683,7 +635,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     const entered =
       passwordInput.trim();
 
-    // Keep your existing admin password here.
     if (entered === "Yamen2009Yamen") {
       setIsAuthenticated(true);
       setAuthError("");
@@ -705,10 +656,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     setTab("products");
     onClose();
   };
-
-  // =========================================================
-  // EDIT PRODUCT
-  // =========================================================
 
   const startEditProduct = (
     prod: Product
@@ -756,10 +703,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     setGallery([]);
   };
 
-  // =========================================================
-  // SAVE PRODUCT
-  // =========================================================
-
   const handleSaveProduct = async (
     e: React.FormEvent
   ) => {
@@ -789,7 +732,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
           )
         : 0;
 
-    // EDIT
     if (editingProduct) {
       try {
         const res = await fetch(
@@ -884,10 +826,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
         return;
       }
-    }
-
-    // ADD
-    else {
+    } else {
       try {
         const res = await fetch(
           "/api/products",
@@ -960,10 +899,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     cancelEdit();
   };
 
-  // =========================================================
-  // DELETE PRODUCT
-  // =========================================================
-
   const handleDeleteProduct = async (
     id: number,
     prodTitle: string
@@ -1015,10 +950,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
     }
   };
 
-  // =========================================================
-  // FILTER PRODUCTS
-  // =========================================================
-
   const filteredList =
     products
       .filter((p) =>
@@ -1041,22 +972,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             )
       );
 
-  // =========================================================
-  // UI
-  // =========================================================
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md overflow-y-auto">
       <div className="relative w-full max-w-5xl rounded-2xl bg-[#0b1120] border border-[#00a3ff]/30 shadow-[0_0_40px_rgba(0,163,255,0.2)] overflow-hidden my-8 text-right">
-
-        {/* =====================================================
-            HEADER
-        ===================================================== */}
-
         <div className="p-6 pb-4 border-b border-[#1c2942] bg-[#120e09] flex items-center justify-between">
-
           <div className="flex items-center gap-3">
-
             <button
               onClick={onClose}
               className="p-2 rounded-xl bg-[#1e170e] text-gray-400 hover:text-white hover:bg-[#253048] transition-colors"
@@ -1073,15 +993,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 <span>تسجيل الخروج</span>
               </button>
             )}
-
           </div>
 
           <div className="flex items-center gap-3">
-
             <div className="text-right">
-
               <div className="flex items-center gap-2">
-
                 <span className="text-base font-black text-white font-['Cairo']">
                   لوحة تحكم إدارة المتجر السرية
                 </span>
@@ -1089,14 +1005,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-[#00a3ff]/15 text-[#00a3ff] border border-[#00a3ff]/30 font-mono">
                   ADMIN ONLY
                 </span>
-
               </div>
 
               <div className="text-xs text-gray-400">
                 إدارة كاملة لمنتجات NITRO GAMES
                 والتعليقات والإعدادات
               </div>
-
             </div>
 
             <div className="w-11 h-11 rounded-xl bg-[#1e170e] border border-[#00a3ff]/40 flex items-center justify-center text-[#00a3ff] shadow-[0_0_15px_rgba(0,163,255,0.3)]">
@@ -1106,18 +1020,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 <Lock className="w-5 h-5" />
               )}
             </div>
-
           </div>
-
         </div>
-
-        {/* =====================================================
-            TABS
-        ===================================================== */}
 
         {isAuthenticated && (
           <div className="px-6 pt-5 flex items-center gap-2 border-b border-[#1c2942] overflow-x-auto">
-
             <button
               onClick={() =>
                 setTab("products")
@@ -1143,9 +1050,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               }`}
             >
               <Monitor className="w-3.5 h-3.5" />
-              <span>
-                المربع المميز
-              </span>
+              <span>المربع المميز</span>
             </button>
 
             <button
@@ -1159,9 +1064,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               }`}
             >
               <Music className="w-3.5 h-3.5" />
-              <span>
-                موسيقى الموقع
-              </span>
+              <span>موسيقى الموقع</span>
             </button>
 
             <button
@@ -1175,12 +1078,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               }`}
             >
               <Bell className="w-3.5 h-3.5" />
-              <span>
-                الإشعارات
-              </span>
+              <span>الإشعارات</span>
             </button>
 
-            {/* NEW: REVIEWS */}
             <button
               onClick={() =>
                 setTab("reviews")
@@ -1192,30 +1092,18 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               }`}
             >
               <MessageSquare className="w-3.5 h-3.5" />
-              <span>
-                التعليقات
-              </span>
+              <span>التعليقات</span>
             </button>
-
           </div>
         )}
 
-        {/* =====================================================
-            BODY
-        ===================================================== */}
-
         {!isAuthenticated ? (
-
-          /* ================= LOGIN ================= */
-
           <div className="p-8 sm:p-12 max-w-md mx-auto text-center space-y-6">
-
             <div className="w-16 h-16 rounded-2xl bg-[#1e170e] border border-[#00a3ff]/30 flex items-center justify-center mx-auto text-[#00a3ff] shadow-[0_0_20px_rgba(0,163,255,0.2)]">
               <Lock className="w-8 h-8" />
             </div>
 
             <div className="space-y-1.5">
-
               <h3 className="text-xl font-black text-white font-['Cairo']">
                 منطقة المشرف المحمية
               </h3>
@@ -1223,16 +1111,13 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               <p className="text-xs text-gray-400">
                 أدخل كلمة المرور السرية للمشرف للوصول إلى لوحة التحكم.
               </p>
-
             </div>
 
             <form
               onSubmit={handleLogin}
               className="space-y-4 text-right"
             >
-
               <div>
-
                 <label className="text-xs font-bold text-gray-300 block mb-1.5">
                   كلمة المرور السرية:
                 </label>
@@ -1251,15 +1136,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   className="w-full bg-[#152034] border border-[#27405f] text-sm text-white rounded-xl px-4 py-3 focus:outline-none focus:border-[#00a3ff] text-center tracking-widest font-mono"
                   autoFocus
                 />
-
               </div>
 
               {authError && (
                 <div className="flex items-center gap-1.5 text-xs text-rose-400 justify-center">
                   <AlertCircle className="w-4 h-4" />
-                  <span>
-                    {authError}
-                  </span>
+                  <span>{authError}</span>
                 </div>
               )}
 
@@ -1272,41 +1154,20 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
               <div className="flex items-center justify-center gap-1.5 text-[11px] text-gray-500 font-mono pt-1">
                 <ShieldAlert className="w-3.5 h-3.5 text-[#00a3ff]" />
-                <span>
-                  الوصول مخصص للمشرف فقط
-                </span>
+                <span>الوصول مخصص للمشرف فقط</span>
               </div>
-
             </form>
-
           </div>
-
         ) : tab === "reviews" ? (
-
-          /* =================================================
-             REVIEWS / COMMENTS
-          ================================================= */
-
           <div className="p-6 max-h-[75vh] overflow-y-auto">
-
             <AdminReviews
               showToast={showToast}
             />
-
           </div>
-
         ) : tab === "showcase" ? (
-
-          /* =================================================
-             SHOWCASE
-          ================================================= */
-
           <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-
             <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-5">
-
               <div className="flex items-center justify-between border-b border-[#1c2942] pb-3">
-
                 <span className="text-[11px] text-gray-400 font-mono">
                   {showcaseProducts.length} منتج في المربع المميز
                 </span>
@@ -1315,13 +1176,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   <Monitor className="w-4 h-4 text-[#00a3ff]" />
                   إعدادات المربع المميز
                 </h4>
-
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-
                 <label className="flex items-center justify-between p-3.5 rounded-xl bg-[#101a2e] border border-[#1c2942] cursor-pointer hover:border-[#00a3ff]/60 transition-colors">
-
                   <span className="text-xs font-bold text-gray-200">
                     إظهار المربع في الشاشة الرئيسية
                   </span>
@@ -1338,11 +1196,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     }
                     className="w-4 h-4 accent-[#00a3ff] cursor-pointer"
                   />
-
                 </label>
 
                 <label className="flex items-center justify-between p-3.5 rounded-xl bg-[#101a2e] border border-[#1c2942] cursor-pointer hover:border-[#00a3ff]/60 transition-colors">
-
                   <span className="text-xs font-bold text-gray-200 flex items-center gap-1.5">
                     {sc.autoPlay ? (
                       <Play className="w-3.5 h-3.5 text-[#00a3ff]" />
@@ -1364,15 +1220,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     }
                     className="w-4 h-4 accent-[#00a3ff] cursor-pointer"
                   />
-
                 </label>
-
               </div>
 
               <div>
-
                 <div className="flex items-center justify-between mb-2">
-
                   <label className="text-xs font-bold text-gray-300">
                     سرعة تبديل الصور
                   </label>
@@ -1384,7 +1236,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     ).toFixed(1)}{" "}
                     ثانية
                   </span>
-
                 </div>
 
                 <input
@@ -1404,11 +1255,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   }
                   className="w-full accent-[#00a3ff] cursor-pointer"
                 />
-
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-
                 <div>
                   <label className="text-xs font-bold text-gray-300 block mb-1">
                     نص الشارة
@@ -1486,13 +1335,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     className="w-full bg-[#152034] border border-[#1c2942] text-xs text-white rounded-xl px-3 py-2 focus:outline-none focus:border-[#00a3ff]"
                   />
                 </div>
-
               </div>
 
-              {/* SHOWCASE VIDEOS */}
-
               <div>
-
                 <label className="text-xs font-bold text-gray-300 block mb-2">
                   فيديوهات المربع المميز
                 </label>
@@ -1533,7 +1378,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 {(sc.videoUrls ?? [])
                   .length > 0 && (
                   <div className="space-y-1.5 mt-3">
-
                     {(sc.videoUrls ?? []).map(
                       (url, idx) => (
                         <div
@@ -1561,18 +1405,15 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         </div>
                       )
                     )}
-
                   </div>
                 )}
 
                 <div className="mt-3">
-
                   <label className="text-[11px] text-gray-400 block mb-1">
                     أو ألصق رابط فيديو مباشر:
                   </label>
 
                   <div className="flex items-center gap-2">
-
                     <input
                       type="text"
                       value={
@@ -1600,19 +1441,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     >
                       إضافة
                     </button>
-
                   </div>
-
                 </div>
-
               </div>
-
             </div>
 
-            {/* CURRENT SHOWCASE */}
-
             <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-3">
-
               <h4 className="text-sm font-black text-white font-['Cairo']">
                 ترتيب المنتجات في المربع
               </h4>
@@ -1623,27 +1457,23 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 </p>
               ) : (
                 <div className="space-y-2">
-
                   {showcaseProducts.map(
                     (p, i) => (
                       <div
                         key={p.id}
                         className="flex items-center gap-3 p-2.5 rounded-xl bg-[#101a2e] border border-[#1c2942]"
                       >
-
                         <span className="w-7 h-7 rounded-lg bg-[#00a3ff]/15 text-[#00a3ff] border border-[#00a3ff]/30 flex items-center justify-center text-[11px] font-bold">
                           {i + 1}
                         </span>
 
                         <div className="relative w-10 h-10 rounded-lg bg-black/50 border border-[#1c2942] overflow-hidden flex-shrink-0">
-
                           <Image
                             src={p.image}
                             alt={p.title}
                             fill
                             className="object-contain p-1"
                           />
-
                         </div>
 
                         <h5 className="flex-1 min-w-0 text-xs font-bold text-white truncate">
@@ -1655,7 +1485,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         </span>
 
                         <div className="flex items-center gap-1">
-
                           <button
                             onClick={() =>
                               moveItem(i, -1)
@@ -1690,30 +1519,21 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           >
                             <Trash2 className="w-3.5 h-3.5" />
                           </button>
-
                         </div>
-
                       </div>
                     )
                   )}
-
                 </div>
               )}
-
             </div>
 
-            {/* PRODUCT PICKER */}
-
             <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-3">
-
               <h4 className="text-sm font-black text-white font-['Cairo']">
                 اختر المنتجات للمربع
               </h4>
 
               <div className="flex flex-col sm:flex-row gap-2.5">
-
                 <div className="relative flex-1">
-
                   <input
                     type="text"
                     placeholder="ابحث عن منتج..."
@@ -1727,7 +1547,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   />
 
                   <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-
                 </div>
 
                 <select
@@ -1753,16 +1572,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       </option>
                     )
                   )}
-
                 </select>
-
               </div>
 
               <div className="max-h-72 overflow-y-auto rounded-xl border border-[#1c2942] divide-y divide-[#1c2942]">
-
                 {pickerList.length > 0 ? (
                   pickerList.map((p) => {
-
                     const picked =
                       sc.productIds.includes(
                         p.id
@@ -1780,20 +1595,16 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                             : "bg-[#12100a]"
                         }`}
                       >
-
                         <div className="relative w-10 h-10 rounded-lg bg-black/50 border border-[#1c2942] overflow-hidden flex-shrink-0">
-
                           <Image
                             src={p.image}
                             alt={p.title}
                             fill
                             className="object-contain p-1"
                           />
-
                         </div>
 
                         <div className="flex-1 min-w-0">
-
                           <div className="text-[10px] font-bold text-[#00a3ff] uppercase">
                             {p.brand}
                           </div>
@@ -1801,7 +1612,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           <h5 className="text-xs font-bold text-white truncate">
                             {p.title}
                           </h5>
-
                         </div>
 
                         <span className="text-xs font-mono text-gray-300 font-bold">
@@ -1817,7 +1627,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         >
                           ✓
                         </span>
-
                       </button>
                     );
                   })
@@ -1826,9 +1635,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     لا توجد منتجات مطابقة
                   </p>
                 )}
-
               </div>
-
             </div>
 
             <button
@@ -1842,27 +1649,15 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
             >
               تفريغ المربع المميز
             </button>
-
           </div>
-
         ) : tab === "audio" ? (
-
-          /* =================================================
-             AUDIO
-          ================================================= */
-
           <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-
             <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-4">
-
               <div className="flex items-center gap-2 border-b border-[#1c2942] pb-3">
-
                 <Music className="w-4 h-4 text-[#00a3ff]" />
-
                 <h3 className="text-sm font-bold text-white">
                   موسيقى خلفية للموقع
                 </h3>
-
               </div>
 
               <div className="p-3.5 rounded-xl bg-[#1e170e] border border-[#00a3ff]/20 text-[11px] text-gray-300 leading-relaxed">
@@ -1870,7 +1665,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               </div>
 
               <div className="flex items-center gap-2">
-
                 <label
                   className={`text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer ${
                     isUploadingAudio
@@ -1915,7 +1709,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     إيقاف الموسيقى
                   </button>
                 )}
-
               </div>
 
               {audioUploadError && (
@@ -1925,7 +1718,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
               )}
 
               <div>
-
                 <label className="text-[11px] text-gray-400 block mb-1">
                   أو الصق رابط ملف صوت مباشر:
                 </label>
@@ -1947,7 +1739,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   dir="ltr"
                   className="w-full bg-[#152034] border border-[#1c2942] text-xs text-white font-mono rounded-xl px-3 py-2"
                 />
-
               </div>
 
               {siteAudioUrl && (
@@ -1957,29 +1748,17 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   className="w-full"
                 />
               )}
-
             </div>
-
           </div>
-
         ) : tab === "notifications" ? (
-
-          /* =================================================
-             NOTIFICATIONS
-          ================================================= */
-
           <div className="p-6 space-y-6 max-h-[75vh] overflow-y-auto">
-
             <div className="p-5 rounded-2xl bg-[#0b1120] border border-[#1c2942] space-y-4">
-
               <div className="flex items-center gap-2 border-b border-[#1c2942] pb-3">
-
                 <Bell className="w-4 h-4 text-[#00a3ff]" />
 
                 <h3 className="text-sm font-bold text-white">
                   إشعارات "مزايا المتجر"
                 </h3>
-
               </div>
 
               <p className="text-[11px] text-gray-400 leading-relaxed">
@@ -1988,14 +1767,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
               {notifications.length > 0 && (
                 <div className="space-y-2">
-
                   {notifications.map(
                     (msg, idx) => (
                       <div
                         key={idx}
                         className="flex items-center gap-2"
                       >
-
                         <span className="text-[11px] text-gray-500 w-5 text-center">
                           {idx + 1}
                         </span>
@@ -2009,11 +1786,7 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                               e.target.value
                             )
                           }
-                          onBlur={() =>
-                            commitNotificationEdit(
-                              idx
-                            )
-                          }
+                          onBlur={commitNotificationEdit}
                           className="flex-1 bg-[#152034] border border-[#1c2942] text-xs text-gray-100 rounded-lg px-3 py-2"
                         />
 
@@ -2028,16 +1801,13 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         >
                           حذف
                         </button>
-
                       </div>
                     )
                   )}
-
                 </div>
               )}
 
               <div className="flex items-center gap-2 pt-2 border-t border-[#1c2942]">
-
                 <input
                   type="text"
                   value={
@@ -2064,32 +1834,17 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 >
                   + إضافة
                 </button>
-
               </div>
-
             </div>
-
           </div>
-
         ) : (
-
-          /* =================================================
-             PRODUCTS
-          ================================================= */
-
           <div className="p-6 space-y-8 max-h-[75vh] overflow-y-auto">
-
-            {/* PRODUCT FORM */}
-
             <div
               id="admin-product-form"
               className="p-6 rounded-2xl bg-[#101a2e] border border-[#1c2942] space-y-5"
             >
-
               <div className="flex items-center justify-between border-b border-[#1c2942] pb-3">
-
                 <div className="flex items-center gap-2">
-
                   <span className="text-xs font-bold text-gray-400">
                     {editingProduct
                       ? "تعديل المنتج المحدد:"
@@ -2101,11 +1856,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       #{editingProduct.id}
                     </span>
                   )}
-
                 </div>
 
                 <div className="flex items-center gap-2">
-
                   {editingProduct && (
                     <button
                       onClick={cancelEdit}
@@ -2117,16 +1870,13 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
                   <h4 className="text-sm font-black text-white flex items-center gap-1.5">
                     <Plus className="w-4 h-4 text-[#00a3ff]" />
-
                     <span>
                       {editingProduct
                         ? "تعديل بيانات المنتج"
                         : "إضافة منتج جديد للكتالوج"}
                     </span>
                   </h4>
-
                 </div>
-
               </div>
 
               <form
@@ -2135,11 +1885,8 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 }
                 className="space-y-4"
               >
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
                   <div>
-
                     <label className="text-xs font-bold text-gray-300 block mb-1">
                       اسم المنتج الكامل *
                     </label>
@@ -2156,11 +1903,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       }
                       className="w-full bg-[#16223a] border border-[#27405f] text-xs sm:text-sm text-white rounded-xl px-3.5 py-2.5"
                     />
-
                   </div>
 
                   <div>
-
                     <label className="text-xs font-bold text-gray-300 block mb-1">
                       الفئة
                     </label>
@@ -2191,15 +1936,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         🎧 سماعات
                       </option>
                     </select>
-
                   </div>
-
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
                   <div>
-
                     <label className="text-xs font-bold text-gray-300 block mb-1">
                       السعر بالشيكل *
                     </label>
@@ -2216,11 +1957,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       }
                       className="w-full bg-[#16223a] border border-[#27405f] text-sm font-mono font-bold text-[#00a3ff] rounded-xl px-3.5 py-2.5"
                     />
-
                   </div>
 
                   <div>
-
                     <label className="text-xs font-bold text-gray-300 block mb-1">
                       السعر القديم
                     </label>
@@ -2238,11 +1977,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       }
                       className="w-full bg-[#16223a] border border-[#27405f] text-sm font-mono text-gray-400 rounded-xl px-3.5 py-2.5"
                     />
-
                   </div>
 
                   <div>
-
                     <label className="text-xs font-bold text-gray-300 block mb-1">
                       العلامة التجارية
                     </label>
@@ -2257,13 +1994,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       }
                       className="w-full bg-[#16223a] border border-[#27405f] text-xs sm:text-sm text-white rounded-xl px-3.5 py-2.5"
                     />
-
                   </div>
-
                 </div>
 
                 <div>
-
                   <label className="text-xs font-bold text-gray-300 block mb-1">
                     وصف المنتج
                   </label>
@@ -2278,19 +2012,14 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     }
                     className="w-full bg-[#16223a] border border-[#27405f] text-xs sm:text-sm text-gray-200 rounded-xl p-3"
                   />
-
                 </div>
 
-                {/* MAIN IMAGE */}
-
                 <div>
-
                   <label className="text-xs font-bold text-gray-300 block mb-1">
                     صورة المنتج
                   </label>
 
                   <div className="flex items-center gap-2 mb-2">
-
                     <label
                       className={`text-[11px] font-bold px-3 py-2 rounded-lg border cursor-pointer ${
                         isUploadingImage
@@ -2316,7 +2045,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         }
                         className="hidden"
                       />
-
                     </label>
 
                     {imageUrl.startsWith(
@@ -2326,7 +2054,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         ✓ تم رفع الصورة
                       </span>
                     )}
-
                   </div>
 
                   {uploadError && (
@@ -2348,7 +2075,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   />
 
                   <div className="flex flex-wrap gap-2">
-
                     {PRESET_IMAGES.map(
                       (preset, idx) => (
                         <button
@@ -2370,15 +2096,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         </button>
                       )
                     )}
-
                   </div>
-
                 </div>
 
-                {/* GALLERY */}
-
                 <div>
-
                   <label className="text-xs font-bold text-gray-300 block mb-1">
                     وسائط إضافية للمنتج
                   </label>
@@ -2411,7 +2132,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       }}
                       className="hidden"
                     />
-
                   </label>
 
                   {galleryUploadError && (
@@ -2422,14 +2142,12 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
 
                   {gallery.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-2">
-
                       {gallery.map(
                         (item, idx) => (
                           <div
                             key={idx}
                             className="relative w-16 h-16 rounded-lg overflow-hidden border border-[#27405f] bg-[#0b1120]"
                           >
-
                             {item.type ===
                             "video" ? (
                               <video
@@ -2461,20 +2179,14 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                             >
                               ×
                             </button>
-
                           </div>
                         )
                       )}
-
                     </div>
                   )}
-
                 </div>
 
-                {/* BADGE */}
-
                 <div>
-
                   <label className="text-xs font-bold text-gray-300 block mb-1">
                     شارة ترويجية
                   </label>
@@ -2490,11 +2202,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                     placeholder="الأكثر طلباً 🔥"
                     className="w-full bg-[#16223a] border border-[#27405f] text-xs text-white rounded-xl px-3.5 py-2"
                   />
-
                 </div>
 
                 <div className="flex items-center justify-end gap-3 pt-2">
-
                   {editingProduct && (
                     <button
                       type="button"
@@ -2516,23 +2226,13 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                         ? "حفظ التعديلات ونشرها فوراً"
                         : "إضافة المنتج للمتجر فوراً"}
                     </span>
-
                   </button>
-
                 </div>
-
               </form>
-
             </div>
 
-            {/* =================================================
-                PRODUCTS LIST
-            ================================================= */}
-
             <div className="space-y-4">
-
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-[#1c2942] pb-3">
-
                 <span className="text-xs text-[#00a3ff] font-bold bg-[#00a3ff]/10 px-3 py-1.5 rounded-lg border border-[#00a3ff]/30 font-mono">
                   إجمالي المنتجات المدارة:{" "}
                   {products.length}
@@ -2541,13 +2241,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                 <h4 className="text-sm font-black text-white">
                   قائمة المنتجات الحالية بالمتجر
                 </h4>
-
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
-
                 <div className="relative w-full sm:w-64">
-
                   <input
                     type="text"
                     placeholder="ابحث في الكتالوج..."
@@ -2561,11 +2258,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                   />
 
                   <Search className="w-3.5 h-3.5 text-gray-400 absolute left-2.5 top-1/2 -translate-y-1/2" />
-
                 </div>
 
                 <div className="flex items-center gap-1.5 overflow-x-auto w-full sm:w-auto pb-1">
-
                   <button
                     onClick={() =>
                       setFilterCategory(
@@ -2602,15 +2297,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       </button>
                     )
                   )}
-
                 </div>
-
               </div>
 
               <div className="rounded-xl border border-[#1c2942] overflow-hidden bg-[#0b1120]">
-
                 <div className="divide-y divide-[#1c2942] max-h-96 overflow-y-auto">
-
                   {filteredList.length >
                   0 ? (
                     filteredList.map(
@@ -2619,11 +2310,8 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                           key={prod.id}
                           className="p-3.5 flex items-center justify-between gap-4 hover:bg-[#101a2e]"
                         >
-
                           <div className="flex items-center gap-3 min-w-0">
-
                             <div className="relative w-12 h-12 rounded-xl bg-black/50 border border-[#27405f] flex-shrink-0 overflow-hidden">
-
                               <Image
                                 src={
                                   prod.image
@@ -2634,13 +2322,10 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                                 fill
                                 className="object-contain p-1"
                               />
-
                             </div>
 
                             <div className="min-w-0">
-
                               <div className="flex items-center gap-2">
-
                                 <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#00a3ff]/10 text-[#00a3ff] border border-[#00a3ff]/30">
                                   {
                                     prod.category
@@ -2652,7 +2337,6 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                                     prod.brand
                                   }
                                 </span>
-
                               </div>
 
                               <h5 className="text-xs font-bold text-white truncate max-w-sm sm:max-w-md mt-0.5">
@@ -2660,15 +2344,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                                   prod.title
                                 }
                               </h5>
-
                             </div>
-
                           </div>
 
                           <div className="flex items-center gap-3 flex-shrink-0">
-
                             <div className="text-left font-mono">
-
                               <span className="text-sm font-black text-[#00a3ff]">
                                 {prod.price.toLocaleString()}
                               </span>
@@ -2676,11 +2356,9 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                               <span className="text-xs text-gray-400 font-bold mr-1">
                                 ₪
                               </span>
-
                             </div>
 
                             <div className="flex items-center gap-1.5">
-
                               <button
                                 onClick={() =>
                                   startEditProduct(
@@ -2705,11 +2383,8 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
                               </button>
-
                             </div>
-
                           </div>
-
                         </div>
                       )
                     )
@@ -2718,16 +2393,11 @@ export const AdminDashboardModal: React.FC<AdminDashboardModalProps> = ({
                       لا توجد منتجات مطابقة
                     </div>
                   )}
-
                 </div>
-
               </div>
-
             </div>
-
           </div>
         )}
-
       </div>
     </div>
   );
