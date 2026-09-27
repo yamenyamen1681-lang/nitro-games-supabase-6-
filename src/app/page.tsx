@@ -14,7 +14,7 @@ import { LiveSalesToast } from "@/components/LiveSalesToast";
 import { FloatingActions } from "@/components/FloatingActions";
 import { AdminDashboardModal } from "@/components/AdminDashboardModal";
 import { CustomerReviews } from "@/components/CustomerReviews";
-import { CyberBackground } from "@/components/CyberBackground"; // استدعاء خلفية السايبر القوية
+import { CyberBackground } from "@/components/CyberBackground";
 import { Product, INITIAL_PRODUCTS, ShowcaseConfig, DEFAULT_SHOWCASE } from "@/lib/data";
 
 function NitroGamesApp() {
@@ -108,13 +108,12 @@ function NitroGamesApp() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // تصفية المنتجات التي توجد بها خصومات أو عروض خاصة لتقديمها في قسم العروض
   const dealProducts = products.filter((p) => p.originalPrice && p.originalPrice > p.price);
 
   return (
-    <div className="min-h-screen bg-[#03060c] text-gray-100 flex flex-col justify-between selection:bg-[#00a3ff] selection:text-black relative overflow-x-hidden">
+    <div className="min-h-screen bg-[#030712]/80 text-gray-100 flex flex-col justify-between selection:bg-[#00a3ff] selection:text-black relative overflow-x-hidden">
       
-      {/* 🌟 خلفية السايبر التفاعلية القوية */}
+      {/* 🌟 خلفية السايبر التفاعلية */}
       <CyberBackground />
 
       {/* التنبيهات المنبثقة (Toast) */}
@@ -127,7 +126,7 @@ function NitroGamesApp() {
         </div>
       )}
 
-      {/* الهيدر العلوي المحدث والمستجيب */}
+      {/* الهيدر العلوي */}
       <Header
         onSearchChange={(q) => setSearchQuery(q)}
         onCategorySelect={(cat) => setSelectedCategory(cat)}
@@ -142,7 +141,6 @@ function NitroGamesApp() {
           onCategorySelect={(cat) => setSelectedCategory(cat)}
         />
         
-        {/* قسم العروض الفلاش الأسطوري الجديد */}
         <DealsSection dealProducts={dealProducts.length > 0 ? dealProducts : products} />
 
         <ProductSection
