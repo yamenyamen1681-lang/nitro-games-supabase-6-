@@ -66,7 +66,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
 
   return (
     <section className="relative overflow-hidden my-10 px-2 sm:px-4">
-      {/* هالة الضوء النيون الخلفية الحارقة */}
+      {/* هالة الضوء النيون الخلفية */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-r from-[#ff0055]/20 via-[#00a3ff]/20 to-[#00e5ff]/20 blur-[140px] pointer-events-none rounded-full" />
 
       <div className="relative max-w-4xl mx-auto rounded-3xl bg-[#050a15]/95 backdrop-blur-2xl border-2 border-[#162e52] hover:border-[#00e5ff]/60 shadow-[0_0_60px_rgba(0,163,255,0.2)] transition-all duration-500 overflow-hidden">
@@ -87,11 +87,11 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
               عروض الفلاش <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00e5ff] via-[#00a3ff] to-[#ff0055]">الأسبوعية</span>
             </h2>
             <p className="text-xs text-gray-400 font-['Cairo']">
-              وفر حتى <span className="text-[#00e5ff] font-bold text-sm">90%</span> على أعتى الملحقات الاحترافية
+              وفر حتى <span className="text-[#00e5ff] font-bold text-sm">90%</span> على العتاد الاحترافي
             </p>
           </div>
 
-          {/* العداد التنازلي بخلفية رقمية شاحنة النيون */}
+          {/* العداد التنازلي المضيء */}
           <div className="flex items-center gap-2.5 bg-[#030712] px-5 py-3 rounded-2xl border border-[#1a355d] shadow-[inset_0_0_20px_rgba(0,0,0,0.8)]" dir="ltr">
             <div className="text-center min-w-[45px]">
               <span className="text-xl sm:text-2xl font-black text-white font-mono leading-none block drop-shadow-[0_0_10px_#ffffff]">
@@ -116,28 +116,29 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
           </div>
         </div>
 
-        {/* جسم العرض الرئيسي - منصة عرض المنتجات */}
+        {/* جسم العرض الرئيسي - حاوية المنتج */}
         <div className="p-5 sm:p-8 grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
           
-          {/* منصة العرض للمنتج (3D Cyber Platform) */}
+          {/* حاوية العرض مع خلفية النقاط التكنولوجية (Dot Grid Matrix) */}
           <div className="md:col-span-6 relative">
-            <div className="relative h-64 sm:h-80 w-full rounded-2xl bg-gradient-to-b from-[#0a1529]/90 via-[#050c19]/90 to-[#02060e] border border-[#1a3863] p-4 flex items-center justify-center group overflow-hidden shadow-inner">
+            <div className="relative h-64 sm:h-80 w-full rounded-2xl bg-[#060c19]/90 border border-[#1a3863] p-4 flex items-center justify-center group overflow-hidden shadow-inner">
               
-              {/* شبكة أرضية النيون العائمة تحت المنتج */}
+              {/* 🎯 شبكة النقاط خلف الكيبورد */}
               <div 
-                className="absolute inset-x-0 bottom-0 h-32 opacity-30 pointer-events-none"
+                className="absolute inset-0 opacity-40 pointer-events-none"
                 style={{
-                  backgroundImage: "radial-gradient(ellipse at bottom, rgba(0,229,255,0.4) 0%, transparent 70%)",
+                  backgroundImage: "radial-gradient(rgba(0, 163, 255, 0.35) 1.5px, transparent 1.5px)",
+                  backgroundSize: "18px 18px",
                 }}
               />
 
-              {/* وسام الخصم النيون المشع */}
+              {/* وسام الخصم النيون */}
               <div className="absolute top-3 right-3 z-10 flex items-center gap-1 bg-gradient-to-r from-[#ff0055] via-[#ff2a00] to-[#ff5500] text-white text-xs sm:text-sm font-black px-3.5 py-1.5 rounded-full shadow-[0_0_20px_rgba(255,0,85,0.8)] border border-white/20 animate-pulse">
                 <Percent className="w-4 h-4" />
                 <span>خصم {discountPercent}%</span>
               </div>
 
-              {/* أزرار الإجراءات السريعة فوق الصورة */}
+              {/* أزرار الإجراءات السريعة */}
               <div className="absolute top-3 left-3 z-10 flex items-center gap-2">
                 {onQuickView && (
                   <button
@@ -150,8 +151,8 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
                 )}
               </div>
 
-              {/* صورة المنتج المسرحية */}
-              <div className="relative w-full h-full transition-transform duration-700 ease-out group-hover:scale-110 drop-shadow-[0_15px_30px_rgba(0,0,0,0.9)]">
+              {/* صورة المنتج مع زوم خفيف عند التمرير */}
+              <div className="relative w-full h-full z-10 transition-transform duration-700 ease-out group-hover:scale-110 drop-shadow-[0_15px_30px_rgba(0,0,0,0.9)]">
                 <Image
                   src={currentProduct.image}
                   alt={currentProduct.title}
@@ -162,12 +163,12 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
               </div>
 
               {/* حالة التوفر النيون */}
-              <span className="absolute bottom-3 right-3 text-[10px] font-bold text-[#00e5ff] bg-[#030914]/90 border border-[#00e5ff]/40 px-3 py-1 rounded-full backdrop-blur-md shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+              <span className="absolute bottom-3 right-3 z-10 text-[10px] font-bold text-[#00e5ff] bg-[#030914]/90 border border-[#00e5ff]/40 px-3 py-1 rounded-full backdrop-blur-md shadow-[0_0_10px_rgba(0,229,255,0.2)]">
                 متوفر حالياً في المخزن
               </span>
             </div>
 
-            {/* أزرار التبديل إن وجدت عدة منتجات */}
+            {/* أزرار التبديل للمنتجات */}
             {activeProducts.length > 1 && (
               <div className="flex items-center justify-between mt-3 px-1">
                 <div className="flex items-center gap-1.5">
@@ -199,7 +200,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
             )}
           </div>
 
-          {/* معلومات وتفاصيل العرض والأسعار */}
+          {/* تفاصيل العرض والأسعار والزر */}
           <div className="md:col-span-6 text-right space-y-5">
             <div>
               <div className="inline-block text-[11px] font-tech text-[#00e5ff] font-bold uppercase bg-[#00e5ff]/10 px-3 py-0.5 rounded-md border border-[#00e5ff]/30 mb-2">
@@ -210,13 +211,13 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
               </h3>
             </div>
 
-            {/* شريط الضمان والمزايا */}
+            {/* شريط الضمان */}
             <div className="flex items-center gap-2.5 text-xs text-gray-200 font-['Cairo'] bg-[#071120] p-3 rounded-xl border border-[#172e50]">
               <ShieldCheck className="w-5 h-5 text-[#00e5ff] shrink-0" />
               <span>ضمان رسمي لمدة 12 شهر شامل الصيانة والتطوير</span>
             </div>
 
-            {/* عرض السعر النيون */}
+            {/* عرض السعر */}
             <div className="flex items-baseline gap-4 pt-1">
               <span className="text-3xl sm:text-4xl font-black text-[#00e5ff] font-mono drop-shadow-[0_0_18px_rgba(0,229,255,0.6)]">
                 {currentProduct.price.toLocaleString()} ₪
@@ -228,7 +229,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
               )}
             </div>
 
-            {/* شريط الكمية المتبقية الحراري (Scarcity Bar) */}
+            {/* شريط الكمية المتبقية الحراري */}
             <div className="space-y-2 pt-1">
               <div className="flex items-center justify-between text-xs font-['Cairo']">
                 <span className="text-gray-400">الكمية المتبقية للعرض:</span>
@@ -244,7 +245,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
               </div>
             </div>
 
-            {/* زر الشراء الضخم والنيون */}
+            {/* زر الشراء */}
             <div className="pt-2">
               <button
                 onClick={() => addToCart(currentProduct, 1)}
