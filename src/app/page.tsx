@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { CartProvider, useCart } from "@/context/CartContext";
 import { Header } from "@/components/Header";
 import { HeroSection } from "@/components/HeroSection";
-import { DealsSection } from "@/components/DealsSection"; // تم استدعاء قسم العروض القوي هنا
+import { DealsSection } from "@/components/DealsSection";
 import { ProductSection } from "@/components/ProductSection";
 import { Footer } from "@/components/Footer";
 import { CartDrawer } from "@/components/CartDrawer";
@@ -14,6 +14,7 @@ import { LiveSalesToast } from "@/components/LiveSalesToast";
 import { FloatingActions } from "@/components/FloatingActions";
 import { AdminDashboardModal } from "@/components/AdminDashboardModal";
 import { CustomerReviews } from "@/components/CustomerReviews";
+import { CyberBackground } from "@/components/CyberBackground"; // استدعاء خلفية السايبر القوية
 import { Product, INITIAL_PRODUCTS, ShowcaseConfig, DEFAULT_SHOWCASE } from "@/lib/data";
 
 function NitroGamesApp() {
@@ -111,20 +112,16 @@ function NitroGamesApp() {
   const dealProducts = products.filter((p) => p.originalPrice && p.originalPrice > p.price);
 
   return (
-    <div className="min-h-screen bg-[#05070d] text-gray-100 flex flex-col justify-between selection:bg-[#00a3ff] selection:text-black relative overflow-x-hidden">
-      {/* الخلفية المضيئة المزخرفة والتأكد من منع التمدد الجانبي الشاذ على الجوال */}
-      <div className="aurora-stage pointer-events-none overflow-hidden max-w-full">
-        <div className="tech-grid opacity-30" />
-        <div className="aurora-blob opacity-40 sm:opacity-70" style={{ width: "80vw", maxWidth: 420, height: 420, top: "-8%", right: "6%", background: "#00a3ff" }} />
-        <div className="aurora-blob opacity-40 sm:opacity-70" style={{ width: "75vw", maxWidth: 380, height: 380, top: "35%", left: "4%", background: "#00e5ff", animationDelay: "-6s" }} />
-        <div className="aurora-blob opacity-40 sm:opacity-70" style={{ width: "70vw", maxWidth: 340, height: 340, bottom: "-6%", right: "28%", background: "#5b8cff", animationDelay: "-12s" }} />
-      </div>
+    <div className="min-h-screen bg-[#03060c] text-gray-100 flex flex-col justify-between selection:bg-[#00a3ff] selection:text-black relative overflow-x-hidden">
+      
+      {/* 🌟 خلفية السايبر التفاعلية القوية */}
+      <CyberBackground />
 
       {/* التنبيهات المنبثقة (Toast) */}
       {toastMessage && (
         <div className="fixed top-20 sm:top-24 left-1/2 -translate-x-1/2 z-50 px-4 w-full max-w-sm">
-          <div className="px-4 py-3 rounded-2xl bg-[#0b1120]/95 border border-[#00a3ff]/60 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2.5 shadow-[0_10px_30px_rgba(0,163,255,0.3)] backdrop-blur-md text-center">
-            <span className="w-2 h-2 rounded-full bg-[#00a3ff] animate-ping shrink-0" />
+          <div className="px-4 py-3 rounded-2xl bg-[#0b1120]/95 border border-[#00a3ff]/60 text-white text-xs sm:text-sm font-bold flex items-center justify-center gap-2.5 shadow-[0_10px_30px_rgba(0,163,255,0.4)] backdrop-blur-md text-center">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#00a3ff] animate-ping shrink-0" />
             <span>{toastMessage}</span>
           </div>
         </div>
@@ -138,7 +135,7 @@ function NitroGamesApp() {
       />
 
       {/* المحتوى الرئيسي للمتجر */}
-      <main className="flex-1 relative z-10 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 space-y-10">
+      <main className="flex-1 relative z-10 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 space-y-12 my-6">
         <HeroSection
           products={products}
           showcase={showcase}
@@ -157,7 +154,7 @@ function NitroGamesApp() {
         <CustomerReviews />
       </main>
 
-      {/* الفوتر وسلة المشتريات والنافذة المنبثقة */}
+      {/* الفوتر وسلة المشتريات والنوافذ المنبثقة */}
       <Footer onOpenAdmin={() => setIsAdminOpen(true)} onSelectCategory={(cat) => setSelectedCategory(cat)} />
 
       <CartDrawer />
