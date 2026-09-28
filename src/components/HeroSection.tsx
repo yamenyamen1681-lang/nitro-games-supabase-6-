@@ -159,9 +159,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         relative
         overflow-hidden
         pt-6
-        pb-4
+        pb-0
+        mb-0
         lg:pt-12
-        lg:pb-10
+        lg:pb-4
         bg-[#020914]
       "
     >
@@ -170,7 +171,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00A8FF]/10 blur-[130px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00D9FF]/10 blur-[130px] rounded-full pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pb-2">
         {/* TOP BADGE */}
         <div className="flex justify-center mb-6">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full panel border border-[#00A8FF]/30 backdrop-blur-md">
@@ -187,7 +188,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
           {/* RIGHT: COPY */}
           <div className="lg:col-span-6 space-y-5 text-right">
             <div className="flex items-center gap-4 justify-end">
@@ -269,61 +270,58 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="lg:col-span-6 mt-2 lg:mt-0">
             <div className="relative group max-w-md mx-auto lg:max-w-none">
               
-              {/* زر الموسيقى المطور: ألوَان نيون متناسقة تماماً، دائري أصغر، وموقعه على الجهة اليسرى */}
+              {/* زر الموسيقى المطور متناسق وبدون إحداث أي مساحة مقتطعة */}
               {siteAudioUrl && (
                 <>
                   <audio ref={audioRef} src={siteAudioUrl} loop />
                   <button
                     onClick={toggleAudio}
-                    className={`absolute -top-3 -left-2 sm:-left-3 z-30 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 border ${
+                    className={`absolute -top-2 -left-2 z-30 w-7 h-7 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 border ${
                       isPlaying
-                        ? "bg-[#00D9FF] border-[#00D9FF] text-[#00101c] shadow-[0_0_15px_#00D9FF]"
-                        : "bg-[#05172b]/90 border-[#00D9FF]/70 text-[#00D9FF] backdrop-blur-md shadow-[0_0_10px_rgba(0,217,255,0.3)]"
+                        ? "bg-[#00D9FF] border-[#00D9FF] text-[#00101c] shadow-[0_0_12px_#00D9FF]"
+                        : "bg-[#05172b]/90 border-[#00D9FF]/70 text-[#00D9FF] backdrop-blur-md"
                     }`}
                     title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
                   >
                     {isPlaying ? (
-                      <Volume2 className="w-4 h-4 animate-pulse" />
+                      <Volume2 className="w-3.5 h-3.5 animate-pulse" />
                     ) : (
-                      <Music className="w-4 h-4" />
+                      <Music className="w-3.5 h-3.5" />
                     )}
                   </button>
                 </>
               )}
 
-              {/* تأثير التوهج خلف الإطار */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#00A8FF] via-[#00D9FF] to-[#0055FF] rounded-[28px] blur-lg opacity-40 group-hover:opacity-75 transition duration-500 pointer-events-none" />
-
-              {/* الإطار الخارجي Ultra-Cyber */}
-              <div className="relative p-1 rounded-[26px] bg-gradient-to-b from-[#0e3256] via-[#051a30] to-[#010a17] border border-[#00D9FF]/50 shadow-[0_0_40px_rgba(0,168,255,0.25)]">
+              {/* الإطار الخارجي Cyber */}
+              <div className="relative p-1 rounded-[24px] bg-gradient-to-b from-[#0e3256] via-[#051a30] to-[#010a17] border border-[#00D9FF]/40">
                 
-                {/* لمسات حواف الهولوغرام Cyber Corners */}
-                <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#00D9FF] rounded-tr-[24px] pointer-events-none" />
-                <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#00D9FF] rounded-bl-[24px] pointer-events-none" />
+                {/* لمسات الحواف Cyber Corners */}
+                <div className="absolute top-0 right-0 w-6 h-6 border-t-2 border-r-2 border-[#00D9FF] rounded-tr-[22px] pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-6 h-6 border-b-2 border-l-2 border-[#00D9FF] rounded-bl-[22px] pointer-events-none" />
 
-                <div className="rounded-[22px] bg-[#020b18] overflow-hidden border border-[#0f3254]">
+                <div className="rounded-[20px] bg-[#020b18] overflow-hidden border border-[#0f3254]">
                   
                   {/* الشريط العلوي الهيدر */}
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-[#0d2e4c] bg-gradient-to-r from-[#05172b] via-[#0a2542] to-[#05172b]">
+                  <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[#0d2e4c] bg-gradient-to-r from-[#05172b] via-[#0a2542] to-[#05172b]">
                     <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-[#00D9FF] animate-spin" style={{ animationDuration: '6s' }} />
-                      <span className="text-xs font-tech font-extrabold text-[#00D9FF] tracking-wider uppercase">
+                      <Sparkles className="w-3.5 h-3.5 text-[#00D9FF] animate-spin" style={{ animationDuration: '6s' }} />
+                      <span className="text-[11px] font-tech font-extrabold text-[#00D9FF] tracking-wider uppercase">
                         CYBER GEAR
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-2 bg-[#00A8FF]/10 px-2.5 py-1 rounded-full border border-[#00A8FF]/30">
-                      <span className="w-2 h-2 rounded-full bg-[#00D9FF] animate-ping" />
-                      <span className="text-[10px] font-tech font-bold text-gray-200 uppercase tracking-wider">
+                    <div className="flex items-center gap-2 bg-[#00A8FF]/10 px-2 py-0.5 rounded-full border border-[#00A8FF]/30">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#00D9FF] animate-ping" />
+                      <span className="text-[9px] font-tech font-bold text-gray-200 uppercase tracking-wider">
                         {cfg.badgeText || "LIVE SHOWCASE"}
                       </span>
                     </div>
                   </div>
 
                   {/* منطقة المحتوى بالفيديو أو الصورة */}
-                  <div className="relative aspect-[16/10] sm:h-80 w-full bg-[#010611] p-2 sm:p-3">
+                  <div className="relative aspect-[16/10] sm:h-80 w-full bg-[#010611] p-2">
                     {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
-                      <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#00A8FF]/40 shadow-2xl">
+                      <div className="relative w-full h-full rounded-lg overflow-hidden border border-[#00A8FF]/30">
                         <video
                           ref={showcaseVideoRef}
                           key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
@@ -336,17 +334,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           onEnded={() =>
                             setShowcaseVideoIndex((i) => (i + 1) % cfg.videoUrls!.length)
                           }
-                          className="absolute inset-0 w-full h-full object-cover rounded-xl"
+                          className="absolute inset-0 w-full h-full object-cover rounded-lg"
                         />
                         {cfg.videoUrls.length > 1 && (
-                          <span className="absolute top-2.5 right-2.5 z-10 text-[10px] font-tech bg-black/80 text-[#00D9FF] px-2.5 py-1 rounded-lg border border-[#00D9FF]/40 shadow-md">
+                          <span className="absolute top-2 right-2 z-10 text-[9px] font-tech bg-black/80 text-[#00D9FF] px-2 py-0.5 rounded border border-[#00D9FF]/40">
                             {(showcaseVideoIndex % cfg.videoUrls.length) + 1}/{cfg.videoUrls.length}
                           </span>
                         )}
                       </div>
                     ) : cfg.enabled && active ? (
                       <div
-                        className="relative w-full h-full rounded-xl overflow-hidden border border-[#00A8FF]/40 flex items-center justify-center bg-[#020b18]"
+                        className="relative w-full h-full rounded-lg overflow-hidden border border-[#00A8FF]/30 flex items-center justify-center bg-[#020b18]"
                         onMouseEnter={() => setPaused(true)}
                         onMouseLeave={() => setPaused(false)}
                       >
@@ -354,18 +352,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           src={active.image}
                           alt={active.title}
                           fill
-                          className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
+                          className="object-contain p-2 transition-transform duration-500 group-hover:scale-105"
                           priority
                         />
 
                         {/* مؤشرات الصور */}
-                        <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg border border-[#00A8FF]/30">
+                        <div className="absolute top-2 right-2 z-10 flex items-center gap-1 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded border border-[#00A8FF]/30">
                           {showcaseItems.map((_, i) => (
                             <button
                               key={i}
                               onClick={() => setSlide(i)}
                               className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                                i === slide ? "w-5 bg-[#00D9FF]" : "w-1.5 bg-gray-600"
+                                i === slide ? "w-4 bg-[#00D9FF]" : "w-1.5 bg-gray-600"
                               }`}
                             />
                           ))}
@@ -375,15 +373,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   </div>
 
                   {/* الشريط السفلي للإطار */}
-                  <div className="px-4 py-3 sm:py-3.5 border-t border-[#0d2e4c] bg-gradient-to-r from-[#05172b] via-[#09223c] to-[#05172b] flex items-center justify-between gap-3">
+                  <div className="px-3.5 py-2.5 border-t border-[#0d2e4c] bg-gradient-to-r from-[#05172b] via-[#09223c] to-[#05172b] flex items-center justify-between gap-3">
                     <div className="text-right truncate">
-                      <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
+                      <h3 className="text-xs font-bold text-white truncate font-['Cairo']">
                         {cfg.videoUrls && cfg.videoUrls.length > 0
                           ? cfg.headline
                           : active?.title || cfg.headline}
                       </h3>
                       {active && (!cfg.videoUrls || cfg.videoUrls.length === 0) && (
-                        <p className="text-xs sm:text-sm font-black text-[#00D9FF] font-tech mt-0.5">
+                        <p className="text-xs font-black text-[#00D9FF] font-tech mt-0.5">
                           {active.price} ₪
                         </p>
                       )}
@@ -395,9 +393,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           ? addToCart(active)
                           : scrollTo("products")
                       }
-                      className="btn-neon text-xs px-3.5 sm:px-5 py-2 flex items-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap font-bold rounded-xl"
+                      className="btn-neon text-xs px-3 py-1.5 flex items-center gap-1.5 cursor-pointer whitespace-nowrap font-bold rounded-lg"
                     >
-                      <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <ShoppingBag className="w-3.5 h-3.5" />
                       <span>{cfg.ctaLabel || "تسوق الآن"}</span>
                     </button>
                   </div>
