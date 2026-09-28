@@ -17,7 +17,8 @@ import {
   Volume2,
   VolumeX,
   Crown,
-  CornerDownRight,
+  Radio,
+  Sparkles,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -116,7 +117,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   ];
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-10 pb-16 lg:pt-14 lg:pb-24 bg-[#05070d] border-b border-[#16223a]">
+    <section id="hero" className="relative overflow-hidden pt-10 pb-16 lg:pt-14 lg:pb-24 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
         @keyframes marqueeLoop {
           0% { transform: translateX(0%); }
@@ -129,6 +130,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }
         .animate-marquee-infinite:hover {
           animation-play-state: paused;
+        }
+        @keyframes cyberGlow {
+          0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 15px rgba(0, 163, 255, 0.4)); }
+          50% { opacity: 1; filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.8)); }
+        }
+        .animate-cyber-glow {
+          animation: cyberGlow 3s infinite ease-in-out;
         }
       `}</style>
 
@@ -180,16 +188,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* الأزرار + شارة صاحب المتجر المميزة */}
             <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
-              {/* شارة صاحب المتجر الجيمينج الأسطورية */}
-              <div dir="ltr" className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl bg-gradient-to-r from-[#030a1a] via-[#08152e] to-[#030a1a] border border-[#00a3ff]/60 shadow-[0_0_20px_rgba(0,163,255,0.25)]">
-                <Crown className="w-4 h-4 text-amber-400 fill-amber-400/30 animate-pulse" />
+              {/* شارة صاحب المتجر الـ Cyber VIP */}
+              <div dir="ltr" className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/70 shadow-[0_0_25px_rgba(0,163,255,0.3)]">
+                <Crown className="w-4 h-4 text-amber-400 fill-amber-400/30 animate-bounce" />
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest font-mono">
                   STORE OWNER:
                 </span>
-                <span className="text-sm font-black text-[#00a3ff] tracking-widest drop-shadow-[0_0_10px_rgba(0,163,255,0.8)] font-mono">
+                <span className="text-sm font-black text-[#00e5ff] tracking-widest drop-shadow-[0_0_12px_rgba(0,229,255,0.9)] font-mono">
                   YamEn
                 </span>
-                <Zap className="w-3.5 h-3.5 text-[#00a3ff] fill-[#00a3ff]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#00a3ff]" />
               </div>
 
               {/* زر تسوق الآن */}
@@ -227,49 +235,42 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* --- LEFT: Dynamic Showcase --- */}
+          {/* --- LEFT: Dynamic Showcase (التصميم الملكي الجديد) --- */}
           <div className="lg:col-span-6 space-y-4">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
-              <div className="relative pt-6">
-                <div className="absolute -inset-6 bg-gradient-to-tr from-[#00a3ff]/15 via-transparent to-[#00e5ff]/15 blur-2xl rounded-full pointer-events-none" />
+              <div className="relative group">
+                {/* إضاءة توهج نيون خلفية */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#00a3ff] via-[#00e5ff] to-[#7000ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-80 transition duration-1000 group-hover:duration-200 animate-cyber-glow" />
 
-                {/* 🔴 زر التشغيل + النص التفاعلي والسهم المنحني من غير رمز النوتة الموسيقية */}
-                {siteAudioUrl && (
-                  <div className="absolute top-0 right-2 z-30 flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full bg-gradient-to-r from-cyan-400 to-[#00a3ff] text-black font-black text-[11px] shadow-[0_0_15px_rgba(0,163,255,0.9)] animate-pulse">
-                      اضغط هنا
-                    </span>
-                    <CornerDownRight className="w-5 h-5 text-[#00a3ff] drop-shadow-[0_0_8px_rgba(0,163,255,1)]" />
-                  </div>
-                )}
-
-                <div className="relative grad-frame p-1.5">
-                  <div className="rounded-[16px] bg-[#080d18] overflow-hidden">
-                    {/* Header المربع المميز */}
-                    <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#16223a] bg-[#080d18]">
-                      {/* زر تشغيل الصوت */}
+                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
+                  <div className="rounded-[22px] bg-[#040814] overflow-hidden">
+                    {/* Header الهيدر الفخم */}
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
+                      {/* زر الصوت بأسلوب Cyber Button */}
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
                             isPlaying
-                              ? "bg-[#00a3ff] text-black shadow-[0_0_15px_rgba(0,163,255,0.8)] scale-105"
-                              : "bg-[#0d182e] border border-[#00a3ff]/50 text-[#00a3ff] hover:bg-[#00a3ff]/20"
+                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black shadow-[0_0_18px_rgba(0,229,255,0.9)] scale-105"
+                              : "bg-[#09152a] border border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
                           }`}
-                          title={isPlaying ? "إيقاف الصوت" : "تشغيل الصوت"}
                         >
-                          {isPlaying ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-                          <span>{isPlaying ? "تشغيل" : "كتم"}</span>
+                          {isPlaying ? <Volume2 className="w-4 h-4 animate-bounce" /> : <VolumeX className="w-4 h-4" />}
+                          <span className="font-tech text-[11px] tracking-wider">{isPlaying ? "AUDIO ON" : "AUDIO OFF"}</span>
                         </button>
                       ) : <div />}
 
-                      <span className="text-[10px] font-tech text-[#00e5ff] flex items-center gap-1 bg-[#0d1626] px-2.5 py-1 rounded-md border border-[#00e5ff]/20">
-                        <Flame className="w-3.5 h-3.5 text-red-500 fill-red-500 animate-pulse" /> {cfg.badgeText}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.2)]">
+                          <Radio className="w-3.5 h-3.5 text-red-500 animate-pulse" /> {cfg.badgeText}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="relative h-56 sm:h-64 w-full bg-black p-2">
-                      <div className="relative w-full h-full rounded-2xl overflow-hidden">
+                    {/* منطقة عرض الفيديوهات */}
+                    <div className="relative h-60 sm:h-72 w-full bg-[#000000] p-2">
+                      <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#122347]">
                         <video
                           ref={showcaseVideoRef}
                           key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
@@ -282,25 +283,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           onEnded={() =>
                             setShowcaseVideoIndex((i) => (i + 1) % cfg.videoUrls!.length)
                           }
-                          className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                          className="absolute inset-0 w-full h-full object-cover rounded-xl"
                         />
                         {cfg.videoUrls.length > 1 && (
-                          <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/70 text-[#00e5ff] px-2 py-0.5 rounded-md border border-[#00e5ff]/30">
-                            {(showcaseVideoIndex % cfg.videoUrls.length) + 1}/{cfg.videoUrls.length}
+                          <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/80 text-[#00e5ff] px-2.5 py-1 rounded-md border border-[#00e5ff]/40 backdrop-blur-md">
+                            {(showcaseVideoIndex % cfg.videoUrls.length) + 1} / {cfg.videoUrls.length}
                           </span>
                         )}
-                        <span className="absolute inset-0 bg-gradient-to-b from-[#00a3ff]/15 via-transparent to-[#00a3ff]/20 pointer-events-none mix-blend-overlay rounded-2xl" />
-                        <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/50 rounded-2xl pointer-events-none shadow-[inset_0_0_25px_rgba(0,163,255,0.25)]" />
+                        <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/40 rounded-xl pointer-events-none shadow-[inset_0_0_30px_rgba(0,163,255,0.3)]" />
                       </div>
                     </div>
 
-                    <div className="px-4 py-3 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
-                      <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
+                    {/* Footer الأسفل */}
+                    <div className="px-5 py-3.5 border-t border-[#142342] bg-[#060c1d] flex items-center justify-between gap-3">
+                      <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo'] tracking-wide">
                         {cfg.headline}
                       </h3>
                       <a
                         href="#products"
-                        className="btn-pink text-[11px] px-3.5 py-2 flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                        className="btn-pink text-[11px] px-4 py-2 flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl shadow-[0_0_15px_rgba(255,0,128,0.4)]"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>{cfg.ctaLabel}</span>
@@ -313,98 +314,91 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             ) : cfg.enabled && active ? (
               <div
-                className="relative pt-6"
+                className="relative group"
                 onMouseEnter={() => setPaused(true)}
                 onMouseLeave={() => setPaused(false)}
               >
-                <div className="absolute -inset-6 bg-gradient-to-tr from-[#00a3ff]/15 via-transparent to-[#00e5ff]/15 blur-2xl rounded-full pointer-events-none" />
+                {/* إضاءة توهج نيون خلفية */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#00a3ff] via-[#00e5ff] to-[#7000ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-80 transition duration-1000 group-hover:duration-200 animate-cyber-glow" />
 
-                {/* 🔴 زر التشغيل والنص التفاعلي والسهم */}
-                {siteAudioUrl && (
-                  <div className="absolute top-0 right-2 z-30 flex items-center gap-2">
-                    <span className="px-3 py-1 rounded-full bg-gradient-to-r from-cyan-400 to-[#00a3ff] text-black font-black text-[11px] shadow-[0_0_15px_rgba(0,163,255,0.9)] animate-pulse">
-                      اضغط هنا
-                    </span>
-                    <CornerDownRight className="w-5 h-5 text-[#00a3ff] drop-shadow-[0_0_8px_rgba(0,163,255,1)]" />
-                  </div>
-                )}
-
-                <div className="relative grad-frame p-1.5">
-                  <div className="rounded-[16px] bg-[#080d18] overflow-hidden">
-                    {/* Header المربع المميز للصور */}
-                    <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#16223a] bg-[#080d18]">
+                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
+                  <div className="rounded-[22px] bg-[#040814] overflow-hidden">
+                    {/* Header هيدر المنتجات */}
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
-                          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
                             isPlaying
-                              ? "bg-[#00a3ff] text-black shadow-[0_0_15px_rgba(0,163,255,0.8)] scale-105"
-                              : "bg-[#0d182e] border border-[#00a3ff]/50 text-[#00a3ff] hover:bg-[#00a3ff]/20"
+                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black shadow-[0_0_18px_rgba(0,229,255,0.9)] scale-105"
+                              : "bg-[#09152a] border border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
                           }`}
-                          title={isPlaying ? "إيقاف الصوت" : "تشغيل الصوت"}
                         >
-                          {isPlaying ? <Volume2 className="w-4 h-4" /> : <VolumeX className="w-4 h-4" />}
-                          <span>{isPlaying ? "تشغيل" : "كتم"}</span>
+                          {isPlaying ? <Volume2 className="w-4 h-4 animate-bounce" /> : <VolumeX className="w-4 h-4" />}
+                          <span className="font-tech text-[11px] tracking-wider">{isPlaying ? "AUDIO ON" : "AUDIO OFF"}</span>
                         </button>
                       ) : <div />}
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-tech text-[#00e5ff] flex items-center gap-1 bg-[#0d1626] px-2.5 py-1 rounded-md border border-[#00e5ff]/20">
+                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.2)]">
                           <Flame className="w-3.5 h-3.5 text-red-500 fill-red-500 animate-pulse" /> {cfg.badgeText}
                         </span>
 
-                        <div className="flex items-center gap-1 mr-2">
+                        <div className="flex items-center gap-1.5 mr-2">
                           <button
                             onClick={() => go(-1)}
-                            className="p-1 rounded-lg bg-[#152034] hover:bg-[#00a3ff] hover:text-black text-gray-300 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg bg-[#0e1d3a] hover:bg-[#00a3ff] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#1d3461]"
                             aria-label="السابق"
                           >
-                            <ChevronRight className="w-3.5 h-3.5" />
+                            <ChevronRight className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => go(1)}
-                            className="p-1 rounded-lg bg-[#152034] hover:bg-[#00a3ff] hover:text-black text-gray-300 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg bg-[#0e1d3a] hover:bg-[#00a3ff] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#1d3461]"
                             aria-label="التالي"
                           >
-                            <ChevronLeft className="w-3.5 h-3.5" />
+                            <ChevronLeft className="w-4 h-4" />
                           </button>
                         </div>
                       </div>
                     </div>
 
-                    <div className="relative h-56 sm:h-64 w-full bg-gradient-to-b from-[#0d1524] to-[#05070d]">
+                    {/* منطقة معرض المنتج */}
+                    <div className="relative h-60 sm:h-72 w-full bg-gradient-to-b from-[#081226] via-[#040814] to-[#02050c]">
                       <div key={active.id} className="absolute inset-0 showcase-enter">
                         <Image
                           src={active.image}
                           alt={active.title}
                           fill
                           priority
-                          className="object-contain p-4"
+                          className="object-contain p-5 drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
                         />
                       </div>
 
-                      <span className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-[#00a3ff]/60 rounded-tr-md" />
-                      <span className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-[#00e5ff]/60 rounded-bl-md" />
+                      {/* زوايا ديكور Cyber Corner */}
+                      <span className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-lg" />
+                      <span className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#00a3ff] rounded-bl-lg" />
 
-                      <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5">
+                      <div className="absolute top-4 left-4 flex flex-col items-start gap-1">
                         {active.originalPrice && (
-                          <span className="text-[10px] font-mono text-gray-400 line-through bg-black/60 px-2 py-0.5 rounded">
+                          <span className="text-[11px] font-mono text-gray-400 line-through bg-black/70 px-2 py-0.5 rounded-md">
                             {active.originalPrice.toLocaleString()} ₪
                           </span>
                         )}
-                        <span className="text-base font-black font-mono text-[#02121f] bg-[#00a3ff] px-2 py-0.5 rounded-lg shadow-[0_0_20px_rgba(0,163,255,.5)]">
+                        <span className="text-base font-black font-mono text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] px-3 py-1 rounded-lg shadow-[0_0_20px_rgba(0,163,255,0.6)]">
                           {active.price.toLocaleString()} ₪
                         </span>
                       </div>
 
-                      <span className="absolute bottom-3 right-3 text-[10px] font-bold font-tech text-[#00e5ff] bg-black/70 border border-[#00e5ff]/40 px-2.5 py-1 rounded-full">
+                      <span className="absolute bottom-4 right-4 text-[10px] font-bold font-tech text-[#00e5ff] bg-[#061124]/90 border border-[#00e5ff]/50 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.3)]">
                         {CATEGORIES_META.find((c) => c.id === active.category)?.name ?? active.category}
                       </span>
                     </div>
 
-                    <div className="px-4 py-3 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
+                    {/* Footer الأسفل */}
+                    <div className="px-5 py-3.5 border-t border-[#142342] bg-[#060c1d] flex items-center justify-between gap-3">
                       <div className="min-w-0 text-right">
-                        <div className="text-[10px] font-tech text-[#00a3ff] uppercase">{active.brand}</div>
+                        <div className="text-[10px] font-tech text-[#00a3ff] uppercase tracking-wider">{active.brand}</div>
                         <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
                           {active.title}
                         </h3>
@@ -412,7 +406,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                       <button
                         onClick={() => addToCart(active, 1)}
-                        className="btn-pink text-[11px] px-3.5 py-2 flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                        className="btn-pink text-[11px] px-4 py-2 flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl shadow-[0_0_15px_rgba(255,0,128,0.4)]"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>أضف للسلة</span>
@@ -424,7 +418,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {siteAudioUrl && <audio ref={audioRef} src={siteAudioUrl} loop />}
               </div>
             ) : (
-              <div className="panel rounded-2xl h-56 flex flex-col items-center justify-center gap-3 text-center">
+              <div className="panel rounded-2xl h-56 flex flex-col items-center justify-center gap-3 text-center border border-[#16223a]">
                 <Zap className="w-10 h-10 text-[#00a3ff]/40" />
                 <p className="text-xs text-gray-400">المربع المميز معطّل حالياً من لوحة التحكم</p>
               </div>
