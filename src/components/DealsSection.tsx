@@ -39,7 +39,6 @@ const DealCountdown = ({ targetDate }: { targetDate: string }) => {
     <div className="w-full my-4">
       <div className="relative p-[1.5px] rounded-2xl bg-gradient-to-r from-[#00a3ff]/40 via-[#00e5ff]/60 to-[#00a3ff]/40 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
         <div className="bg-[#070e1c] rounded-[15px] p-4 border border-[#16294a]">
-          
           <div className="flex items-center justify-center gap-2 mb-3">
             <Zap className="w-4 h-4 text-[#00e5ff] animate-bounce" />
             <span className="text-xs font-bold text-[#00e5ff] tracking-wider font-['Cairo']">
@@ -76,7 +75,6 @@ const DealCountdown = ({ targetDate }: { targetDate: string }) => {
               <span className="text-[10px] font-bold text-[#00e5ff] mt-1 font-['Cairo']">ثانية</span>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -90,16 +88,23 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
 }) => {
   const [slide, setSlide] = useState(0);
   const itemsList = dealProducts.length > 0 ? dealProducts : products;
-  const currentItem = itemsList[slide] || {};
 
+  // التبديل التلقائي بين المنتجات كل 4 ثوانٍ
+  useEffect(() => {
+    if (itemsList.length <= 1) return;
+    const interval = setInterval(() => {
+      setSlide((prev) => (prev + 1) % itemsList.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [itemsList.length]);
+
+  const currentItem = itemsList[slide] || {};
   const itemTitle = currentItem.title || currentItem.name || "R68 HE Black";
-  
-  // التأكد من جلب رابط الصورة
   const imageUrl =
     currentItem.image_url ||
     currentItem.image ||
     currentItem.images?.[0] ||
-    "/keyboard.png"; // صورة احتياطية في حال عدم وجود صورة للمنتج
+    "/keyboard.png";
 
   return (
     <section className="w-full max-w-md mx-auto px-4 py-4 text-white" dir="rtl">
@@ -109,7 +114,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
       {/* كرت العروض */}
       <div className="bg-[#081225] border border-[#16294a] rounded-2xl p-4 shadow-[0_0_20px_rgba(0,163,255,0.15)] relative">
         
-        {/* شارة الخصم والأزرار العلويّة */}
+        {/* شارة الخصم والأزرار */}
         <div className="flex justify-between items-center mb-3">
           <span className="bg-gradient-to-r from-[#ff9900] to-[#ff5500] text-black font-black text-xs px-3 py-1 rounded-full shadow-[0_0_10px_rgba(255,153,0,0.4)]">
             خصم 90%-
@@ -120,16 +125,29 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
           </div>
         </div>
 
-        {/* عرض صورة المنتج */}
-        <div className="relative w-full h-48 my-3 flex items-center justify-center bg-[#050b17]/60 rounded-xl border border-[#16294a]/80 overflow-hidden">
+        {/* حاوية صورة الكيبورد مع خلفية النقاط التكنولوجية (Dot Grid Background) */}
+        <div className="relative w-full h-52 my-3 flex items-center justify-center bg-[#050b17] rounded-xl border border-[#16294a] overflow-hidden group">
+          {/* نمط النقاط الخلفي */}
+          <div 
+            className="absolute inset-0 opacity-30 pointer-events-none"
+            style={{
+              backgroundImage: `radial-gradient(rgba(0, 229, 255, 0.4) 1px, transparent 1px)`,
+              backgroundSize: `14px 14px`
+            }}
+          />
+          {/* إضاءة نيون مركزية خفيفة */}
+          <div className="absolute w-32 h-32 bg-[#00a3ff]/20 rounded-full blur-2xl pointer-events-none" />
+
+          {/* صورة المنتج */}
           <img
+            key={slide}
             src={imageUrl}
             alt={itemTitle}
-            className="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300"
+            className="relative z-10 max-h-44 max-w-full object-contain p-2 transition-all duration-500 ease-in-out transform hover:scale-105"
           />
         </div>
 
-        {/* اسم المتجر و الحالة */}
+        {/* اسم المتجر والحالة */}
         <div className="flex justify-between items-center text-xs mb-3">
           <span className="bg-[#0f2347] border border-[#1d3d7a] text-gray-300 px-3 py-1 rounded-lg font-mono text-[10px]">
             NITRO GAMES
@@ -162,9 +180,9 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
           </button>
         </div>
 
-        {/* نقاط التنقل السفلي */}
+        {/* مؤشر التنقل مع تحريك للشرائط */}
         <div className="flex items-center justify-center gap-2 pt-5">
-          {(itemsList.length > 0 ? itemsList : [1, 2, 3]).map((_, idx) => (
+          {itemsList.map((_, idx) => (
             <button
               key={idx}
               onClick={() => setSlide(idx)}
