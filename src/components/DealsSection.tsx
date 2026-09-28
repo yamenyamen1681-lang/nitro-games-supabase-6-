@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Timer, Zap, Heart, Eye, ShoppingCart, CheckCircle, Volume2, VolumeX, ShoppingBag, Sparkles } from "lucide-react";
+import { Timer, Zap, Heart, Eye, ShoppingCart, CheckCircle } from "lucide-react";
 import { Product } from "@/lib/data";
 
 interface DealsSectionProps {
@@ -10,7 +10,7 @@ interface DealsSectionProps {
   targetDate?: string;
 }
 
-// 1. مكون العداد التنازلي
+// مكون العداد التنازلي النيون (أزرق وسيان)
 const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
@@ -81,18 +81,15 @@ const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   );
 };
 
-// 2. المكون الرئيسي المدمج (يحتوي قسم العروض وقسم البث المباشر)
 export const DealsSection: React.FC<DealsSectionProps> = ({
   dealProducts = [],
   products = [],
   targetDate = "2026-10-01T00:00:00",
 }) => {
   const [slide, setSlide] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
-
   const itemsList = dealProducts.length > 0 ? dealProducts : products;
 
-  // تبديل تلقائي للمنتجات
+  // التبديل التلقائي بين المنتجات كل 4 ثوانٍ
   useEffect(() => {
     if (itemsList.length <= 1) return;
     const interval = setInterval(() => {
@@ -110,160 +107,95 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
     "/keyboard.png";
 
   return (
-    <section className="w-full max-w-md mx-auto px-4 py-4 text-white space-y-6" dir="rtl">
-      
-      {/* ----------------- قسم كرت العروض والعداد ----------------- */}
-      <div>
-        <DealCountdown targetDate={targetDate} />
+    <section className="w-full max-w-md mx-auto px-4 py-4 text-white" dir="rtl">
+      {/* العداد التنازلي */}
+      <DealCountdown targetDate={targetDate} />
 
-        <div className="bg-[#081225] border border-[#16294a] rounded-2xl p-4 shadow-[0_0_20px_rgba(0,163,255,0.15)] relative">
-          
-          <div className="flex justify-between items-center mb-3">
-            <span className="bg-gradient-to-r from-[#ff9900] to-[#ff5500] text-black font-black text-xs px-3 py-1 rounded-full shadow-[0_0_10px_rgba(255,153,0,0.4)]">
-              خصم 90%-
-            </span>
-            <div className="flex gap-2 text-gray-400">
-              <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition"><Heart className="w-4 h-4" /></button>
-              <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition"><Eye className="w-4 h-4" /></button>
-            </div>
-          </div>
-
-          {/* خلفية النقاط */}
-          <div className="relative w-full h-52 my-3 flex items-center justify-center bg-[#050b17] rounded-xl border border-[#16294a] overflow-hidden group">
-            <div 
-              className="absolute inset-0 opacity-30 pointer-events-none"
-              style={{
-                backgroundImage: `radial-gradient(rgba(0, 229, 255, 0.4) 1px, transparent 1px)`,
-                backgroundSize: `14px 14px`
-              }}
-            />
-            <div className="absolute w-32 h-32 bg-[#00a3ff]/20 rounded-full blur-2xl pointer-events-none" />
-
-            <img
-              key={slide}
-              src={imageUrl}
-              alt={itemTitle}
-              className="relative z-10 max-h-44 max-w-full object-contain p-2 transition-all duration-500 ease-in-out transform hover:scale-105"
-            />
-          </div>
-
-          <div className="flex justify-between items-center text-xs mb-3">
-            <span className="bg-[#0f2347] border border-[#1d3d7a] text-gray-300 px-3 py-1 rounded-lg font-mono text-[10px]">
-              NITRO GAMES
-            </span>
-            <span className="text-[#00e5ff] flex items-center gap-1 bg-[#00e5ff]/10 border border-[#00e5ff]/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">
-              <CheckCircle className="w-3 h-3" /> متوفر حالياً
-            </span>
-          </div>
-
-          <h3 className="text-xl font-extrabold text-white mb-3">{itemTitle}</h3>
-
-          <div className="flex items-center justify-between mt-4">
-            <div>
-              <div className="text-2xl font-black text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">
-                ${currentItem.price || "9999"}
-              </div>
-              {currentItem.original_price && (
-                <div className="text-xs text-gray-500 line-through">${currentItem.original_price}</div>
-              )}
-            </div>
-            <button className="flex items-center gap-2 bg-gradient-to-r from-[#00a3ff] to-[#0066ff] hover:from-[#00e5ff] hover:to-[#00a3ff] text-white font-bold px-5 py-2.5 rounded-xl shadow-[0_0_15px_rgba(0,163,255,0.4)] transition duration-300">
-              <ShoppingCart className="w-4 h-4" />
-              <span>إضافة للسلة</span>
-            </button>
-          </div>
-
-          <div className="flex items-center justify-center gap-2 pt-5">
-            {itemsList.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setSlide(idx)}
-                className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
-                  slide === idx
-                    ? "w-8 bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.8)]"
-                    : "w-2.5 bg-[#122347] hover:bg-[#00a3ff]/50 border border-[#1d3563]"
-                }`}
-              />
-            ))}
-          </div>
-
-        </div>
-      </div>
-
-      {/* ----------------- قسم البث المباشر (LIVE SHOWCASE) مع الإطار المتحرك ----------------- */}
-      <div className="relative group p-[2px] rounded-3xl overflow-hidden shadow-[0_0_25px_rgba(0,229,255,0.2)]">
+      {/* كرت العروض */}
+      <div className="bg-[#081225] border border-[#16294a] rounded-2xl p-4 shadow-[0_0_20px_rgba(0,163,255,0.15)] relative">
         
-        {/* إضاءة الإطار المتوهجة المتحركة */}
-        <div className="absolute -inset-[200%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_300deg,#00e5ff_340deg,#00a3ff_360deg)] opacity-100" />
-
-        <div className="relative bg-[#040914] rounded-[22px] p-3 border border-[#102342] backdrop-blur-xl z-10">
-          
-          <div className="flex items-center justify-between mb-3 px-1">
-            
-            {/* LIVE SHOWCASE على اليمين */}
-            <div className="flex items-center gap-2 bg-[#09172e]/90 border border-[#00e5ff]/40 px-3 py-1.5 rounded-full shadow-[0_0_12px_rgba(0,229,255,0.25)]">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00e5ff]"></span>
-              </span>
-              <span className="text-[11px] font-black tracking-widest text-[#00e5ff] font-mono uppercase">
-                LIVE SHOWCASE
-              </span>
-            </div>
-
-            {/* الصوت والموسيقى على اليسار */}
-            <button
-              onClick={() => setIsMuted(!isMuted)}
-              className="p-2 bg-[#0d2142] hover:bg-[#00a3ff]/20 border border-[#00a3ff]/40 text-[#00e5ff] rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(0,163,255,0.3)] active:scale-95"
-            >
-              {isMuted ? (
-                <VolumeX className="w-4 h-4 text-gray-400" />
-              ) : (
-                <Volume2 className="w-4 h-4 text-[#00e5ff] animate-pulse" />
-              )}
-            </button>
-
+        {/* شارة الخصم والأزرار */}
+        <div className="flex justify-between items-center mb-3">
+          <span className="bg-gradient-to-r from-[#ff9900] to-[#ff5500] text-black font-black text-xs px-3 py-1 rounded-full shadow-[0_0_10px_rgba(255,153,0,0.4)]">
+            خصم 90%-
+          </span>
+          <div className="flex gap-2 text-gray-400">
+            <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition"><Heart className="w-4 h-4" /></button>
+            <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition"><Eye className="w-4 h-4" /></button>
           </div>
-
-          <div className="relative w-full h-56 rounded-2xl overflow-hidden border border-[#162d54] bg-[#020611] group">
-            <div 
-              className="absolute inset-0 opacity-25 pointer-events-none"
-              style={{
-                backgroundImage: `radial-gradient(rgba(0, 229, 255, 0.4) 1px, transparent 1px)`,
-                backgroundSize: `14px 14px`
-              }}
-            />
-
-            <div className="absolute top-3 left-3 z-20 bg-black/70 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg font-mono">
-              3 / 4
-            </div>
-
-            <img
-              src="/keyboard.png" 
-              alt="Live Showcase"
-              className="relative z-10 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-
-            <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#040914] via-transparent to-transparent opacity-80 pointer-events-none" />
-          </div>
-
-          <div className="flex items-center justify-between mt-3.5 px-1">
-            <div className="flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-[#00e5ff]" />
-              <span className="text-sm font-extrabold text-white tracking-wide">
-                عتاد البطولات • جاهز للشحن
-              </span>
-            </div>
-
-            <button className="flex items-center gap-2 bg-gradient-to-r from-[#00a3ff] via-[#0066ff] to-[#00e5ff] text-white text-xs font-black px-4 py-2.5 rounded-xl shadow-[0_0_15px_rgba(0,163,255,0.4)] hover:shadow-[0_0_22px_rgba(0,229,255,0.8)] transition-all duration-300 active:scale-95">
-              <ShoppingBag className="w-3.5 h-3.5" />
-              <span>تسوق الآن</span>
-            </button>
-          </div>
-
         </div>
-      </div>
 
+        {/* حاوية صورة الكيبورد مع خلفية النقاط التكنولوجية (Dot Grid Background) */}
+        <div className="relative w-full h-52 my-3 flex items-center justify-center bg-[#050b17] rounded-xl border border-[#16294a] overflow-hidden group">
+          {/* نمط النقاط الخلفي */}
+          <div 
+            className="absolute inset-0 opacity-30 pointer-events-none"
+            style={{
+              backgroundImage: `radial-gradient(rgba(0, 229, 255, 0.4) 1px, transparent 1px)`,
+              backgroundSize: `14px 14px`
+            }}
+          />
+          {/* إضاءة نيون مركزية خفيفة */}
+          <div className="absolute w-32 h-32 bg-[#00a3ff]/20 rounded-full blur-2xl pointer-events-none" />
+
+          {/* صورة المنتج */}
+          <img
+            key={slide}
+            src={imageUrl}
+            alt={itemTitle}
+            className="relative z-10 max-h-44 max-w-full object-contain p-2 transition-all duration-500 ease-in-out transform hover:scale-105"
+          />
+        </div>
+
+        {/* اسم المتجر والحالة */}
+        <div className="flex justify-between items-center text-xs mb-3">
+          <span className="bg-[#0f2347] border border-[#1d3d7a] text-gray-300 px-3 py-1 rounded-lg font-mono text-[10px]">
+            NITRO GAMES
+          </span>
+          <span className="text-[#00e5ff] flex items-center gap-1 bg-[#00e5ff]/10 border border-[#00e5ff]/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">
+            <CheckCircle className="w-3 h-3" /> متوفر حالياً
+          </span>
+        </div>
+
+        {/* عنوان المنتج */}
+        <h3 className="text-xl font-extrabold text-white mb-3">
+          {itemTitle}
+        </h3>
+
+        {/* السعر وزر الإضافة */}
+        <div className="flex items-center justify-between mt-4">
+          <div>
+            <div className="text-2xl font-black text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">
+              ${currentItem.price || "9999"}
+            </div>
+            {currentItem.original_price && (
+              <div className="text-xs text-gray-500 line-through">
+                ${currentItem.original_price}
+              </div>
+            )}
+          </div>
+          <button className="flex items-center gap-2 bg-gradient-to-r from-[#00a3ff] to-[#0066ff] hover:from-[#00e5ff] hover:to-[#00a3ff] text-white font-bold px-5 py-2.5 rounded-xl shadow-[0_0_15px_rgba(0,163,255,0.4)] transition duration-300">
+            <ShoppingCart className="w-4 h-4" />
+            <span>إضافة للسلة</span>
+          </button>
+        </div>
+
+        {/* مؤشر التنقل مع تحريك للشرائط */}
+        <div className="flex items-center justify-center gap-2 pt-5">
+          {itemsList.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setSlide(idx)}
+              className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                slide === idx
+                  ? "w-8 bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.8)]"
+                  : "w-2.5 bg-[#122347] hover:bg-[#00a3ff]/50 border border-[#1d3563]"
+              }`}
+            />
+          ))}
+        </div>
+
+      </div>
     </section>
   );
 };
