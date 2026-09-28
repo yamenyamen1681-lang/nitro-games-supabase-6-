@@ -1,14 +1,10 @@
-
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Timer, Zap, Flame } from "lucide-react";
+import { Timer, Zap, Heart, Eye, ShoppingCart, CheckCircle } from "lucide-react";
 
-interface CountdownProps {
-  targetDate: Date | string;
-}
-
-export const DealCountdown: React.FC<CountdownProps> = ({ targetDate }) => {
+// مكون العداد التنازلي المحدث بالسيان والأزرق
+const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -34,11 +30,9 @@ export const DealCountdown: React.FC<CountdownProps> = ({ targetDate }) => {
 
   return (
     <div className="w-full my-4">
-      {/* حاوية العداد بتوهج سايبر نيون بدلاً من الأحمر */}
       <div className="relative p-[1.5px] rounded-2xl bg-gradient-to-r from-[#00a3ff]/40 via-[#00e5ff]/60 to-[#00a3ff]/40 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
         <div className="bg-[#070e1c] rounded-[15px] p-4 border border-[#16294a]">
           
-          {/* عنوان العداد */}
           <div className="flex items-center justify-center gap-2 mb-3">
             <Zap className="w-4 h-4 text-[#00e5ff] animate-bounce" />
             <span className="text-xs font-bold text-[#00e5ff] tracking-wider font-['Cairo']">
@@ -47,10 +41,7 @@ export const DealCountdown: React.FC<CountdownProps> = ({ targetDate }) => {
             <Timer className="w-4 h-4 text-[#00a3ff]" />
           </div>
 
-          {/* خانات العداد: تصميم نيون أزرق وسيان */}
           <div className="grid grid-cols-3 gap-3 text-center" dir="ltr">
-            
-            {/* الساعات */}
             <div className="flex flex-col items-center">
               <div className="w-full py-2.5 bg-gradient-to-b from-[#0b1b36] to-[#050b17] border border-[#00a3ff]/50 rounded-xl shadow-[inset_0_0_12px_rgba(0,163,255,0.3)]">
                 <span className="text-xl sm:text-2xl font-black font-mono text-[#00e5ff] drop-shadow-[0_0_10px_rgba(0,229,255,0.8)]">
@@ -60,7 +51,6 @@ export const DealCountdown: React.FC<CountdownProps> = ({ targetDate }) => {
               <span className="text-[10px] font-bold text-gray-400 mt-1 font-['Cairo']">ساعة</span>
             </div>
 
-            {/* الدقائق */}
             <div className="flex flex-col items-center">
               <div className="w-full py-2.5 bg-gradient-to-b from-[#0b1b36] to-[#050b17] border border-[#00a3ff]/50 rounded-xl shadow-[inset_0_0_12px_rgba(0,163,255,0.3)]">
                 <span className="text-xl sm:text-2xl font-black font-mono text-[#00e5ff] drop-shadow-[0_0_10px_rgba(0,229,255,0.8)]">
@@ -70,7 +60,6 @@ export const DealCountdown: React.FC<CountdownProps> = ({ targetDate }) => {
               <span className="text-[10px] font-bold text-gray-400 mt-1 font-['Cairo']">دقيقة</span>
             </div>
 
-            {/* الثواني */}
             <div className="flex flex-col items-center">
               <div className="w-full py-2.5 bg-gradient-to-b from-[#0b1b36] to-[#050b17] border border-[#00e5ff] rounded-xl shadow-[0_0_15px_rgba(0,229,255,0.4)] animate-pulse">
                 <span className="text-xl sm:text-2xl font-black font-mono text-[#00e5ff] drop-shadow-[0_0_12px_rgba(0,229,255,1)]">
@@ -79,11 +68,79 @@ export const DealCountdown: React.FC<CountdownProps> = ({ targetDate }) => {
               </div>
               <span className="text-[10px] font-bold text-[#00e5ff] mt-1 font-['Cairo']">ثانية</span>
             </div>
-
           </div>
 
         </div>
       </div>
     </div>
+  );
+};
+
+// التصدير الرئيسي الذي يطلبه ملف page.tsx
+export const DealsSection = () => {
+  const [slide, setSlide] = useState(0);
+  const showcaseItems = [1, 2, 3]; // يمكنك تعديل عدد الشرائح حسب الحاجة
+
+  return (
+    <section className="w-full max-w-md mx-auto px-4 py-4 text-white" dir="rtl">
+      {/* العداد التنازلي */}
+      <DealCountdown targetDate="2026-10-01T00:00:00" />
+
+      {/* كرت المنتج مع إزالة اللون الأحمر بالكامل واستبداله بالسيان والنيون */}
+      <div className="bg-[#081225] border border-[#16294a] rounded-2xl p-4 shadow-[0_0_20px_rgba(0,163,255,0.15)] relative">
+        
+        {/* شارة الخصم */}
+        <div className="flex justify-between items-center mb-3">
+          <span className="bg-gradient-to-r from-[#ff9900] to-[#ff5500] text-black font-black text-xs px-3 py-1 rounded-full shadow-[0_0_10px_rgba(255,153,0,0.4)]">
+            خصم 90%-
+          </span>
+          <div className="flex gap-2 text-gray-400">
+            <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition"><Heart className="w-4 h-4" /></button>
+            <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition"><Eye className="w-4 h-4" /></button>
+          </div>
+        </div>
+
+        {/* اسم المتجر و الحالة */}
+        <div className="flex justify-between items-center text-xs mb-3">
+          <span className="bg-[#0f2347] border border-[#1d3d7a] text-gray-300 px-3 py-1 rounded-lg font-mono text-[10px]">
+            NITRO GAMES
+          </span>
+          <span className="text-[#00e5ff] flex items-center gap-1 bg-[#00e5ff]/10 border border-[#00e5ff]/30 px-2.5 py-1 rounded-lg text-[10px] font-bold">
+            <CheckCircle className="w-3 h-3" /> متوفر حالياً
+          </span>
+        </div>
+
+        {/* عنوان المنتج */}
+        <h3 className="text-xl font-extrabold text-white mb-3">R68 HE Black</h3>
+
+        {/* السعر وزر الإضافة */}
+        <div className="flex items-center justify-between mt-4">
+          <div>
+            <div className="text-2xl font-black text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">$9999</div>
+            <div className="text-xs text-gray-500 line-through">$99994</div>
+          </div>
+          <button className="flex items-center gap-2 bg-gradient-to-r from-[#00a3ff] to-[#0066ff] hover:from-[#00e5ff] hover:to-[#00a3ff] text-white font-bold px-5 py-2.5 rounded-xl shadow-[0_0_15px_rgba(0,163,255,0.4)] transition duration-300">
+            <ShoppingCart className="w-4 h-4" />
+            <span>إضافة للسلة</span>
+          </button>
+        </div>
+
+        {/* نقاط التنقل السفلي الشريط دون أي لون أحمر */}
+        <div className="flex items-center justify-center gap-2 pt-5">
+          {showcaseItems.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setSlide(idx)}
+              className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                slide === idx
+                  ? "w-8 bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.8)]"
+                  : "w-2.5 bg-[#122347] hover:bg-[#00a3ff]/50 border border-[#1d3563]"
+              }`}
+            />
+          ))}
+        </div>
+
+      </div>
+    </section>
   );
 };
