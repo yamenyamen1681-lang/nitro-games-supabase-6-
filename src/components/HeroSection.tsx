@@ -1,97 +1,162 @@
 "use client";
 
 import React, { useState } from "react";
-import { Volume2, VolumeX, ShoppingBag, Sparkles } from "lucide-react";
+import { Volume2, VolumeX, Music, Play, Pause, ShoppingBag, Zap, Crown, Sparkles, Star, ArrowLeft } from "lucide-react";
 
-export const HeroSection = () => {
+// تعريف الأنواع (Props) لمنع خطأ الـ TypeScript في Vercel
+export interface HeroSectionProps {
+  products?: any[];
+  showcase?: any;
+  onCategorySelect?: (cat: any) => void;
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({
+  products = [],
+  showcase,
+  onCategorySelect,
+}) => {
   const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
 
   return (
-    <section className="w-full max-w-md mx-auto px-4 py-3" dir="rtl">
-      {/* الإطار الخارجي المتوهج بأنيميشن الليزر المتحرك */}
-      <div className="relative group p-[2px] rounded-3xl overflow-hidden shadow-[0_0_25px_rgba(0,229,255,0.25)]">
+    <section className="w-full max-w-md mx-auto px-4 py-4 space-y-6" dir="rtl">
+      
+      {/* 1. قسم الهيدر والترحيب الرئيسي */}
+      <div className="flex flex-col items-center text-center space-y-4">
         
-        {/* خط الليزر المتحرك حول الإطار */}
-        <div className="absolute -inset-[200%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_300deg,#00e5ff_340deg,#00a3ff_360deg)] opacity-100" />
+        {/* اللوجو */}
+        <div className="flex items-center gap-3 justify-center">
+          <div className="w-12 h-12 rounded-2xl bg-[#091832] border border-[#00a3ff]/40 flex items-center justify-center shadow-[0_0_15px_rgba(0,163,255,0.3)]">
+            <Zap className="w-6 h-6 text-[#00e5ff] fill-[#00e5ff]/20" />
+          </div>
+          <div className="text-right">
+            <h1 className="text-2xl font-black tracking-wider text-white font-mono leading-none">
+              NITRO
+            </h1>
+            <h1 className="text-xl font-extrabold tracking-widest text-[#00e5ff] font-mono leading-tight">
+              GAMES
+            </h1>
+            <p className="text-[9px] font-bold tracking-widest text-gray-400 font-mono">
+              PALESTINE • ESPORTS GEAR
+            </p>
+          </div>
+        </div>
 
-        {/* الكرت الداخلي */}
-        <div className="relative bg-[#040914] rounded-[22px] p-3 border border-[#102342] backdrop-blur-xl z-10">
-          
-          {/* الشريط العلوي: LIVE SHOWCASE على اليمين وزر الصوت على اليسار */}
-          <div className="flex items-center justify-between mb-3 px-1">
-            
-            {/* جهة اليمين: LIVE SHOWCASE */}
-            <div className="flex items-center gap-2 bg-[#09172e]/90 border border-[#00e5ff]/40 px-3 py-1.5 rounded-full shadow-[0_0_12px_rgba(0,229,255,0.25)]">
-              <span className="relative flex h-2.5 w-2.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00e5ff]"></span>
-              </span>
-              <span className="text-[11px] font-black tracking-widest text-[#00e5ff] font-mono uppercase">
-                LIVE SHOWCASE
-              </span>
-            </div>
+        {/* النصوص الرئيسية */}
+        <div className="space-y-1">
+          <h2 className="text-xs font-black tracking-widest text-gray-300 font-mono">
+            NITRO GAMES
+          </h2>
+          <h3 className="text-2xl font-black text-white leading-snug">
+            خياركم الأفضل في <br />
+            <span className="text-white">فلسطين</span>
+          </h3>
+          <p className="text-base font-extrabold text-[#00e5ff] drop-shadow-[0_0_10px_rgba(0,229,255,0.5)]">
+            للعتاد الاحترافي.. ارفع مستوى لعبك!
+          </p>
+        </div>
 
-            {/* جهة اليسار: زر الصوت والموسيقى */}
+        {/* شارة STORE OWNER */}
+        <div className="inline-flex items-center gap-2 bg-[#09172e] border border-[#00e5ff]/30 px-4 py-1.5 rounded-2xl shadow-[0_0_10px_rgba(0,229,255,0.15)]">
+          <Crown className="w-4 h-4 text-amber-400 fill-amber-400/20" />
+          <span className="text-xs font-mono font-bold text-gray-300">
+            STORE OWNER: <span className="text-[#00e5ff] font-extrabold">YamEn</span>
+          </span>
+          <Sparkles className="w-3.5 h-3.5 text-[#00e5ff]" />
+        </div>
+
+        {/* زر التسوق الرئيسي */}
+        <button
+          onClick={() => onCategorySelect && onCategorySelect('all')}
+          className="w-full max-w-[200px] flex items-center justify-center gap-2 bg-gradient-to-r from-[#00a3ff] to-[#0051ff] text-white text-sm font-black py-2.5 rounded-2xl shadow-[0_0_20px_rgba(0,163,255,0.5)] transition active:scale-95"
+          type="button"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>تسوق الآن</span>
+          <ShoppingBag className="w-4 h-4 ml-1" />
+        </button>
+
+        {/* شارة عدد اللاعبين */}
+        <div className="inline-flex items-center gap-2 bg-[#081326] border border-[#162e54] px-4 py-1.5 rounded-xl text-xs font-bold text-gray-300">
+          <span className="w-2 h-2 rounded-full bg-[#00e5ff]" />
+          <span>لاعب يثق بنا</span>
+          <span className="text-white font-mono font-black text-sm flex items-center gap-1">
+            <Star className="w-3.5 h-3.5 text-amber-400 fill-amber-400" />
+            +5,400
+          </span>
+        </div>
+
+      </div>
+
+      {/* 2. كرت البث المشغل (Hero Video Showcase) */}
+      <div className="relative rounded-3xl p-4 bg-[#070e1c] border border-[#00a3ff]/40 shadow-[0_0_20px_rgba(0,163,255,0.2)]">
+        
+        {/* الشريط العلوي للكرت */}
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center gap-2">
+            <button 
+              className="p-2 bg-[#0c1c38] hover:bg-[#00a3ff]/20 border border-[#17325c] text-[#00e5ff] rounded-xl transition"
+              type="button"
+            >
+              <Music className="w-4 h-4 text-gray-300" />
+            </button>
             <button
               onClick={() => setIsMuted(!isMuted)}
-              className="p-2 bg-[#0d2142] hover:bg-[#00a3ff]/20 border border-[#00a3ff]/40 text-[#00e5ff] rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(0,163,255,0.3)] active:scale-95"
-              aria-label="Toggle Audio"
+              className="p-2 bg-[#0c1c38] hover:bg-[#00a3ff]/20 border border-[#17325c] text-[#00e5ff] rounded-xl transition active:scale-95"
+              type="button"
             >
-              {isMuted ? (
-                <VolumeX className="w-4 h-4 text-gray-400" />
-              ) : (
-                <Volume2 className="w-4 h-4 text-[#00e5ff] animate-pulse" />
-              )}
+              {isMuted ? <VolumeX className="w-4 h-4 text-gray-300" /> : <Volume2 className="w-4 h-4 text-[#00e5ff]" />}
             </button>
-
           </div>
 
-          {/* حاوية الصورة/الفيديو الشاشية */}
-          <div className="relative w-full h-56 rounded-2xl overflow-hidden border border-[#162d54] bg-[#020611] group">
-            
-            {/* خلفية النقاط */}
-            <div 
-              className="absolute inset-0 opacity-25 pointer-events-none"
-              style={{
-                backgroundImage: `radial-gradient(rgba(0, 229, 255, 0.4) 1px, transparent 1px)`,
-                backgroundSize: `14px 14px`
-              }}
-            />
-
-            {/* شارة عدد الصور */}
-            <div className="absolute top-3 left-3 z-20 bg-black/70 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg font-mono">
-              3 / 4
-            </div>
-
-            {/* الصورة */}
-            <img
-              src="/keyboard.png" 
-              alt="Live Showcase"
-              className="relative z-10 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            />
-
-            <div className="absolute inset-0 z-10 bg-gradient-to-t from-[#040914] via-transparent to-transparent opacity-80 pointer-events-none" />
+          <div className="flex items-center gap-2 bg-[#0a1832] border border-[#00e5ff]/40 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+            </span>
+            <span className="text-[11px] font-black tracking-widest text-[#00e5ff] font-mono uppercase">
+              LIVE SHOWCASE
+            </span>
           </div>
-
-          {/* الشريط السفلي */}
-          <div className="flex items-center justify-between mt-3.5 px-1">
-            
-            <div className="flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-[#00e5ff]" />
-              <span className="text-sm font-extrabold text-white tracking-wide">
-                عتاد البطولات • جاهز للشحن
-              </span>
-            </div>
-
-            <button className="flex items-center gap-2 bg-gradient-to-r from-[#00a3ff] via-[#0066ff] to-[#00e5ff] text-white text-xs font-black px-4 py-2.5 rounded-xl shadow-[0_0_15px_rgba(0,163,255,0.4)] hover:shadow-[0_0_22px_rgba(0,229,255,0.8)] transition-all duration-300 active:scale-95">
-              <ShoppingBag className="w-3.5 h-3.5" />
-              <span>تسوق الآن</span>
-            </button>
-
-          </div>
-
         </div>
+
+        {/* حاوية المشغل */}
+        <div className="relative w-full h-44 rounded-2xl overflow-hidden border border-[#162a4a] bg-[#040a17] flex items-center justify-center">
+          <div className="absolute top-2.5 right-2.5 z-20 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-md font-mono">
+            3 / 4
+          </div>
+
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="relative z-20 w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg transition transform active:scale-95"
+            type="button"
+          >
+            {isPlaying ? (
+              <Pause className="w-6 h-6 text-black fill-black" />
+            ) : (
+              <Play className="w-6 h-6 text-black fill-black ml-0.5" />
+            )}
+          </button>
+        </div>
+
+        {/* أسفل الكرت */}
+        <div className="flex items-center justify-between mt-3">
+          <span className="text-xs font-bold text-white tracking-wide">
+            عتاد البطولات • جاهز للشحن
+          </span>
+
+          <button 
+            onClick={() => onCategorySelect && onCategorySelect('all')}
+            className="flex items-center gap-2 bg-gradient-to-r from-[#00a3ff] to-[#0051ff] text-white text-xs font-black px-4 py-2 rounded-xl shadow-[0_0_12px_rgba(0,163,255,0.4)] transition active:scale-95"
+            type="button"
+          >
+            <ShoppingBag className="w-4 h-4" />
+            <span>تسوق الآن</span>
+          </button>
+        </div>
+
       </div>
+
     </section>
   );
 };
