@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nitro-games.example.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nitro-games-supabase-6.vercel.app";
 const STORE_NAME_AR = "نيترو قيمز";
 const STORE_NAME_EN = "NITRO GAMES";
 const WHATSAPP = "972595852044";
@@ -103,7 +103,7 @@ export const metadata: Metadata = {
 
   // ✅ تحقق ملكية الموقع من Google Search Console
   verification: {
-    google: "h76rf_kHvTkGfk9555FJHDcUsRzGri8qgwrGrYlYtqI",
+    google: "01ee1a873bc6",
   },
 
   alternates: {
@@ -195,7 +195,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         {/* ✅ تحقق ملكية الموقع من Google Search Console */}
         <meta
           name="google-site-verification"
-          content="h76rf_kHvTkGfk9555FJHDcUsRzGri8qgwrGrYlYtqI"
+          content="01ee1a873bc6"
         />
         <meta name="theme-color" content="#00a3ff" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
