@@ -7,18 +7,15 @@ import { useCart } from "@/context/CartContext";
 
 import {
   ArrowLeft,
-  ChevronRight,
-  ChevronLeft,
   ShieldCheck,
   Truck,
-  Zap,
   CheckCircle2,
   ShoppingBag,
-  Flame,
   Music,
   Volume2,
   Star,
   Sparkles,
+  Zap,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -161,13 +158,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       className="
         relative
         overflow-hidden
-        pt-8
-        pb-14
-        lg:pt-14
-        lg:pb-24
+        pt-6
+        pb-4
+        lg:pt-12
+        lg:pb-10
         bg-[#020914]
-        border-b
-        border-[#12304a]
       "
     >
       <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
@@ -270,33 +265,37 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* LEFT: SHOWCASE FRAME (إطار ألترا فاخر ومطور للجوّال والشاشات) */}
-          <div className="lg:col-span-6 mt-4 lg:mt-0">
+          {/* LEFT: SHOWCASE FRAME */}
+          <div className="lg:col-span-6 mt-2 lg:mt-0">
             <div className="relative group max-w-md mx-auto lg:max-w-none">
               
-              {/* زر الموسيقى العائم المحدث (لا يتداخل مطلقاً مع النص) */}
+              {/* زر الموسيقى المطور: ألوَان نيون متناسقة تماماً، دائري أصغر، وموقعه على الجهة اليسرى */}
               {siteAudioUrl && (
                 <>
                   <audio ref={audioRef} src={siteAudioUrl} loop />
                   <button
                     onClick={toggleAudio}
-                    className={`absolute -top-4 -right-2 sm:-right-4 z-30 w-11 h-11 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,217,255,0.4)] transition-all duration-300 hover:scale-110 active:scale-95 ${
+                    className={`absolute -top-3 -left-2 sm:-left-3 z-30 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 border ${
                       isPlaying
-                        ? "bg-gradient-to-br from-[#00D9FF] to-[#0088FF] text-[#00101c] shadow-[0_0_25px_#00D9FF]"
-                        : "bg-[#041427]/90 border border-[#00D9FF]/60 text-[#00D9FF] backdrop-blur-md"
+                        ? "bg-[#00D9FF] border-[#00D9FF] text-[#00101c] shadow-[0_0_15px_#00D9FF]"
+                        : "bg-[#05172b]/90 border-[#00D9FF]/70 text-[#00D9FF] backdrop-blur-md shadow-[0_0_10px_rgba(0,217,255,0.3)]"
                     }`}
                     title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
                   >
-                    {isPlaying ? <Volume2 className="w-5 h-5 animate-pulse" /> : <Music className="w-5 h-5" />}
+                    {isPlaying ? (
+                      <Volume2 className="w-4 h-4 animate-pulse" />
+                    ) : (
+                      <Music className="w-4 h-4" />
+                    )}
                   </button>
                 </>
               )}
 
               {/* تأثير التوهج خلف الإطار */}
-              <div className="absolute -inset-1 bg-gradient-to-r from-[#00A8FF] via-[#00D9FF] to-[#0055FF] rounded-[28px] blur-lg opacity-50 group-hover:opacity-85 transition duration-500 pointer-events-none" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#00A8FF] via-[#00D9FF] to-[#0055FF] rounded-[28px] blur-lg opacity-40 group-hover:opacity-75 transition duration-500 pointer-events-none" />
 
               {/* الإطار الخارجي Ultra-Cyber */}
-              <div className="relative p-1 rounded-[26px] bg-gradient-to-b from-[#0e3256] via-[#051a30] to-[#010a17] border border-[#00D9FF]/50 shadow-[0_0_50px_rgba(0,168,255,0.3)]">
+              <div className="relative p-1 rounded-[26px] bg-gradient-to-b from-[#0e3256] via-[#051a30] to-[#010a17] border border-[#00D9FF]/50 shadow-[0_0_40px_rgba(0,168,255,0.25)]">
                 
                 {/* لمسات حواف الهولوغرام Cyber Corners */}
                 <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#00D9FF] rounded-tr-[24px] pointer-events-none" />
