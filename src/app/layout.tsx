@@ -19,16 +19,13 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
-  // ===== العنوان والوصف =====
   title: {
     default: "نيترو قيمز | NITRO GAMES — متجر عتاد الجيمينج في فلسطين",
     template: "%s | NITRO GAMES فلسطين",
   },
   description,
 
-  // ===== كلمات مفتاحية (عربي + إنجليزي + أخطاء إملائية شائعة) =====
   keywords: [
-    // عربي
     "نيترو قيمز",
     "نتيرو قيمز",
     "نيتروقيز",
@@ -43,7 +40,6 @@ export const metadata: Metadata = {
     "متجر ألعاب فلسطين",
     "رام الله",
     "القدس",
-    // إنجليزي
     "Nitro Games",
     "NitroGames",
     "NITRO GAMES Palestine",
@@ -65,7 +61,6 @@ export const metadata: Metadata = {
   creator: "NITRO GAMES",
   publisher: "NITRO GAMES",
 
-  // ===== الظهور عند المشاركة (واتساب / فيسبوك / تويتر) =====
   openGraph: {
     type: "website",
     locale: "ar_PS",
@@ -91,7 +86,6 @@ export const metadata: Metadata = {
     images: ["/images/deep-space-nebula.jpg"],
   },
 
-  // ===== التطبيق على الجوال =====
   applicationName: "NITRO GAMES",
   appleWebApp: {
     capable: true,
@@ -101,9 +95,9 @@ export const metadata: Metadata = {
 
   formatDetection: { telephone: true, address: true, email: true },
 
-  // ✅ تحقق ملكية الموقع من Google Search Console
+  // ✅ كود التحقق الموحد والصحيح فقط بدون تكرار
   verification: {
-    google: "01ee1a873bc6",
+    google: "025401ee1a873bc6",
   },
 
   alternates: {
@@ -125,7 +119,6 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.ico" },
 };
 
-/** البيانات المنظمة — تساعد جوجل على فهم أن "نيترو قيمز" = NITRO GAMES = متجر */
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -192,11 +185,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ar" dir="rtl" className="dark">
       <head>
-        {/* ✅ تحقق ملكية الموقع من Google Search Console */}
-        <meta
-          name="google-site-verification"
-          content="01ee1a873bc6"
-        />
         <meta name="theme-color" content="#00a3ff" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -204,7 +192,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Michroma&family=Chakra+Petch:wght@600;700&family=Orbitron:wght@600;700;800;900&display=swap"
           rel="stylesheet"
         />
-        {/* البيانات المنظمة لجوجل */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
