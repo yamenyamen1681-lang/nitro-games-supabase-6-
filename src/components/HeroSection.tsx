@@ -19,6 +19,7 @@ import {
   Music,
   Volume2,
   Crown,
+  Star,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -128,27 +129,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const active = showcaseItems[slide];
 
-  // مميزات المتجر الأربعة الثابتة
+  // المميزات الأربعة بتصميم الجيمينج القوي
   const features = [
     {
-      icon: <ShieldCheck className="w-5 h-5 text-[#00D9FF]" />,
+      icon: <ShieldCheck className="w-4 h-4 text-[#00D9FF]" />,
       big: "1 سنة",
       small: "ضمان حقيقي",
+      glow: "hover:shadow-[0_0_20px_rgba(0,217,255,0.3)]",
     },
     {
-      icon: <Truck className="w-5 h-5 text-[#00D9FF]" />,
+      icon: <Truck className="w-4 h-4 text-[#00D9FF]" />,
       big: "24-48h",
       small: "شحن سريع جداً",
+      glow: "hover:shadow-[0_0_20px_rgba(0,217,255,0.3)]",
     },
     {
-      icon: <CheckCircle2 className="w-5 h-5 text-[#00A8FF]" />,
+      icon: <CheckCircle2 className="w-4 h-4 text-[#00A8FF]" />,
       big: "100%",
-      small: "منتجات أصلية معتمدة",
+      small: "منتجات أصلية",
+      glow: "hover:shadow-[0_0_20px_rgba(0,168,255,0.3)]",
     },
     {
-      icon: <span className="text-base text-[#00A8FF]">⭐</span>,
+      icon: <Star className="w-4 h-4 text-amber-400 fill-amber-400/30" />,
       big: "+5,400",
       small: "لاعب يثق بنا",
+      glow: "hover:shadow-[0_0_20px_rgba(251,191,36,0.3)]",
     },
   ];
 
@@ -252,23 +257,34 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* STATIC 4-CARD FEATURE GRID */}
-            <div className="pt-2">
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {/* STATIC 4-CARD FEATURE ROW (صف واحد مع ديزاين احترافي) */}
+            <div className="pt-2 overflow-x-auto no-scrollbar">
+              <div className="grid grid-cols-4 gap-2 sm:gap-3 min-w-[320px]">
                 {features.map((s, i) => (
                   <div
                     key={i}
-                    className="flex flex-col items-center text-center justify-center p-3 rounded-xl bg-[#041226]/80 backdrop-blur-md border border-[#00A8FF]/30 shadow-lg hover:border-[#00D9FF]/60 transition-all duration-300 group"
+                    className={`
+                      relative group overflow-hidden flex flex-col items-center text-center justify-between
+                      p-2 sm:p-3 rounded-2xl bg-gradient-to-b from-[#081a30]/90 to-[#030d1a]/90
+                      border border-[#00A8FF]/30 hover:border-[#00D9FF] transition-all duration-300
+                      backdrop-blur-md ${s.glow}
+                    `}
                   >
-                    <div className="p-2 rounded-lg bg-[#00A8FF]/15 border border-[#00A8FF]/40 mb-2 group-hover:scale-110 transition-transform">
+                    {/* Top ambient glow bar */}
+                    <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#00D9FF]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+
+                    <div className="p-1.5 sm:p-2 rounded-xl bg-[#00A8FF]/10 border border-[#00A8FF]/20 group-hover:bg-[#00D9FF]/20 group-hover:border-[#00D9FF]/50 transition-all duration-300 transform group-hover:scale-110">
                       {s.icon}
                     </div>
-                    <span className="text-sm font-black text-white font-tech leading-tight block">
-                      {s.big}
-                    </span>
-                    <span className="text-[11px] text-gray-300 font-bold block mt-1">
-                      {s.small}
-                    </span>
+
+                    <div className="mt-1.5">
+                      <span className="text-xs sm:text-sm font-black text-white font-tech tracking-tight block leading-tight">
+                        {s.big}
+                      </span>
+                      <span className="text-[9px] sm:text-[11px] text-gray-300 font-medium block mt-0.5 whitespace-nowrap">
+                        {s.small}
+                      </span>
+                    </div>
                   </div>
                 ))}
               </div>
