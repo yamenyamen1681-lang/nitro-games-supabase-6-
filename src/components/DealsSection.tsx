@@ -2,24 +2,15 @@
 
 import React, { useState, useEffect } from "react";
 import { Timer, Zap, Heart, Eye, ShoppingCart, CheckCircle } from "lucide-react";
-
-// تعريف واجهة المنتجات لتفادي خطأ TypeScript
-interface Product {
-  id: string | number;
-  name: string;
-  price: number;
-  original_price?: number;
-  image_url?: string;
-  in_stock?: boolean;
-}
+import { Product } from "@/lib/data";
 
 interface DealsSectionProps {
-  dealProducts?: Product[];
-  products?: Product[];
+  dealProducts?: Product[] | any[];
+  products?: Product[] | any[];
   targetDate?: string;
 }
 
-// مكون العداد التنازلي المحدث بالسيان والأزرق
+// مكون العداد التنازلي النيون (أزرق وسيان)
 const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
@@ -92,7 +83,7 @@ const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   );
 };
 
-// المكون الرئيسي الداعم للـ Props المتوقعة من page.tsx
+// المكون الرئيسي المتوافق مع بيانات المشروع
 export const DealsSection: React.FC<DealsSectionProps> = ({
   dealProducts = [],
   products = [],
@@ -100,13 +91,17 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
 }) => {
   const [slide, setSlide] = useState(0);
   const itemsList = dealProducts.length > 0 ? dealProducts : products;
+  const currentItem = itemsList[slide] || {};
+
+  // دعم اسم المنتج سواء كان باسم title أو name
+  const itemTitle = currentItem.title || currentItem.name || "R68 HE Black";
 
   return (
     <section className="w-full max-w-md mx-auto px-4 py-4 text-white" dir="rtl">
       {/* العداد التنازلي */}
       <DealCountdown targetDate={targetDate} />
 
-      {/* كرت العروض باللون النيون الأزرق والسيان بدون أحمر */}
+      {/* كرت العروض باللون الأزرق والسيان بدون أحمر */}
       <div className="bg-[#081225] border border-[#16294a] rounded-2xl p-4 shadow-[0_0_20px_rgba(0,163,255,0.15)] relative">
         
         {/* شارة الخصم */}
@@ -132,18 +127,18 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
 
         {/* عنوان المنتج */}
         <h3 className="text-xl font-extrabold text-white mb-3">
-          {itemsList[slide]?.name || "R68 HE Black"}
+          {itemTitle}
         </h3>
 
         {/* السعر وزر الإضافة */}
         <div className="flex items-center justify-between mt-4">
           <div>
             <div className="text-2xl font-black text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">
-              ${itemsList[slide]?.price || "9999"}
+              ${currentItem.price || "9999"}
             </div>
-            {itemsList[slide]?.original_price && (
+            {currentItem.original_price && (
               <div className="text-xs text-gray-500 line-through">
-                ${itemsList[slide]?.original_price}
+                ${currentItem.original_price}
               </div>
             )}
           </div>
