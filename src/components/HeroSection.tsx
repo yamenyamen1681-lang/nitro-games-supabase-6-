@@ -18,6 +18,7 @@ import {
   Music,
   Volume2,
   Star,
+  Sparkles,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -127,7 +128,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const active = showcaseItems[slide];
 
-  // المميزات الأربعة الثابتة في صف واحد
   const features = [
     {
       icon: <ShieldCheck className="w-4 h-4 text-[#00D9FF]" />,
@@ -161,8 +161,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       className="
         relative
         overflow-hidden
-        pt-10
-        pb-16
+        pt-8
+        pb-14
         lg:pt-14
         lg:pb-24
         bg-[#020914]
@@ -177,8 +177,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* TOP BADGE */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full panel border border-[#00A8FF]/30">
+        <div className="flex justify-center mb-6">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full panel border border-[#00A8FF]/30 backdrop-blur-md">
             <span className="relative flex h-2.5 w-2.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A8FF] opacity-75" />
               <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00A8FF]" />
@@ -186,56 +186,52 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <span className="text-[11px] sm:text-xs font-bold text-gray-200">
               المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
             </span>
-            <span className="text-[10px] font-black bg-[#00D9FF] text-[#00101c] px-2 py-0.5 rounded-full font-tech">
+            <span className="text-[9px] sm:text-[10px] font-black bg-[#00D9FF] text-[#00101c] px-2 py-0.5 rounded-full font-tech">
               CYBER ESPORTS
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
           {/* RIGHT: COPY */}
-          <div className="lg:col-span-6 space-y-6 text-right">
-            {/* BRAND */}
+          <div className="lg:col-span-6 space-y-5 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
                 <div className="brand-mark brand-mark-lg text-white">
                   NITRO <span className="brand-mark-games">GAMES</span>
                 </div>
-                <div className="brand-sub mt-2">PALESTINE · ESPORTS GEAR</div>
+                <div className="brand-sub mt-1">PALESTINE · ESPORTS GEAR</div>
               </div>
 
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl grad-frame flex items-center justify-center flex-shrink-0">
-                <Zap className="w-8 h-8 sm:w-9 sm:h-9 text-[#00A8FF] drop-shadow-[0_0_14px_#00A8FF]" />
+              <div className="relative w-14 h-14 sm:w-20 sm:h-20 rounded-2xl grad-frame flex items-center justify-center flex-shrink-0">
+                <Zap className="w-7 h-7 sm:w-9 sm:h-9 text-[#00A8FF] drop-shadow-[0_0_14px_#00A8FF]" />
               </div>
             </div>
 
-            {/* MAIN TITLE */}
-            <h1 className="text-3xl sm:text-5xl lg:text-[3.2rem] font-black text-white leading-[1.25] font-['Cairo']">
+            <h1 className="text-2xl sm:text-5xl lg:text-[3.2rem] font-black text-white leading-[1.25] font-['Cairo']">
               <span className="brand-mark brand-mark-md text-white">
                 NITRO GAMES
               </span>
-              <span className="block mt-2">
+              <span className="block mt-1">
                 <span className="sr-only">نيترو قيمز —</span>
                 خياركم الأفضل في فلسطين
               </span>
-              <span className="block text-2xl sm:text-4xl lg:text-[2.5rem] text-gray-100 mt-1.5">
+              <span className="block text-xl sm:text-4xl lg:text-[2.5rem] text-gray-100 mt-1">
                 للعتاد الاحترافي..{" "}
                 <span className="glow-cyan">ارفع مستوى لعبك!</span>
               </span>
             </h1>
 
-            {/* DESCRIPTION */}
-            <p className="text-sm sm:text-base text-gray-300 max-w-xl leading-relaxed">
+            <p className="text-xs sm:text-base text-gray-300 max-w-xl leading-relaxed">
               توصيل لكافة مناطق فلسطين والداخل المحتل 🚚 | ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
             </p>
 
-            {/* BUTTONS */}
-            <div className="flex flex-wrap items-center gap-3.5">
+            <div className="flex flex-wrap items-center gap-3">
               <button
                 onClick={() => scrollTo("products")}
-                className="btn-neon text-sm sm:text-base px-8 py-3.5 flex items-center gap-2.5 cursor-pointer group"
+                className="btn-neon text-xs sm:text-base px-6 sm:px-8 py-3 sm:py-3.5 flex items-center gap-2 cursor-pointer group"
               >
-                <ShoppingBag className="w-5 h-5" />
+                <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
                 <span>{cfg.ctaLabel || "تسوق الآن"}</span>
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               </button>
@@ -243,28 +239,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* STATIC 4-CARD FEATURE ROW */}
             <div className="pt-2 overflow-x-auto no-scrollbar">
-              <div className="grid grid-cols-4 gap-2 sm:gap-3 min-w-[320px]">
+              <div className="grid grid-cols-4 gap-2 sm:gap-3 min-w-[300px]">
                 {features.map((s, i) => (
                   <div
                     key={i}
                     className={`
                       relative group overflow-hidden flex flex-col items-center text-center justify-between
-                      p-2 sm:p-3 rounded-2xl bg-gradient-to-b from-[#081a30]/90 to-[#030d1a]/90
+                      p-2 sm:p-3 rounded-xl sm:rounded-2xl bg-gradient-to-b from-[#081a30]/90 to-[#030d1a]/90
                       border border-[#00A8FF]/30 hover:border-[#00D9FF] transition-all duration-300
                       backdrop-blur-md ${s.glow}
                     `}
                   >
                     <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#00D9FF]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
-                    <div className="p-1.5 sm:p-2 rounded-xl bg-[#00A8FF]/10 border border-[#00A8FF]/20 group-hover:bg-[#00D9FF]/20 group-hover:border-[#00D9FF]/50 transition-all duration-300 transform group-hover:scale-110">
+                    <div className="p-1 sm:p-2 rounded-lg sm:rounded-xl bg-[#00A8FF]/10 border border-[#00A8FF]/20 group-hover:bg-[#00D9FF]/20 group-hover:border-[#00D9FF]/50 transition-all duration-300 transform group-hover:scale-110">
                       {s.icon}
                     </div>
 
-                    <div className="mt-1.5">
-                      <span className="text-xs sm:text-sm font-black text-white font-tech tracking-tight block leading-tight">
+                    <div className="mt-1">
+                      <span className="text-[11px] sm:text-sm font-black text-white font-tech tracking-tight block leading-tight">
                         {s.big}
                       </span>
-                      <span className="text-[9px] sm:text-[11px] text-gray-300 font-medium block mt-0.5 whitespace-nowrap">
+                      <span className="text-[8px] sm:text-[11px] text-gray-300 font-medium block mt-0.5 whitespace-nowrap">
                         {s.small}
                       </span>
                     </div>
@@ -274,34 +270,61 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* LEFT: SHOWCASE (إطار فخم جداً وبدون قسم صاحب المتجر) */}
-          <div className="lg:col-span-6">
-            {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
-              <div className="relative group">
-                {/* خلفية ضوئية نيون تحيط بالإطار */}
-                <div className="absolute -inset-1.5 bg-gradient-to-r from-[#00A8FF] via-[#00D9FF] to-[#0055FF] rounded-3xl blur-xl opacity-40 group-hover:opacity-75 transition duration-500 pointer-events-none" />
+          {/* LEFT: SHOWCASE FRAME (إطار ألترا فاخر ومطور للجوّال والشاشات) */}
+          <div className="lg:col-span-6 mt-4 lg:mt-0">
+            <div className="relative group max-w-md mx-auto lg:max-w-none">
+              
+              {/* زر الموسيقى العائم المحدث (لا يتداخل مطلقاً مع النص) */}
+              {siteAudioUrl && (
+                <>
+                  <audio ref={audioRef} src={siteAudioUrl} loop />
+                  <button
+                    onClick={toggleAudio}
+                    className={`absolute -top-4 -right-2 sm:-right-4 z-30 w-11 h-11 rounded-2xl flex items-center justify-center shadow-[0_0_20px_rgba(0,217,255,0.4)] transition-all duration-300 hover:scale-110 active:scale-95 ${
+                      isPlaying
+                        ? "bg-gradient-to-br from-[#00D9FF] to-[#0088FF] text-[#00101c] shadow-[0_0_25px_#00D9FF]"
+                        : "bg-[#041427]/90 border border-[#00D9FF]/60 text-[#00D9FF] backdrop-blur-md"
+                    }`}
+                    title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
+                  >
+                    {isPlaying ? <Volume2 className="w-5 h-5 animate-pulse" /> : <Music className="w-5 h-5" />}
+                  </button>
+                </>
+              )}
 
-                {/* الإطار الخارجي الفخم (Cyber Frame) */}
-                <div className="relative p-1 rounded-3xl bg-gradient-to-b from-[#0a2744] via-[#041427] to-[#010813] border border-[#00A8FF]/60 shadow-[0_0_40px_rgba(0,168,255,0.25)]">
-                  <div className="rounded-[22px] bg-[#030d1a] overflow-hidden border border-[#12385b]">
-                    {/* الشريط العلوي الهولوغرامي */}
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#103252] bg-gradient-to-r from-[#06182e] via-[#09223e] to-[#06182e]">
-                      <span className="text-xs font-tech font-bold text-[#00D9FF] flex items-center gap-1.5 tracking-wider">
-                        <Flame className="w-4 h-4 text-[#00D9FF] animate-pulse" />
-                        {cfg.badgeText || "LIVE SHOWCASE"}
+              {/* تأثير التوهج خلف الإطار */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#00A8FF] via-[#00D9FF] to-[#0055FF] rounded-[28px] blur-lg opacity-50 group-hover:opacity-85 transition duration-500 pointer-events-none" />
+
+              {/* الإطار الخارجي Ultra-Cyber */}
+              <div className="relative p-1 rounded-[26px] bg-gradient-to-b from-[#0e3256] via-[#051a30] to-[#010a17] border border-[#00D9FF]/50 shadow-[0_0_50px_rgba(0,168,255,0.3)]">
+                
+                {/* لمسات حواف الهولوغرام Cyber Corners */}
+                <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-[#00D9FF] rounded-tr-[24px] pointer-events-none" />
+                <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-[#00D9FF] rounded-bl-[24px] pointer-events-none" />
+
+                <div className="rounded-[22px] bg-[#020b18] overflow-hidden border border-[#0f3254]">
+                  
+                  {/* الشريط العلوي الهيدر */}
+                  <div className="flex items-center justify-between px-4 py-3 border-b border-[#0d2e4c] bg-gradient-to-r from-[#05172b] via-[#0a2542] to-[#05172b]">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#00D9FF] animate-spin" style={{ animationDuration: '6s' }} />
+                      <span className="text-xs font-tech font-extrabold text-[#00D9FF] tracking-wider uppercase">
+                        CYBER GEAR
                       </span>
-
-                      <div className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-[#00D9FF] animate-ping" />
-                        <span className="text-[11px] font-tech font-bold text-gray-300 uppercase tracking-widest">
-                          CYBER GEAR
-                        </span>
-                      </div>
                     </div>
 
-                    {/* عرض الفيديو */}
-                    <div className="relative h-64 sm:h-80 w-full bg-[#010712] p-2">
-                      <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#00A8FF]/30 shadow-inner">
+                    <div className="flex items-center gap-2 bg-[#00A8FF]/10 px-2.5 py-1 rounded-full border border-[#00A8FF]/30">
+                      <span className="w-2 h-2 rounded-full bg-[#00D9FF] animate-ping" />
+                      <span className="text-[10px] font-tech font-bold text-gray-200 uppercase tracking-wider">
+                        {cfg.badgeText || "LIVE SHOWCASE"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* منطقة المحتوى بالفيديو أو الصورة */}
+                  <div className="relative aspect-[16/10] sm:h-80 w-full bg-[#010611] p-2 sm:p-3">
+                    {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
+                      <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#00A8FF]/40 shadow-2xl">
                         <video
                           ref={showcaseVideoRef}
                           key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
@@ -317,141 +340,73 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           className="absolute inset-0 w-full h-full object-cover rounded-xl"
                         />
                         {cfg.videoUrls.length > 1 && (
-                          <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/80 text-[#00D9FF] px-2.5 py-1 rounded-md border border-[#00D9FF]/40 shadow-lg">
+                          <span className="absolute top-2.5 right-2.5 z-10 text-[10px] font-tech bg-black/80 text-[#00D9FF] px-2.5 py-1 rounded-lg border border-[#00D9FF]/40 shadow-md">
                             {(showcaseVideoIndex % cfg.videoUrls.length) + 1}/{cfg.videoUrls.length}
                           </span>
                         )}
                       </div>
-                    </div>
-
-                    {/* الشريط السفلي للإطار */}
-                    <div className="px-5 py-4 border-t border-[#103252] bg-gradient-to-r from-[#06182e] via-[#08203a] to-[#06182e] flex items-center justify-between gap-4">
-                      <h3 className="text-xs sm:text-sm font-black text-white truncate font-['Cairo'] tracking-wide">
-                        {cfg.headline}
-                      </h3>
-                      <button
-                        onClick={() => scrollTo("products")}
-                        className="btn-neon text-xs px-4 py-2 flex items-center gap-2 cursor-pointer whitespace-nowrap font-bold"
+                    ) : cfg.enabled && active ? (
+                      <div
+                        className="relative w-full h-full rounded-xl overflow-hidden border border-[#00A8FF]/40 flex items-center justify-center bg-[#020b18]"
+                        onMouseEnter={() => setPaused(true)}
+                        onMouseLeave={() => setPaused(false)}
                       >
-                        <ShoppingBag className="w-4 h-4" />
-                        <span>{cfg.ctaLabel}</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
+                        <Image
+                          src={active.image}
+                          alt={active.title}
+                          fill
+                          className="object-contain p-3 transition-transform duration-500 group-hover:scale-105"
+                          priority
+                        />
 
-                {/* زر تشغيل الصوت في زاوية الإطار */}
-                {siteAudioUrl && (
-                  <>
-                    <audio ref={audioRef} src={siteAudioUrl} loop />
-                    <button
-                      onClick={toggleAudio}
-                      className={`absolute -top-3 left-6 z-20 w-10 h-10 rounded-xl flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 ${
-                        isPlaying
-                          ? "bg-[#00A8FF] text-[#00101c] shadow-[0_0_15px_#00A8FF]"
-                          : "bg-[#06182e] border border-[#00A8FF]/60 text-[#00A8FF]"
-                      }`}
-                    >
-                      {isPlaying ? <Volume2 className="w-5 h-5 animate-pulse" /> : <Music className="w-5 h-5" />}
-                    </button>
-                  </>
-                )}
-              </div>
-            ) : cfg.enabled && active ? (
-              <div className="relative group" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-                {/* خلفية ضوئية نيون */}
-                <div className="absolute -inset-1.5 bg-gradient-to-r from-[#00A8FF] via-[#00D9FF] to-[#0055FF] rounded-3xl blur-xl opacity-40 group-hover:opacity-75 transition duration-500 pointer-events-none" />
-
-                {/* الإطار الخارجي الفخم */}
-                <div className="relative p-1 rounded-3xl bg-gradient-to-b from-[#0a2744] via-[#041427] to-[#010813] border border-[#00A8FF]/60 shadow-[0_0_40px_rgba(0,168,255,0.25)]">
-                  <div className="rounded-[22px] bg-[#030d1a] overflow-hidden border border-[#12385b]">
-                    {/* الشريط العلوي */}
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#103252] bg-gradient-to-r from-[#06182e] via-[#09223e] to-[#06182e]">
-                      <div className="flex items-center gap-1.5">
-                        {showcaseItems.map((_, i) => (
-                          <button
-                            key={i}
-                            onClick={() => setSlide(i)}
-                            className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                              i === slide ? "w-6 bg-[#00D9FF]" : "w-2 bg-[#12385b]"
-                            }`}
-                          />
-                        ))}
-                      </div>
-
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs font-tech font-bold text-[#00D9FF] flex items-center gap-1">
-                          <Flame className="w-4 h-4 text-[#00D9FF]" />
-                          {cfg.badgeText}
-                        </span>
-                        <div className="flex items-center gap-1.5 dir-ltr">
-                          <button
-                            onClick={() => go(-1)}
-                            className="p-1.5 rounded-lg bg-[#0b223a] hover:bg-[#00A8FF] hover:text-[#00101c] text-gray-200 transition-colors"
-                          >
-                            <ChevronLeft className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => go(1)}
-                            className="p-1.5 rounded-lg bg-[#0b223a] hover:bg-[#00A8FF] hover:text-[#00101c] text-gray-200 transition-colors"
-                          >
-                            <ChevronRight className="w-4 h-4" />
-                          </button>
+                        {/* مؤشرات الصور */}
+                        <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1 bg-black/60 backdrop-blur-md px-2 py-1 rounded-lg border border-[#00A8FF]/30">
+                          {showcaseItems.map((_, i) => (
+                            <button
+                              key={i}
+                              onClick={() => setSlide(i)}
+                              className={`h-1.5 rounded-full transition-all cursor-pointer ${
+                                i === slide ? "w-5 bg-[#00D9FF]" : "w-1.5 bg-gray-600"
+                              }`}
+                            />
+                          ))}
                         </div>
                       </div>
-                    </div>
+                    ) : null}
+                  </div>
 
-                    {/* عرض الصورة */}
-                    <div className="relative h-64 sm:h-80 w-full bg-[#010712] p-4 flex items-center justify-center">
-                      <Image
-                        src={active.image}
-                        alt={active.title}
-                        fill
-                        className="object-contain p-4 transition-transform duration-500 group-hover:scale-105"
-                        priority
-                      />
-                    </div>
-
-                    {/* الشريط السفلي */}
-                    <div className="px-5 py-4 border-t border-[#103252] bg-gradient-to-r from-[#06182e] via-[#08203a] to-[#06182e] flex items-center justify-between gap-4">
-                      <div className="text-right overflow-hidden">
-                        <h3 className="text-xs sm:text-sm font-bold text-white truncate">
-                          {active.title}
-                        </h3>
-                        <p className="text-sm font-black text-[#00D9FF] font-tech mt-0.5">
+                  {/* الشريط السفلي للإطار */}
+                  <div className="px-4 py-3 sm:py-3.5 border-t border-[#0d2e4c] bg-gradient-to-r from-[#05172b] via-[#09223c] to-[#05172b] flex items-center justify-between gap-3">
+                    <div className="text-right truncate">
+                      <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
+                        {cfg.videoUrls && cfg.videoUrls.length > 0
+                          ? cfg.headline
+                          : active?.title || cfg.headline}
+                      </h3>
+                      {active && (!cfg.videoUrls || cfg.videoUrls.length === 0) && (
+                        <p className="text-xs sm:text-sm font-black text-[#00D9FF] font-tech mt-0.5">
                           {active.price} ₪
                         </p>
-                      </div>
-
-                      <button
-                        onClick={() => addToCart(active)}
-                        className="btn-neon text-xs px-4 py-2 flex items-center gap-2 cursor-pointer whitespace-nowrap font-bold"
-                      >
-                        <ShoppingBag className="w-4 h-4" />
-                        <span>أضف للسلة</span>
-                      </button>
+                      )}
                     </div>
-                  </div>
-                </div>
 
-                {/* زر تشغيل الصوت */}
-                {siteAudioUrl && (
-                  <>
-                    <audio ref={audioRef} src={siteAudioUrl} loop />
                     <button
-                      onClick={toggleAudio}
-                      className={`absolute -top-3 left-6 z-20 w-10 h-10 rounded-xl flex items-center justify-center shadow-2xl transition-all duration-300 hover:scale-110 active:scale-95 ${
-                        isPlaying
-                          ? "bg-[#00A8FF] text-[#00101c] shadow-[0_0_15px_#00A8FF]"
-                          : "bg-[#06182e] border border-[#00A8FF]/60 text-[#00A8FF]"
-                      }`}
+                      onClick={() =>
+                        active && (!cfg.videoUrls || cfg.videoUrls.length === 0)
+                          ? addToCart(active)
+                          : scrollTo("products")
+                      }
+                      className="btn-neon text-xs px-3.5 sm:px-5 py-2 flex items-center gap-1.5 sm:gap-2 cursor-pointer whitespace-nowrap font-bold rounded-xl"
                     >
-                      {isPlaying ? <Volume2 className="w-5 h-5 animate-pulse" /> : <Music className="w-5 h-5" />}
+                      <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      <span>{cfg.ctaLabel || "تسوق الآن"}</span>
                     </button>
-                  </>
-                )}
+                  </div>
+
+                </div>
               </div>
-            ) : null}
+
+            </div>
           </div>
         </div>
       </div>
