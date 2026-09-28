@@ -128,25 +128,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const active = showcaseItems[slide];
 
-  // مميزات المتجر
+  // مميزات المتجر الأربعة الثابتة
   const features = [
     {
-      icon: <ShieldCheck className="w-4 h-4 text-[#00D9FF]" />,
+      icon: <ShieldCheck className="w-5 h-5 text-[#00D9FF]" />,
       big: "1 سنة",
       small: "ضمان حقيقي",
     },
     {
-      icon: <Truck className="w-4 h-4 text-[#00D9FF]" />,
+      icon: <Truck className="w-5 h-5 text-[#00D9FF]" />,
       big: "24-48h",
       small: "شحن سريع جداً",
     },
     {
-      icon: <CheckCircle2 className="w-4 h-4 text-[#00A8FF]" />,
+      icon: <CheckCircle2 className="w-5 h-5 text-[#00A8FF]" />,
       big: "100%",
       small: "منتجات أصلية معتمدة",
     },
     {
-      icon: <span className="text-[#00A8FF]">⭐</span>,
+      icon: <span className="text-base text-[#00A8FF]">⭐</span>,
       big: "+5,400",
       small: "لاعب يثق بنا",
     },
@@ -252,52 +252,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* FULL SCREEN MARQUEE */}
-            <div className="w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden pt-4 pb-2 relative pointer-events-none">
-              <div className="flex w-max animate-fast-marquee" dir="ltr">
-                {/* المجموعة الأولى */}
-                <div className="flex items-center gap-6 shrink-0 pr-6">
-                  {features.map((s, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-2.5 bg-[#041226]/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#00A8FF]/30 shadow-lg"
-                    >
-                      <div className="p-1 rounded-lg bg-[#00A8FF]/15 border border-[#00A8FF]/40 shrink-0">
-                        {s.icon}
-                      </div>
-                      <div className="text-right whitespace-nowrap">
-                        <span className="text-xs font-black text-white font-tech block leading-tight">
-                          {s.big}
-                        </span>
-                        <span className="text-[10px] text-gray-300 font-bold block mt-0.5">
-                          {s.small}
-                        </span>
-                      </div>
+            {/* STATIC 4-CARD FEATURE GRID */}
+            <div className="pt-2">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {features.map((s, i) => (
+                  <div
+                    key={i}
+                    className="flex flex-col items-center text-center justify-center p-3 rounded-xl bg-[#041226]/80 backdrop-blur-md border border-[#00A8FF]/30 shadow-lg hover:border-[#00D9FF]/60 transition-all duration-300 group"
+                  >
+                    <div className="p-2 rounded-lg bg-[#00A8FF]/15 border border-[#00A8FF]/40 mb-2 group-hover:scale-110 transition-transform">
+                      {s.icon}
                     </div>
-                  ))}
-                </div>
-
-                {/* المجموعة المكررة */}
-                <div className="flex items-center gap-6 shrink-0 pr-6" aria-hidden="true">
-                  {features.map((s, i) => (
-                    <div
-                      key={`dup-${i}`}
-                      className="flex items-center gap-2.5 bg-[#041226]/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#00A8FF]/30 shadow-lg"
-                    >
-                      <div className="p-1 rounded-lg bg-[#00A8FF]/15 border border-[#00A8FF]/40 shrink-0">
-                        {s.icon}
-                      </div>
-                      <div className="text-right whitespace-nowrap">
-                        <span className="text-xs font-black text-white font-tech block leading-tight">
-                          {s.big}
-                        </span>
-                        <span className="text-[10px] text-gray-300 font-bold block mt-0.5">
-                          {s.small}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                    <span className="text-sm font-black text-white font-tech leading-tight block">
+                      {s.big}
+                    </span>
+                    <span className="text-[11px] text-gray-300 font-bold block mt-1">
+                      {s.small}
+                    </span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
