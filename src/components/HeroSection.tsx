@@ -17,7 +17,6 @@ interface HeroSectionProps {
 }
 
 export function HeroSection({ products = [], showcase, onCategorySelect }: HeroSectionProps) {
-  // عناصر الشريط المتحرك
   const tickerItems = [
     { icon: <Star className="w-4 h-4 text-amber-400 fill-amber-400" />, title: "+11,400", sub: "عميل يثق بنا" },
     { icon: <ShieldCheck className="w-4 h-4 text-cyan-400" />, title: "ضمان 1 سنة", sub: "شامل وصريح" },
@@ -27,7 +26,7 @@ export function HeroSection({ products = [], showcase, onCategorySelect }: HeroS
 
   return (
     <section className="relative w-full min-h-screen bg-[#080d14] text-white flex flex-col items-center pt-6 pb-12 px-4 overflow-hidden font-sans dir-rtl">
-      {/* خلفية الشبكة الجيمينج - Grid Overlay */}
+      {/* خلفية الشبكة الجيمينج */}
       <div 
         className="absolute inset-0 opacity-15 pointer-events-none"
         style={{
@@ -36,10 +35,10 @@ export function HeroSection({ products = [], showcase, onCategorySelect }: HeroS
         }}
       />
 
-      {/* التوهج الأزرق الخلفي */}
+      {/* التوهج الخلفي */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      {/* 1. البادج العلوي الصغير */}
+      {/* 1. البادج العلوي */}
       <div className="relative z-10 flex items-center justify-between gap-3 bg-[#0d1622]/90 border border-cyan-500/30 rounded-full py-1.5 px-3 max-w-sm w-full mb-6 shadow-[0_0_15px_rgba(0,210,255,0.1)]">
         <span className="text-[11px] text-gray-300 font-medium">
           المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
@@ -49,7 +48,7 @@ export function HeroSection({ products = [], showcase, onCategorySelect }: HeroS
         </span>
       </div>
 
-      {/* 2. اللوجو والرمز */}
+      {/* 2. اللوجو */}
       <div className="relative z-10 flex flex-col items-center mb-4">
         <div className="w-16 h-16 rounded-2xl bg-[#0b131e] border border-cyan-400/40 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(0,210,255,0.15)]">
           <Zap className="w-8 h-8 text-cyan-400 fill-cyan-400/20" />
@@ -63,7 +62,7 @@ export function HeroSection({ products = [], showcase, onCategorySelect }: HeroS
         </p>
       </div>
 
-      {/* 3. العناوين الرئيسية */}
+      {/* 3. العناوين */}
       <div className="relative z-10 text-center max-w-md my-2 space-y-2">
         <h1 className="text-3xl sm:text-4xl font-extrabold leading-tight text-white">
           خياركم الأفضل في فلسطين
@@ -73,7 +72,7 @@ export function HeroSection({ products = [], showcase, onCategorySelect }: HeroS
         </p>
       </div>
 
-      {/* 4. معلومات مالك المتجر (Store Owner) وزر التسوق */}
+      {/* 4. Owner & Button */}
       <div className="relative z-10 my-4 flex flex-col items-center gap-3 w-full max-w-xs">
         <div className="flex items-center gap-2 bg-[#0a121c] border border-cyan-500/30 rounded-2xl px-4 py-2 text-xs shadow-inner">
           <Crown className="w-4 h-4 text-amber-400" />
@@ -92,33 +91,33 @@ export function HeroSection({ products = [], showcase, onCategorySelect }: HeroS
         </button>
       </div>
 
-      {/* 5. الشريط اللانهائي الجديد (الصف الواحد المتحرك بأسلوب الشريط الإخباري الدوار) */}
-      <div className="relative z-10 w-full max-w-xl my-6 overflow-hidden bg-[#0c1624]/80 border border-cyan-500/30 rounded-2xl py-3 shadow-[0_0_20px_rgba(0,210,255,0.08)] backdrop-blur-md">
-        {/* تأثير التلاشي عند الحواف */}
-        <div className="absolute top-0 bottom-0 left-0 w-8 bg-gradient-to-r from-[#080d14] to-transparent z-10 pointer-events-none" />
-        <div className="absolute top-0 bottom-0 right-0 w-8 bg-gradient-to-l from-[#080d14] to-transparent z-10 pointer-events-none" />
+      {/* 5. الشريط المتحرك الجديد (سريع ومضبوط للموبايل) */}
+      <div className="relative z-10 w-full max-w-lg my-5 overflow-hidden bg-[#0c1624]/90 border border-cyan-500/30 rounded-2xl py-2.5 shadow-[0_0_20px_rgba(0,210,255,0.08)] backdrop-blur-md dir-ltr">
+        {/* التلاشي عند الأطراف */}
+        <div className="absolute top-0 bottom-0 left-0 w-8 bg-gradient-to-r from-[#080d14] to-transparent z-20 pointer-events-none" />
+        <div className="absolute top-0 bottom-0 right-0 w-8 bg-gradient-to-l from-[#080d14] to-transparent z-20 pointer-events-none" />
 
-        <div className="flex w-max animate-marquee space-x-6 space-x-reverse">
-          {/* نكرر القائمة مرتين لإنشاء حركة مستمرة بدون انقطاع */}
-          {[...tickerItems, ...tickerItems, ...tickerItems].map((item, index) => (
+        <div className="flex w-max animate-infinite-scroll space-x-4">
+          {/* مضاعفة العناصر لضمان استمرار الدوران بشكل غير منقطع */}
+          {[...tickerItems, ...tickerItems, ...tickerItems, ...tickerItems].map((item, index) => (
             <div 
               key={index} 
-              className="flex items-center gap-2.5 bg-[#08101a] border border-cyan-500/20 rounded-xl px-4 py-2 shrink-0 shadow-sm"
+              className="flex items-center gap-2 bg-[#08101a] border border-cyan-500/20 rounded-xl px-3.5 py-1.5 shrink-0 shadow-sm dir-rtl"
             >
-              <div className="p-1.5 rounded-lg bg-cyan-950/50 border border-cyan-500/30">
+              <div className="p-1 rounded-lg bg-cyan-950/50 border border-cyan-500/30">
                 {item.icon}
               </div>
               <div className="flex flex-col text-right">
-                <span className="text-xs font-black text-white">{item.title}</span>
-                <span className="text-[10px] text-gray-400">{item.sub}</span>
+                <span className="text-xs font-black text-white whitespace-nowrap">{item.title}</span>
+                <span className="text-[9px] text-gray-400 whitespace-nowrap">{item.sub}</span>
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* 6. استعراض الكيبورد / الميديا (Showcase) */}
-      <div className="relative z-10 w-full max-w-2xl bg-[#0a131f] border border-cyan-500/40 rounded-3xl p-3 shadow-[0_0_30px_rgba(0,210,255,0.15)] overflow-hidden">
+      {/* 6. استعراض الكيبورد (الميديا) */}
+      <div className="relative z-10 w-full max-w-2xl bg-[#0a131f] border border-cyan-500/40 rounded-3xl p-2.5 shadow-[0_0_30px_rgba(0,210,255,0.15)] overflow-hidden">
         <div className="relative aspect-video w-full rounded-2xl overflow-hidden border border-cyan-500/20 bg-black">
           {showcase?.videos && showcase.videos.length > 0 ? (
             <video 
@@ -143,17 +142,14 @@ export function HeroSection({ products = [], showcase, onCategorySelect }: HeroS
         </div>
       </div>
 
-      {/* كود CSS المخصص للأنيميشن (المجال المتحرك) */}
-      <style jsx global>{`
-        @keyframes marquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(50%); }
+      {/* كود الحركة الأنيميشن المباشر */}
+      <style>{`
+        @keyframes infinite-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
         }
-        .animate-marquee {
-          animation: marquee 18s linear infinite;
-        }
-        .animate-marquee:hover {
-          animation-play-state: paused;
+        .animate-infinite-scroll {
+          animation: infinite-scroll 15s linear infinite;
         }
       `}</style>
     </section>
