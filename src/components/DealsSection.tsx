@@ -3,6 +3,22 @@
 import React, { useState, useEffect } from "react";
 import { Timer, Zap, Heart, Eye, ShoppingCart, CheckCircle } from "lucide-react";
 
+// تعريف واجهة المنتجات لتفادي خطأ TypeScript
+interface Product {
+  id: string | number;
+  name: string;
+  price: number;
+  original_price?: number;
+  image_url?: string;
+  in_stock?: boolean;
+}
+
+interface DealsSectionProps {
+  dealProducts?: Product[];
+  products?: Product[];
+  targetDate?: string;
+}
+
 // مكون العداد التنازلي المحدث بالسيان والأزرق
 const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
@@ -76,17 +92,21 @@ const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   );
 };
 
-// التصدير الرئيسي الذي يطلبه ملف page.tsx
-export const DealsSection = () => {
+// المكون الرئيسي الداعم للـ Props المتوقعة من page.tsx
+export const DealsSection: React.FC<DealsSectionProps> = ({
+  dealProducts = [],
+  products = [],
+  targetDate = "2026-10-01T00:00:00",
+}) => {
   const [slide, setSlide] = useState(0);
-  const showcaseItems = [1, 2, 3]; // يمكنك تعديل عدد الشرائح حسب الحاجة
+  const itemsList = dealProducts.length > 0 ? dealProducts : products;
 
   return (
     <section className="w-full max-w-md mx-auto px-4 py-4 text-white" dir="rtl">
       {/* العداد التنازلي */}
-      <DealCountdown targetDate="2026-10-01T00:00:00" />
+      <DealCountdown targetDate={targetDate} />
 
-      {/* كرت المنتج مع إزالة اللون الأحمر بالكامل واستبداله بالسيان والنيون */}
+      {/* كرت العروض باللون النيون الأزرق والسيان بدون أحمر */}
       <div className="bg-[#081225] border border-[#16294a] rounded-2xl p-4 shadow-[0_0_20px_rgba(0,163,255,0.15)] relative">
         
         {/* شارة الخصم */}
@@ -111,13 +131,21 @@ export const DealsSection = () => {
         </div>
 
         {/* عنوان المنتج */}
-        <h3 className="text-xl font-extrabold text-white mb-3">R68 HE Black</h3>
+        <h3 className="text-xl font-extrabold text-white mb-3">
+          {itemsList[slide]?.name || "R68 HE Black"}
+        </h3>
 
         {/* السعر وزر الإضافة */}
         <div className="flex items-center justify-between mt-4">
           <div>
-            <div className="text-2xl font-black text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">$9999</div>
-            <div className="text-xs text-gray-500 line-through">$99994</div>
+            <div className="text-2xl font-black text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">
+              ${itemsList[slide]?.price || "9999"}
+            </div>
+            {itemsList[slide]?.original_price && (
+              <div className="text-xs text-gray-500 line-through">
+                ${itemsList[slide]?.original_price}
+              </div>
+            )}
           </div>
           <button className="flex items-center gap-2 bg-gradient-to-r from-[#00a3ff] to-[#0066ff] hover:from-[#00e5ff] hover:to-[#00a3ff] text-white font-bold px-5 py-2.5 rounded-xl shadow-[0_0_15px_rgba(0,163,255,0.4)] transition duration-300">
             <ShoppingCart className="w-4 h-4" />
@@ -125,9 +153,9 @@ export const DealsSection = () => {
           </button>
         </div>
 
-        {/* نقاط التنقل السفلي الشريط دون أي لون أحمر */}
+        {/* نقاط التنقل السفلي الأزرق والسيان */}
         <div className="flex items-center justify-center gap-2 pt-5">
-          {showcaseItems.map((_, idx) => (
+          {(itemsList.length > 0 ? itemsList : [1, 2, 3]).map((_, idx) => (
             <button
               key={idx}
               onClick={() => setSlide(idx)}
