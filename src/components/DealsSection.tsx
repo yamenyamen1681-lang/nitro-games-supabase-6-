@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Timer, Zap, Heart, Eye, ShoppingCart, CheckCircle, Volume2, VolumeX, Sparkles } from "lucide-react";
+import { Timer, Zap, Heart, Eye, ShoppingCart, CheckCircle, Sparkles } from "lucide-react";
 import { Product } from "@/lib/data";
 
 interface DealsSectionProps {
@@ -81,14 +81,13 @@ const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   );
 };
 
-// 2. مكون العروض المدمج مع شارة SPECIAL OFFER
+// 2. مكون العروض المدمج (بدون زر الصوت)
 export const DealsSection: React.FC<DealsSectionProps> = ({
   dealProducts = [],
   products = [],
   targetDate = "2026-10-01T00:00:00",
 }) => {
   const [slide, setSlide] = useState(0);
-  const [isMuted, setIsMuted] = useState(true);
   const itemsList = dealProducts.length > 0 ? dealProducts : products;
 
   useEffect(() => {
@@ -121,7 +120,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
         {/* الكرت الداخلي */}
         <div className="relative bg-[#081225] rounded-[22px] p-4 border border-[#16294a] backdrop-blur-xl z-10">
           
-          {/* الشريط العلوي: شارة SPECIAL OFFER على اليمين والتحكم على اليسار */}
+          {/* الشريط العلوي: شارة SPECIAL OFFER والأزرار */}
           <div className="flex items-center justify-between mb-3 px-1">
             
             {/* SPECIAL OFFER (جهة اليمين) */}
@@ -135,19 +134,8 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
               </span>
             </div>
 
-            {/* الأزرار العلوية (جهة اليسار): الصوت، المفضلة، المعاينة */}
+            {/* الأزرار العلوية (جهة اليسار): المفضلة والمعاينة فقط */}
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setIsMuted(!isMuted)}
-                className="p-2 bg-[#0d2142] hover:bg-[#00a3ff]/20 border border-[#00a3ff]/40 text-[#00e5ff] rounded-full transition-all duration-300 shadow-[0_0_10px_rgba(0,163,255,0.3)] active:scale-95"
-                aria-label="Toggle Audio"
-              >
-                {isMuted ? (
-                  <VolumeX className="w-4 h-4 text-gray-400" />
-                ) : (
-                  <Volume2 className="w-4 h-4 text-[#00e5ff] animate-pulse" />
-                )}
-              </button>
               <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition">
                 <Heart className="w-4 h-4 text-gray-400" />
               </button>
@@ -227,7 +215,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
             </button>
           </div>
 
-          {/* نقاط المؤشر التراكمي */}
+          {/* نقاط المؤشر */}
           <div className="flex items-center justify-center gap-2 pt-5">
             {itemsList.map((_, idx) => (
               <button
