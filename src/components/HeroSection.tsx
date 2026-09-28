@@ -157,6 +157,30 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const active = showcaseItems[slide];
 
+  // مميزات المتجر
+  const features = [
+    {
+      icon: <ShieldCheck className="w-4 h-4 text-[#00D9FF]" />,
+      big: "1 سنة",
+      small: "ضمان حقيقي",
+    },
+    {
+      icon: <Truck className="w-4 h-4 text-[#00D9FF]" />,
+      big: "24-48h",
+      small: "شحن سريع جداً",
+    },
+    {
+      icon: <CheckCircle2 className="w-4 h-4 text-[#00A8FF]" />,
+      big: "100%",
+      small: "منتجات أصلية معتمدة",
+    },
+    {
+      icon: <span className="text-[#00A8FF]">⭐</span>,
+      big: "+5,400",
+      small: "لاعب يثق بنا",
+    },
+  ];
+
   return (
     <section
       id="hero"
@@ -206,78 +230,64 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* TOP MARQUEE BADGE (شريط متحرك في صف واحد) */}
-        <div className="w-full overflow-hidden mb-8">
+        {/* TOP BADGE الأصلي كما كان */}
+        <div className="flex justify-center mb-8">
           <div
             className="
+              inline-flex
+              items-center
+              gap-2.5
+              px-4
+              py-1.5
+              rounded-full
               panel
               border
               border-[#00A8FF]/30
-              rounded-full
-              py-2
-              px-4
-              overflow-hidden
-              relative
             "
           >
-            <div className="flex whitespace-nowrap animate-marquee">
-              <div className="flex items-center gap-6 min-w-full shrink-0 justify-around">
-                <div className="inline-flex items-center gap-2.5">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A8FF] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00A8FF]" />
-                  </span>
-                  <span className="text-xs font-bold text-gray-200">
-                    المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
-                  </span>
-                  <span className="text-[10px] font-black bg-[#00D9FF] text-[#00101c] px-2 py-0.5 rounded-full font-tech">
-                    CYBER ESPORTS
-                  </span>
-                </div>
+            <span className="relative flex h-2.5 w-2.5">
+              <span
+                className="
+                  animate-ping
+                  absolute
+                  inline-flex
+                  h-full
+                  w-full
+                  rounded-full
+                  bg-[#00A8FF]
+                  opacity-75
+                "
+              />
+              <span
+                className="
+                  relative
+                  inline-flex
+                  rounded-full
+                  h-2.5
+                  w-2.5
+                  bg-[#00A8FF]
+                "
+              />
+            </span>
 
-                <div className="inline-flex items-center gap-2.5">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A8FF] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00A8FF]" />
-                  </span>
-                  <span className="text-xs font-bold text-gray-200">
-                    توصيل سريع وسريع جداً لجميع مدن الضفة والداخل المحتل
-                  </span>
-                  <span className="text-[10px] font-black bg-[#00A8FF] text-[#00101c] px-2 py-0.5 rounded-full font-tech">
-                    NITRO GEAR
-                  </span>
-                </div>
-              </div>
+            <span className="text-[11px] sm:text-xs font-bold text-gray-200">
+              المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
+            </span>
 
-              {/* نسخة مكررة للحصول على حركة سلسة متواصلة 100% */}
-              <div className="flex items-center gap-6 min-w-full shrink-0 justify-around" aria-hidden="true">
-                <div className="inline-flex items-center gap-2.5">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A8FF] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00A8FF]" />
-                  </span>
-                  <span className="text-xs font-bold text-gray-200">
-                    المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
-                  </span>
-                  <span className="text-[10px] font-black bg-[#00D9FF] text-[#00101c] px-2 py-0.5 rounded-full font-tech">
-                    CYBER ESPORTS
-                  </span>
-                </div>
-
-                <div className="inline-flex items-center gap-2.5">
-                  <span className="relative flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A8FF] opacity-75" />
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00A8FF]" />
-                  </span>
-                  <span className="text-xs font-bold text-gray-200">
-                    توصيل سريع وسريع جداً لجميع مدن الضفة والداخل المحتل
-                  </span>
-                  <span className="text-[10px] font-black bg-[#00A8FF] text-[#00101c] px-2 py-0.5 rounded-full font-tech">
-                    NITRO GEAR
-                  </span>
-                </div>
-              </div>
-            </div>
+            <span
+              className="
+                text-[10px]
+                font-black
+                bg-[#00D9FF]
+                text-[#00101c]
+                px-2
+                py-0.5
+                rounded-full
+                font-tech
+              "
+            >
+              CYBER ESPORTS
+            </span>
           </div>
         </div>
 
@@ -418,7 +428,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <Sparkles className="w-3.5 h-3.5 text-[#00A8FF]" />
             </div>
 
-            {/* BUTTONS (تمت إزالة زر الأقسام الخمسة) */}
+            {/* BUTTONS */}
             <div className="flex flex-wrap items-center gap-3.5">
               <button
                 onClick={() => scrollTo("products")}
@@ -452,72 +462,66 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* STATS */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
-              {[
-                {
-                  icon: (
-                    <span className="text-[#00A8FF]">
-                      ⭐
-                    </span>
-                  ),
-                  big: "+5,400",
-                  small: "لاعب يثق بنا",
-                },
-                {
-                  icon: (
-                    <ShieldCheck className="w-4 h-4 text-[#00D9FF]" />
-                  ),
-                  big: "1 سنة",
-                  small: "ضمان حقيقي",
-                },
-                {
-                  icon: (
-                    <CheckCircle2 className="w-4 h-4 text-[#00A8FF]" />
-                  ),
-                  big: "100%",
-                  small: "أصلي معتمد",
-                },
-                {
-                  icon: (
-                    <Truck className="w-4 h-4 text-[#00D9FF]" />
-                  ),
-                  big: "24-48h",
-                  small: "شحن سريع",
-                },
-              ].map((s, i) => (
-                <div
-                  key={i}
-                  className="
-                    panel
-                    rounded-xl
-                    px-3
-                    py-2.5
-                    text-right
-                  "
-                >
-                  <div
-                    className="
-                      text-base
-                      font-black
-                      text-white
-                      font-tech
-                      flex
-                      items-center
-                      justify-end
-                      gap-1.5
-                    "
-                  >
-                    {s.big}
-                    {s.icon}
+            {/* MARQUEE FEATURES (شريط المميزات المتحرك في صف واحد) */}
+            <div className="w-full overflow-hidden pt-3">
+              <div
+                className="
+                  panel
+                  rounded-2xl
+                  py-3
+                  px-2
+                  border
+                  border-[#00A8FF]/30
+                  bg-gradient-to-r
+                  from-[#041226]/80
+                  via-[#061830]/90
+                  to-[#041226]/80
+                  shadow-[0_0_20px_rgba(0,168,255,0.1)]
+                  overflow-hidden
+                "
+              >
+                <div className="flex whitespace-nowrap animate-marquee">
+                  {/* المجموعة الأولى */}
+                  <div className="flex items-center gap-8 min-w-full shrink-0 justify-around">
+                    {features.map((s, i) => (
+                      <div key={i} className="flex items-center gap-2.5">
+                        <div className="p-1.5 rounded-lg bg-[#00A8FF]/10 border border-[#00A8FF]/30">
+                          {s.icon}
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs font-black text-white font-tech block leading-none">
+                            {s.big}
+                          </span>
+                          <span className="text-[10px] text-gray-300 font-bold block mt-0.5">
+                            {s.small}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
 
-                  <div className="text-[10px] text-gray-400 mt-0.5">
-                    {s.small}
+                  {/* مجموعة مكررة لضمان السلاسة وعدم الانقطاع */}
+                  <div className="flex items-center gap-8 min-w-full shrink-0 justify-around" aria-hidden="true">
+                    {features.map((s, i) => (
+                      <div key={`dup-${i}`} className="flex items-center gap-2.5">
+                        <div className="p-1.5 rounded-lg bg-[#00A8FF]/10 border border-[#00A8FF]/30">
+                          {s.icon}
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs font-black text-white font-tech block leading-none">
+                            {s.big}
+                          </span>
+                          <span className="text-[10px] text-gray-300 font-bold block mt-0.5">
+                            {s.small}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
+              </div>
             </div>
+
           </div>
 
           {/* LEFT: SHOWCASE */}
@@ -794,31 +798,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     </button>
                   </>
                 )}
-
-                {/* FLOATING INFO */}
-                <div
-                  className="
-                    hidden
-                    sm:flex
-                    absolute
-                    -bottom-4
-                    right-6
-                    items-center
-                    gap-2
-                    px-3
-                    py-1.5
-                    rounded-xl
-                    panel
-                    border
-                    border-[#00A8FF]/40
-                    animate-floaty
-                  "
-                >
-                  <Zap className="w-3.5 h-3.5 text-[#00A8FF]" />
-                  <span className="text-[10px] font-bold text-gray-200">
-                    {cfg.headline}
-                  </span>
-                </div>
               </div>
 
             ) : cfg.enabled && active ? (
