@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import Image from "next/image";
 import {
   Product,
   ShowcaseConfig,
   DEFAULT_SHOWCASE,
-  CATEGORIES_META,
 } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
 
@@ -35,7 +34,6 @@ interface HeroSectionProps {
 export const HeroSection: React.FC<HeroSectionProps> = ({
   products,
   showcase,
-  onCategorySelect,
 }) => {
   const { addToCart } = useCart();
   const cfg = showcase ?? DEFAULT_SHOWCASE;
@@ -43,18 +41,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [siteAudioUrl, setSiteAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
-  const showcaseVideoRef = React.useRef<HTMLVideoElement | null>(null);
+  const showcaseVideoRef = useRef<HTMLVideoElement | null>(null);
 
+  // Video Autoplay handling
   useEffect(() => {
     const vid = showcaseVideoRef.current;
-
     if (!vid) return;
 
     const playPromise = vid.play();
-
     if (playPromise && typeof playPromise.catch === "function") {
       playPromise.catch(() => {
         /* Autoplay can still be blocked */
@@ -62,6 +59,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     }
   }, [showcaseVideoIndex, cfg.videoUrls]);
 
+  // Fetch Site Audio
   useEffect(() => {
     (async () => {
       try {
@@ -99,7 +97,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   };
 
   // Resolve showcase items
-  const showcaseItems = React.useMemo(() => {
+  const showcaseItems = useMemo(() => {
     if (cfg.productIds.length > 0) {
       const picked = cfg.productIds
         .map((id) => products.find((p) => p.id === id))
@@ -208,83 +206,89 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* ===================================================== */}
-        {/* TOP BADGE */}
-        {/* ===================================================== */}
-
-        <div className="flex justify-center mb-8">
+        {/* TOP MARQUEE BADGE (شريط متحرك في صف واحد) */}
+        <div className="w-full overflow-hidden mb-8">
           <div
             className="
-              inline-flex
-              items-center
-              gap-2.5
-              px-4
-              py-1.5
-              rounded-full
               panel
               border
               border-[#00A8FF]/30
+              rounded-full
+              py-2
+              px-4
+              overflow-hidden
+              relative
             "
           >
-            <span className="relative flex h-2.5 w-2.5">
-              <span
-                className="
-                  animate-ping
-                  absolute
-                  inline-flex
-                  h-full
-                  w-full
-                  rounded-full
-                  bg-[#00A8FF]
-                  opacity-75
-                "
-              />
+            <div className="flex whitespace-nowrap animate-marquee">
+              <div className="flex items-center gap-6 min-w-full shrink-0 justify-around">
+                <div className="inline-flex items-center gap-2.5">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A8FF] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00A8FF]" />
+                  </span>
+                  <span className="text-xs font-bold text-gray-200">
+                    المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
+                  </span>
+                  <span className="text-[10px] font-black bg-[#00D9FF] text-[#00101c] px-2 py-0.5 rounded-full font-tech">
+                    CYBER ESPORTS
+                  </span>
+                </div>
 
-              <span
-                className="
-                  relative
-                  inline-flex
-                  rounded-full
-                  h-2.5
-                  w-2.5
-                  bg-[#00A8FF]
-                "
-              />
-            </span>
+                <div className="inline-flex items-center gap-2.5">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A8FF] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00A8FF]" />
+                  </span>
+                  <span className="text-xs font-bold text-gray-200">
+                    توصيل سريع وسريع جداً لجميع مدن الضفة والداخل المحتل
+                  </span>
+                  <span className="text-[10px] font-black bg-[#00A8FF] text-[#00101c] px-2 py-0.5 rounded-full font-tech">
+                    NITRO GEAR
+                  </span>
+                </div>
+              </div>
 
-            <span className="text-[11px] sm:text-xs font-bold text-gray-200">
-              المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
-            </span>
+              {/* نسخة مكررة للحصول على حركة سلسة متواصلة 100% */}
+              <div className="flex items-center gap-6 min-w-full shrink-0 justify-around" aria-hidden="true">
+                <div className="inline-flex items-center gap-2.5">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A8FF] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00A8FF]" />
+                  </span>
+                  <span className="text-xs font-bold text-gray-200">
+                    المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
+                  </span>
+                  <span className="text-[10px] font-black bg-[#00D9FF] text-[#00101c] px-2 py-0.5 rounded-full font-tech">
+                    CYBER ESPORTS
+                  </span>
+                </div>
 
-            <span
-              className="
-                text-[10px]
-                font-black
-                bg-[#00D9FF]
-                text-[#00101c]
-                px-2
-                py-0.5
-                rounded-full
-                font-tech
-              "
-            >
-              CYBER ESPORTS
-            </span>
+                <div className="inline-flex items-center gap-2.5">
+                  <span className="relative flex h-2.5 w-2.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A8FF] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00A8FF]" />
+                  </span>
+                  <span className="text-xs font-bold text-gray-200">
+                    توصيل سريع وسريع جداً لجميع مدن الضفة والداخل المحتل
+                  </span>
+                  <span className="text-[10px] font-black bg-[#00A8FF] text-[#00101c] px-2 py-0.5 rounded-full font-tech">
+                    NITRO GEAR
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
 
-          {/* ===================================================== */}
           {/* RIGHT: COPY */}
-          {/* ===================================================== */}
-
           <div className="lg:col-span-6 space-y-6 text-right">
 
             {/* BRAND */}
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
-
                 <div className="brand-mark brand-mark-lg text-white">
                   NITRO{" "}
                   <span className="brand-mark-games">
@@ -345,7 +349,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <span className="sr-only">
                   نيترو قيمز —
                 </span>
-
                 خياركم الأفضل في فلسطين
               </span>
 
@@ -415,16 +418,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <Sparkles className="w-3.5 h-3.5 text-[#00A8FF]" />
             </div>
 
-            {/* BUTTONS */}
+            {/* BUTTONS (تمت إزالة زر الأقسام الخمسة) */}
             <div className="flex flex-wrap items-center gap-3.5">
-
               <button
                 onClick={() => scrollTo("products")}
                 className="
                   btn-neon
                   text-sm
                   sm:text-base
-                  px-7
+                  px-8
                   py-3.5
                   flex
                   items-center
@@ -448,27 +450,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   "
                 />
               </button>
-
-              <button
-                onClick={() => scrollTo("categories")}
-                className="
-                  btn-ghost
-                  text-sm
-                  sm:text-base
-                  px-6
-                  py-3.5
-                  flex
-                  items-center
-                  gap-2
-                  cursor-pointer
-                "
-              >
-                <Sparkles className="w-4 h-4 text-[#00D9FF]" />
-
-                <span>
-                  الأقسام الخمسة
-                </span>
-              </button>
             </div>
 
             {/* STATS */}
@@ -483,7 +464,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   big: "+5,400",
                   small: "لاعب يثق بنا",
                 },
-
                 {
                   icon: (
                     <ShieldCheck className="w-4 h-4 text-[#00D9FF]" />
@@ -491,7 +471,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   big: "1 سنة",
                   small: "ضمان حقيقي",
                 },
-
                 {
                   icon: (
                     <CheckCircle2 className="w-4 h-4 text-[#00A8FF]" />
@@ -499,7 +478,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   big: "100%",
                   small: "أصلي معتمد",
                 },
-
                 {
                   icon: (
                     <Truck className="w-4 h-4 text-[#00D9FF]" />
@@ -542,21 +520,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* ===================================================== */}
           {/* LEFT: SHOWCASE */}
-          {/* ===================================================== */}
-
           <div className="lg:col-span-6">
 
-            {/* ================================================= */}
             {/* VIDEO SHOWCASE */}
-            {/* ================================================= */}
-
-            {cfg.enabled &&
-            cfg.videoUrls &&
-            cfg.videoUrls.length > 0 ? (
+            {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative">
-
                 <div
                   className="
                     absolute
@@ -572,7 +541,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 />
 
                 <div className="relative grad-frame p-1.5">
-
                   <div
                     className="
                       rounded-[16px]
@@ -580,7 +548,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       overflow-hidden
                     "
                   >
-
                     {/* VIDEO TOP BAR */}
                     <div
                       className="
@@ -605,7 +572,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         "
                       >
                         <Flame className="w-3 h-3" />
-
                         {cfg.badgeText}
                       </span>
 
@@ -651,28 +617,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           ref={showcaseVideoRef}
                           key={
                             cfg.videoUrls[
-                              showcaseVideoIndex %
-                                cfg.videoUrls.length
+                              showcaseVideoIndex % cfg.videoUrls.length
                             ]
                           }
                           src={
                             cfg.videoUrls[
-                              showcaseVideoIndex %
-                                cfg.videoUrls.length
+                              showcaseVideoIndex % cfg.videoUrls.length
                             ]
                           }
                           autoPlay
                           muted
-                          loop={
-                            cfg.videoUrls.length === 1
-                          }
+                          loop={cfg.videoUrls.length === 1}
                           playsInline
                           controls
                           onEnded={() =>
                             setShowcaseVideoIndex(
-                              (i) =>
-                                (i + 1) %
-                                cfg.videoUrls!.length
+                              (i) => (i + 1) % cfg.videoUrls!.length
                             )
                           }
                           className="
@@ -704,9 +664,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                               border-[#00D9FF]/30
                             "
                           >
-                            {(showcaseVideoIndex %
-                              cfg.videoUrls.length) +
-                              1}
+                            {(showcaseVideoIndex % cfg.videoUrls.length) + 1}
                             /
                             {cfg.videoUrls.length}
                           </span>
@@ -770,8 +728,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         {cfg.headline}
                       </h3>
 
-                      <a
-                        href="#products"
+                      <button
+                        onClick={() => scrollTo("products")}
                         className="
                           btn-neon
                           text-[11px]
@@ -785,11 +743,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         "
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
-
-                        <span>
-                          {cfg.ctaLabel}
-                        </span>
-                      </a>
+                        <span>{cfg.ctaLabel}</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -860,7 +815,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   "
                 >
                   <Zap className="w-3.5 h-3.5 text-[#00A8FF]" />
-
                   <span className="text-[10px] font-bold text-gray-200">
                     {cfg.headline}
                   </span>
@@ -869,16 +823,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             ) : cfg.enabled && active ? (
 
-              /* ================================================= */
               /* PRODUCT SHOWCASE */
-              /* ================================================= */
-
               <div
                 className="relative"
                 onMouseEnter={() => setPaused(true)}
                 onMouseLeave={() => setPaused(false)}
               >
-
                 {/* BLUE GLOW */}
                 <div
                   className="
@@ -941,7 +891,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 )}
 
                 <div className="relative grad-frame p-1.5">
-
                   <div
                     className="
                       rounded-[16px]
@@ -949,7 +898,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       overflow-hidden
                     "
                   >
-
                     {/* TOP BAR */}
                     <div
                       className="
@@ -963,10 +911,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         bg-[#06111f]
                       "
                     >
-
                       {/* SLIDER DOTS */}
                       <div className="flex items-center gap-1.5">
-
                         {showcaseItems.map((_, i) => (
                           <button
                             key={i}
@@ -989,7 +935,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                       {/* CONTROLS */}
                       <div className="flex items-center gap-2">
-
                         <span
                           className="
                             text-[10px]
@@ -1001,181 +946,54 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           "
                         >
                           <Flame className="w-3 h-3" />
-
                           {cfg.badgeText}
                         </span>
 
-                        <button
-                          onClick={() => go(-1)}
-                          className="
-                            p-1
-                            rounded-lg
-                            bg-[#0b1b2d]
-                            hover:bg-[#00A8FF]
-                            hover:text-[#00101c]
-                            text-gray-300
-                            transition-colors
-                            cursor-pointer
-                          "
-                          aria-label="السابق"
-                        >
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
-
-                        <button
-                          onClick={() => go(1)}
-                          className="
-                            p-1
-                            rounded-lg
-                            bg-[#0b1b2d]
-                            hover:bg-[#00A8FF]
-                            hover:text-[#00101c]
-                            text-gray-300
-                            transition-colors
-                            cursor-pointer
-                          "
-                          aria-label="التالي"
-                        >
-                          <ChevronLeft className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* IMAGE */}
-                    <div
-                      className="
-                        relative
-                        h-64
-                        sm:h-80
-                        w-full
-                        bg-gradient-to-b
-                        from-[#061321]
-                        to-[#020914]
-                      "
-                    >
-
-                      <div
-                        key={active.id}
-                        className="
-                          absolute
-                          inset-0
-                          showcase-enter
-                        "
-                      >
-                        <Image
-                          src={active.image}
-                          alt={active.title}
-                          fill
-                          priority
-                          className="object-contain p-6"
-                        />
-                      </div>
-
-                      {/* CORNER FRAME */}
-                      <span
-                        className="
-                          absolute
-                          top-3
-                          right-3
-                          w-5
-                          h-5
-                          border-t-2
-                          border-r-2
-                          border-[#00A8FF]/60
-                          rounded-tr-md
-                        "
-                      />
-
-                      <span
-                        className="
-                          absolute
-                          bottom-3
-                          left-3
-                          w-5
-                          h-5
-                          border-b-2
-                          border-l-2
-                          border-[#00D9FF]/60
-                          rounded-bl-md
-                        "
-                      />
-
-                      {/* PRICE */}
-                      <div
-                        className="
-                          absolute
-                          top-3
-                          left-3
-                          flex
-                          flex-col
-                          items-start
-                          gap-1.5
-                        "
-                      >
-
-                        {active.originalPrice && (
-                          <span
+                        <div className="flex items-center gap-1 dir-ltr">
+                          <button
+                            onClick={() => go(-1)}
                             className="
-                              text-[10px]
-                              font-mono
-                              text-gray-400
-                              line-through
-                              bg-black/60
-                              px-2
-                              py-0.5
-                              rounded
+                              p-1
+                              rounded-lg
+                              bg-[#0b1b2d]
+                              hover:bg-[#00A8FF]
+                              hover:text-[#00101c]
+                              text-gray-300
+                              transition-colors
                             "
                           >
-                            {active.originalPrice.toLocaleString()} ₪
-                          </span>
-                        )}
-
-                        <span
-                          className="
-                            text-lg
-                            font-black
-                            font-mono
-                            text-[#00101c]
-                            bg-[#00A8FF]
-                            px-2.5
-                            py-1
-                            rounded-lg
-                            shadow-[0_0_20px_rgba(0,168,255,0.5)]
-                          "
-                        >
-                          {active.price.toLocaleString()} ₪
-                        </span>
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => go(1)}
+                            className="
+                              p-1
+                              rounded-lg
+                              bg-[#0b1b2d]
+                              hover:bg-[#00A8FF]
+                              hover:text-[#00101c]
+                              text-gray-300
+                              transition-colors
+                            "
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
-
-                      {/* CATEGORY */}
-                      <span
-                        className="
-                          absolute
-                          bottom-3
-                          right-3
-                          text-[10px]
-                          font-bold
-                          font-tech
-                          text-[#00D9FF]
-                          bg-black/70
-                          border
-                          border-[#00D9FF]/40
-                          px-2.5
-                          py-1
-                          rounded-full
-                        "
-                      >
-                        {
-                          CATEGORIES_META.find(
-                            (c) =>
-                              c.id === active.category
-                          )?.name ??
-                            active.category
-                        }
-                      </span>
                     </div>
 
-                    {/* BOTTOM INFO */}
+                    {/* PRODUCT DISPLAY */}
+                    <div className="relative h-64 sm:h-80 w-full bg-[#020914] p-4 flex items-center justify-center">
+                      <Image
+                        src={active.image}
+                        alt={active.title}
+                        fill
+                        className="object-contain p-4"
+                        priority
+                      />
+                    </div>
+
+                    {/* PRODUCT BOTTOM INFO */}
                     <div
                       className="
                         px-4
@@ -1189,38 +1007,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         gap-3
                       "
                     >
-
-                      <div className="min-w-0 text-right">
-
-                        <div
-                          className="
-                            text-[10px]
-                            font-tech
-                            text-[#00A8FF]
-                            uppercase
-                          "
-                        >
-                          {active.brand}
-                        </div>
-
-                        <h3
-                          className="
-                            text-xs
-                            sm:text-sm
-                            font-bold
-                            text-white
-                            truncate
-                            font-['Cairo']
-                          "
-                        >
+                      <div className="text-right overflow-hidden">
+                        <h3 className="text-xs sm:text-sm font-bold text-white truncate">
                           {active.title}
                         </h3>
+                        <p className="text-xs font-black text-[#00D9FF] font-tech mt-0.5">
+                          {active.price} ₪
+                        </p>
                       </div>
 
                       <button
-                        onClick={() =>
-                          addToCart(active, 1)
-                        }
+                        onClick={() => addToCart(active)}
                         className="
                           btn-neon
                           text-[11px]
@@ -1234,205 +1031,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         "
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
-
-                        <span>
-                          أضف للسلة
-                        </span>
+                        <span>أضف للسلة</span>
                       </button>
                     </div>
                   </div>
                 </div>
-
-                {/* FLOATING INFO */}
-                <div
-                  className="
-                    hidden
-                    sm:flex
-                    absolute
-                    -bottom-4
-                    right-6
-                    items-center
-                    gap-2
-                    px-3
-                    py-1.5
-                    rounded-xl
-                    panel
-                    border
-                    border-[#00A8FF]/40
-                    animate-floaty
-                  "
-                >
-                  <Zap className="w-3.5 h-3.5 text-[#00A8FF]" />
-
-                  <span className="text-[10px] font-bold text-gray-200">
-                    {cfg.headline}
-                  </span>
-                </div>
               </div>
-
-            ) : (
-
-              /* ================================================= */
-              /* DISABLED SHOWCASE */
-              /* ================================================= */
-
-              <div
-                className="
-                  panel
-                  rounded-2xl
-                  h-64
-                  flex
-                  flex-col
-                  items-center
-                  justify-center
-                  gap-3
-                  text-center
-                "
-              >
-                <Zap className="w-10 h-10 text-[#00A8FF]/40" />
-
-                <p className="text-xs text-gray-400">
-                  المربع المميز معطّل حالياً من لوحة التحكم
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ===================================================== */}
-        {/* 5 CATEGORIES */}
-        {/* ===================================================== */}
-
-        <div
-          id="hero-categories"
-          className="pt-12"
-        >
-
-          <div
-            className="
-              text-[11px]
-              font-tech
-              text-gray-400
-              uppercase
-              tracking-[0.2em]
-              mb-3.5
-              flex
-              items-center
-              justify-center
-              gap-3
-            "
-          >
-            <span
-              className="
-                w-10
-                h-px
-                bg-gradient-to-l
-                from-[#00A8FF]/50
-                to-transparent
-              "
-            />
-
-            الأقسام الخمسة
-
-            <span
-              className="
-                w-10
-                h-px
-                bg-gradient-to-r
-                from-[#00D9FF]/50
-                to-transparent
-              "
-            />
-          </div>
-
-          <div
-            className="
-              grid
-              grid-cols-2
-              sm:grid-cols-3
-              lg:grid-cols-5
-              gap-3
-            "
-          >
-            {CATEGORIES_META.map((c, i) => {
-
-              const count = products.filter(
-                (p) => p.category === c.id
-              ).length;
-
-              return (
-                <button
-                  key={c.id}
-                  onClick={() => {
-                    onCategorySelect?.(c.id);
-                    scrollTo("products");
-                  }}
-                  className="
-                    group
-                    panel
-                    rounded-2xl
-                    px-4
-                    py-4
-                    text-right
-                    cursor-pointer
-                    flex
-                    items-center
-                    justify-between
-                    gap-3
-                  "
-                >
-
-                  <div>
-
-                    <div
-                      className="
-                        text-sm
-                        font-black
-                        text-white
-                        group-hover:text-[#00A8FF]
-                        transition-colors
-                        font-['Cairo']
-                      "
-                    >
-                      {c.name}
-                    </div>
-
-                    <div
-                      className="
-                        text-[10px]
-                        text-gray-400
-                        font-tech
-                        mt-0.5
-                      "
-                    >
-                      {count} منتج
-                    </div>
-                  </div>
-
-                  <span
-                    className={`
-                      w-9
-                      h-9
-                      rounded-xl
-                      flex
-                      items-center
-                      justify-center
-                      text-xs
-                      font-tech
-                      group-hover:scale-110
-                      transition-transform
-                      ${
-                        i % 2 === 0
-                          ? "bg-[#00A8FF]/10 text-[#00A8FF] border border-[#00A8FF]/30"
-                          : "bg-[#00D9FF]/10 text-[#00D9FF] border border-[#00D9FF]/30"
-                      }
-                    `}
-                  >
-                    0{i + 1}
-                  </span>
-                </button>
-              );
-            })}
+            ) : null}
           </div>
         </div>
       </div>
