@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Timer, Zap, Heart, Eye, ShoppingCart, CheckCircle, Volume2, VolumeX, ShoppingBag, Sparkles } from "lucide-react";
+import { Timer, Zap, Heart, Eye, ShoppingCart, CheckCircle, Volume2, VolumeX, Sparkles } from "lucide-react";
 import { Product } from "@/lib/data";
 
 interface DealsSectionProps {
@@ -10,7 +10,7 @@ interface DealsSectionProps {
   targetDate?: string;
 }
 
-// 1. مكون العداد التنازلي النيون
+// 1. مكون العداد التنازلي
 const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   const [timeLeft, setTimeLeft] = useState({ hours: 0, minutes: 0, seconds: 0 });
 
@@ -81,7 +81,7 @@ const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   );
 };
 
-// 2. مكون العروض المدمج المعدل مع الإطار المتحرك واللايف
+// 2. مكون العروض المدمج مع شارة SPECIAL OFFER
 export const DealsSection: React.FC<DealsSectionProps> = ({
   dealProducts = [],
   products = [],
@@ -100,7 +100,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
   }, [itemsList.length]);
 
   const currentItem = itemsList[slide] || {};
-  const itemTitle = currentItem.title || currentItem.name || "R68 HE Black";
+  const itemTitle = currentItem.title || currentItem.name || "X82PRO HE Comic";
   const imageUrl =
     currentItem.image_url ||
     currentItem.image ||
@@ -112,30 +112,30 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
       {/* العداد التنازلي */}
       <DealCountdown targetDate={targetDate} />
 
-      {/* كرت العروض الرئيسي المحاط بأنيميشن الإطار المتحرك (أنيميشن الليزر) */}
+      {/* كرت العروض الرئيسي مع الإطار النيون المتحرك */}
       <div className="relative group p-[2px] rounded-3xl overflow-hidden shadow-[0_0_25px_rgba(0,229,255,0.25)]">
         
-        {/* خط الليزر المتحرك حول الإطار (Spinning Laser) */}
+        {/* حزام الليزر الدوار حول الإطار */}
         <div className="absolute -inset-[200%] animate-[spin_4s_linear_infinite] bg-[conic-gradient(from_0deg,transparent_0_300deg,#00e5ff_340deg,#00a3ff_360deg)] opacity-100" />
 
-        {/* محتوى الكرت الداخلي */}
+        {/* الكرت الداخلي */}
         <div className="relative bg-[#081225] rounded-[22px] p-4 border border-[#16294a] backdrop-blur-xl z-10">
           
-          {/* الشريط العلوي: شارة LIVE SHOWCASE يميناً والصوت يساراً */}
+          {/* الشريط العلوي: شارة SPECIAL OFFER على اليمين والتحكم على اليسار */}
           <div className="flex items-center justify-between mb-3 px-1">
             
-            {/* LIVE SHOWCASE (جهة اليمين) */}
+            {/* SPECIAL OFFER (جهة اليمين) */}
             <div className="flex items-center gap-2 bg-[#09172e]/90 border border-[#00e5ff]/40 px-3 py-1.5 rounded-full shadow-[0_0_12px_rgba(0,229,255,0.25)]">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00e5ff]"></span>
               </span>
               <span className="text-[11px] font-black tracking-widest text-[#00e5ff] font-mono uppercase">
-                LIVE SHOWCASE
+                SPECIAL OFFER
               </span>
             </div>
 
-            {/* الأزرار العلوية: التحكم بالصوت + المفضلة والعمليات */}
+            {/* الأزرار العلوية (جهة اليسار): الصوت، المفضلة، المعاينة */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsMuted(!isMuted)}
@@ -148,16 +148,20 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
                   <Volume2 className="w-4 h-4 text-[#00e5ff] animate-pulse" />
                 )}
               </button>
-              <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition"><Heart className="w-4 h-4 text-gray-400" /></button>
-              <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition"><Eye className="w-4 h-4 text-gray-400" /></button>
+              <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition">
+                <Heart className="w-4 h-4 text-gray-400" />
+              </button>
+              <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition">
+                <Eye className="w-4 h-4 text-gray-400" />
+              </button>
             </div>
 
           </div>
 
-          {/* حاوية المنتج وصورة الكيبورد مع شبكة النقاط والتدرج */}
+          {/* حاوية المنتج وصورة الكيبورد */}
           <div className="relative w-full h-52 my-3 flex items-center justify-center bg-[#050b17] rounded-xl border border-[#16294a] overflow-hidden group">
             
-            {/* شارة الترقيم العلوي */}
+            {/* شارة رقم الصورة */}
             <div className="absolute top-2.5 left-2.5 z-20 bg-black/70 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg font-mono">
               {slide + 1} / {itemsList.length || 1}
             </div>
@@ -169,7 +173,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
               </span>
             </div>
 
-            {/* نمط النقاط الخلفي */}
+            {/* نمط النقاط خلف الصورة */}
             <div 
               className="absolute inset-0 opacity-30 pointer-events-none"
               style={{
@@ -208,7 +212,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
           <div className="flex items-center justify-between mt-4">
             <div>
               <div className="text-2xl font-black text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.6)]">
-                ${currentItem.price || "9999"}
+                ${currentItem.price || "5555"}
               </div>
               {currentItem.original_price && (
                 <div className="text-xs text-gray-500 line-through">
@@ -223,7 +227,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
             </button>
           </div>
 
-          {/* مؤشر التنقل السريع */}
+          {/* نقاط المؤشر التراكمي */}
           <div className="flex items-center justify-center gap-2 pt-5">
             {itemsList.map((_, idx) => (
               <button
