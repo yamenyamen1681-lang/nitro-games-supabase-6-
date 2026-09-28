@@ -83,7 +83,6 @@ const DealCountdown = ({ targetDate }: { targetDate: string }) => {
   );
 };
 
-// المكون الرئيسي المتوافق مع بيانات المشروع
 export const DealsSection: React.FC<DealsSectionProps> = ({
   dealProducts = [],
   products = [],
@@ -93,18 +92,24 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
   const itemsList = dealProducts.length > 0 ? dealProducts : products;
   const currentItem = itemsList[slide] || {};
 
-  // دعم اسم المنتج سواء كان باسم title أو name
   const itemTitle = currentItem.title || currentItem.name || "R68 HE Black";
+  
+  // التأكد من جلب رابط الصورة
+  const imageUrl =
+    currentItem.image_url ||
+    currentItem.image ||
+    currentItem.images?.[0] ||
+    "/keyboard.png"; // صورة احتياطية في حال عدم وجود صورة للمنتج
 
   return (
     <section className="w-full max-w-md mx-auto px-4 py-4 text-white" dir="rtl">
       {/* العداد التنازلي */}
       <DealCountdown targetDate={targetDate} />
 
-      {/* كرت العروض باللون الأزرق والسيان بدون أحمر */}
+      {/* كرت العروض */}
       <div className="bg-[#081225] border border-[#16294a] rounded-2xl p-4 shadow-[0_0_20px_rgba(0,163,255,0.15)] relative">
         
-        {/* شارة الخصم */}
+        {/* شارة الخصم والأزرار العلويّة */}
         <div className="flex justify-between items-center mb-3">
           <span className="bg-gradient-to-r from-[#ff9900] to-[#ff5500] text-black font-black text-xs px-3 py-1 rounded-full shadow-[0_0_10px_rgba(255,153,0,0.4)]">
             خصم 90%-
@@ -113,6 +118,15 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
             <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition"><Heart className="w-4 h-4" /></button>
             <button className="p-2 bg-[#0d1d3a] rounded-xl hover:text-white border border-[#1a3363] transition"><Eye className="w-4 h-4" /></button>
           </div>
+        </div>
+
+        {/* عرض صورة المنتج */}
+        <div className="relative w-full h-48 my-3 flex items-center justify-center bg-[#050b17]/60 rounded-xl border border-[#16294a]/80 overflow-hidden">
+          <img
+            src={imageUrl}
+            alt={itemTitle}
+            className="max-h-full max-w-full object-contain p-2 hover:scale-105 transition-transform duration-300"
+          />
         </div>
 
         {/* اسم المتجر و الحالة */}
@@ -148,7 +162,7 @@ export const DealsSection: React.FC<DealsSectionProps> = ({
           </button>
         </div>
 
-        {/* نقاط التنقل السفلي الأزرق والسيان */}
+        {/* نقاط التنقل السفلي */}
         <div className="flex items-center justify-center gap-2 pt-5">
           {(itemsList.length > 0 ? itemsList : [1, 2, 3]).map((_, idx) => (
             <button
