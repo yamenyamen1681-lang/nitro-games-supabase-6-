@@ -1,105 +1,107 @@
-'use client';
+"use client";
 
-import React from 'react';
-import { ShoppingBag, ArrowLeft, Crown, Zap, Sparkles } from 'lucide-react';
-
-// تعريف الـ Props لتوافق TypeScript مع page.tsx
-interface ShowcaseConfig {
-  type?: 'video' | 'slider';
-  videos?: string[];
-  images?: string[];
-  [key: string]: any;
-}
+import React, { useState } from "react";
+import { Volume2, VolumeX, Music, Play, Pause, ShoppingBag } from "lucide-react";
+import { Product } from "@/lib/data";
 
 interface HeroSectionProps {
-  products?: any[];
-  showcase?: ShowcaseConfig;
+  products?: Product[] | any[];
+  showcase?: any;
   onCategorySelect?: (cat: any) => void;
 }
 
-export function HeroSection({ products = [], showcase, onCategorySelect }: HeroSectionProps) {
+export const HeroSection: React.FC<HeroSectionProps> = ({
+  products = [],
+  showcase,
+  onCategorySelect,
+}) => {
+  const [isMuted, setIsMuted] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+
   return (
-    <section className="relative w-full min-h-screen bg-[#080d14] text-white flex flex-col items-center pt-6 pb-12 px-4 overflow-hidden font-sans dir-rtl">
-      {/* خلفية الشبكة الجيمينج - Grid Overlay */}
-      <div 
-        className="absolute inset-0 opacity-15 pointer-events-none"
-        style={{
-          backgroundImage: `linear-gradient(#00d2ff 1px, transparent 1px), linear-gradient(90deg, #00d2ff 1px, transparent 1px)`,
-          backgroundSize: '30px 30px'
-        }}
-      />
-
-      {/* التوهج الأزرق الخلفي */}
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none" />
-
-      {/* 1. البادج العلوي الصغير */}
-      <div className="relative z-10 flex items-center justify-between gap-3 bg-[#0d1622]/90 border border-cyan-500/30 rounded-full py-1.5 px-3 max-w-sm w-full mb-8 shadow-[0_0_15px_rgba(0,210,255,0.1)]">
-        <span className="text-[11px] text-gray-300 font-medium">
-          المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
-        </span>
-        <span className="flex items-center gap-1 bg-cyan-400 text-black font-extrabold text-[10px] px-2 py-0.5 rounded-full tracking-wider">
-          CYBER ESPORTS
-        </span>
-      </div>
-
-      {/* 2. اللوجو والرمز المحيط به */}
-      <div className="relative z-10 flex flex-col items-center mb-6">
-        <div className="w-16 h-16 rounded-2xl bg-[#0b131e] border border-cyan-400/40 flex items-center justify-center mb-4 shadow-[0_0_20px_rgba(0,210,255,0.15)]">
-          <Zap className="w-8 h-8 text-cyan-400 fill-cyan-400/20" />
-        </div>
+    <section className="w-full max-w-md mx-auto px-4 py-2" dir="rtl">
+      {/* الكرت الخارجي المطابق للصورة */}
+      <div className="relative rounded-3xl p-4 bg-[#070e1c] border border-[#00a3ff]/40 shadow-[0_0_20px_rgba(0,163,255,0.2)]">
         
-        <h2 className="text-2xl font-black tracking-widest text-white uppercase">
-          NITRO GAMES
-        </h2>
-        <p className="text-[10px] tracking-[0.25em] text-cyan-400/80 uppercase font-semibold mt-1">
-          PALESTINE · ESPORTS GEAR
-        </p>
-      </div>
+        {/* 1. الشريط العلوي: أزرار الموسيقى والصوت على اليمين، وشارة LIVE SHOWCASE على اليسار */}
+        <div className="flex items-center justify-between mb-3">
+          
+          {/* الأزرار العلوية (جهة اليمين) */}
+          <div className="flex items-center gap-2">
+            <button 
+              className="p-2 bg-[#0c1c38] hover:bg-[#00a3ff]/20 border border-[#17325c] text-[#00e5ff] rounded-xl transition"
+              type="button"
+            >
+              <Music className="w-4 h-4 text-gray-300" />
+            </button>
+            <button
+              onClick={() => setIsMuted(!isMuted)}
+              className="p-2 bg-[#0c1c38] hover:bg-[#00a3ff]/20 border border-[#17325c] text-[#00e5ff] rounded-xl transition active:scale-95"
+              type="button"
+            >
+              {isMuted ? <VolumeX className="w-4 h-4 text-gray-300" /> : <Volume2 className="w-4 h-4 text-[#00e5ff]" />}
+            </button>
+          </div>
 
-      {/* 3. العناوين الرئيسية */}
-      <div className="relative z-10 text-center max-w-md my-4 space-y-2">
-        <span className="text-xs font-bold tracking-widest text-cyan-400/90 uppercase block">
-          NITRO GAMES
-        </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold leading-tight text-white">
-          خياركم الأفضل في فلسطين
-        </h1>
-        <p className="text-2xl sm:text-3xl font-extrabold text-cyan-400 shadow-cyan-500/50 drop-shadow-[0_0_12px_rgba(0,212,255,0.6)]">
-          للعتاد الاحترافي.. ارفع مستوى لعبك!
-        </p>
-      </div>
+          {/* شارة LIVE SHOWCASE (جهة اليسار) */}
+          <div className="flex items-center gap-2 bg-[#0a1832] border border-[#00e5ff]/40 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+            </span>
+            <span className="text-[11px] font-black tracking-widest text-[#00e5ff] font-mono uppercase">
+              LIVE SHOWCASE
+            </span>
+          </div>
 
-      {/* 4. معلومات مالك المتجر (Store Owner) */}
-      <div className="relative z-10 mt-6 mb-4 flex items-center gap-2 bg-[#0a121c] border border-cyan-500/30 rounded-2xl px-4 py-2 text-xs shadow-inner">
-        <Crown className="w-4 h-4 text-amber-400" />
-        <span className="text-gray-400 font-semibold uppercase text-[11px]">STORE OWNER:</span>
-        <span className="text-cyan-400 font-bold text-sm">YaMEn</span>
-        <Sparkles className="w-3.5 h-3.5 text-cyan-400 mr-1" />
-      </div>
-
-      {/* 5. زر التسوق */}
-      <button 
-        onClick={() => onCategorySelect && onCategorySelect('all')}
-        className="relative z-10 mt-2 w-full max-w-xs bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-extrabold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,210,255,0.4)] transition-all active:scale-95"
-      >
-        <ShoppingBag className="w-5 h-5 stroke-[2.5]" />
-        <span className="text-base">تسوق الآن</span>
-        <ArrowLeft className="w-5 h-5 stroke-[2.5] mr-auto" />
-      </button>
-
-      {/* 6. شريط المميزات السفلي (Bottom Bar) */}
-      <div className="relative z-10 mt-12 w-full max-w-md bg-[#0a121d]/90 border border-cyan-500/20 rounded-2xl p-2.5 flex items-center justify-between shadow-lg backdrop-blur-md">
-        <div className="flex items-center gap-2">
-          <div className="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_#00d2ff]" />
-          <span className="text-xs font-bold text-gray-200">مزايا المتجر</span>
-          <span className="bg-cyan-500 text-black text-[10px] font-black px-2 py-0.5 rounded-md uppercase">
-            NITRO GAMES
-          </span>
         </div>
-        <button className="p-1.5 rounded-lg bg-[#0f1b2b] border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10">
-          <Sparkles className="w-4 h-4" />
-        </button>
+
+        {/* 2. حاوية المشغل الرئيسي */}
+        <div className="relative w-full h-44 rounded-2xl overflow-hidden border border-[#162a4a] bg-[#040a17] flex items-center justify-center">
+          
+          {/* شارة الترقيم 3/4 (جهة اليمين علوي) */}
+          <div className="absolute top-2.5 right-2.5 z-20 bg-black/60 backdrop-blur-md border border-white/10 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-md font-mono">
+            3 / 4
+          </div>
+
+          {/* زر التشغيل والإيقاف الدائري الأبيض في المنتصف */}
+          <button 
+            onClick={() => setIsPlaying(!isPlaying)}
+            className="relative z-20 w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-lg transition transform active:scale-95"
+            type="button"
+          >
+            {isPlaying ? (
+              <Pause className="w-6 h-6 text-black fill-black" />
+            ) : (
+              <Play className="w-6 h-6 text-black fill-black ml-0.5" />
+            )}
+          </button>
+
+        </div>
+
+        {/* 3. الشريط السفلي: النص على اليمين وزر التسوق على اليسار */}
+        <div className="flex items-center justify-between mt-3">
+          
+          {/* النص على اليمين */}
+          <span className="text-xs font-bold text-white tracking-wide">
+            عتاد البطولات • جاهز للشحن
+          </span>
+
+          {/* زر تسوق الآن على اليسار مع الأيقونة */}
+          <button 
+            onClick={() => onCategorySelect && onCategorySelect('all')}
+            className="flex items-center gap-2 bg-gradient-to-r from-[#00a3ff] to-[#0051ff] text-white text-xs font-black px-4 py-2 rounded-xl shadow-[0_0_12px_rgba(0,163,255,0.4)] transition active:scale-95"
+            type="button"
+          >
+            <ShoppingBag className="w-4 h-4" />
+            <span>تسوق الآن</span>
+          </button>
+
+        </div>
+
       </div>
     </section>
   );
-}
+};
+
+export default HeroSection;
