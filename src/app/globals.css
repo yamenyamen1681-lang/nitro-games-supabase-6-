@@ -13,45 +13,90 @@
   --line: #1c2942;
 }
 
+/* ===== Full Site Cyber Background Setup ===== */
 body {
   font-family: 'Tajawal', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #05070d;
+  background-color: #03050a;
   color: #eaf1ff;
   direction: rtl;
   overflow-x: hidden;
   min-height: 100vh;
+  position: relative;
+  /* خلفية شبكة نيون تغطي كل الموقع وتتحرك مع التمرير بصورة ثابتة */
+  background-image: 
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 163, 255, 0.15), transparent 70%),
+    radial-gradient(ellipse 60% 40% at 90% 50%, rgba(0, 229, 255, 0.08), transparent 60%),
+    radial-gradient(ellipse 60% 40% at 10% 80%, rgba(91, 140, 255, 0.08), transparent 60%),
+    linear-gradient(to right, rgba(0, 163, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  background-attachment: fixed;
 }
 
 ::selection { background-color: #00a3ff; color: #02121f; }
 
-/* ===== Blue Aurora Backdrop ===== */
+/* ===== Blue Aurora Backdrop (Dynamic Background Container) ===== */
 .aurora-stage {
-  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
-  background:
-    radial-gradient(ellipse 70% 45% at 50% -10%, rgba(0,163,255,0.14), transparent 70%),
-    radial-gradient(ellipse 55% 40% at 92% 28%, rgba(0,229,255,0.10), transparent 65%),
-    radial-gradient(ellipse 55% 40% at 6% 72%, rgba(91,140,255,0.12), transparent 65%);
+  position: fixed; 
+  inset: 0; 
+  pointer-events: none; 
+  z-index: 0; 
+  overflow: hidden;
 }
 
-.aurora-blob {
-  position: absolute; border-radius: 9999px; filter: blur(95px); opacity: 0.33;
+.aurora-blob-1 {
+  position: absolute; 
+  top: -10%;
+  left: 30%;
+  width: 500px;
+  height: 500px;
+  border-radius: 9999px; 
+  background: rgba(0, 163, 255, 0.18);
+  filter: blur(120px); 
   animation: blobDrift 22s ease-in-out infinite alternate;
 }
 
+.aurora-blob-2 {
+  position: absolute; 
+  top: 40%;
+  right: -10%;
+  width: 450px;
+  height: 450px;
+  border-radius: 9999px; 
+  background: rgba(0, 229, 255, 0.12);
+  filter: blur(130px); 
+  animation: blobDrift 18s ease-in-out infinite alternate-reverse;
+}
+
+.aurora-blob-3 {
+  position: absolute; 
+  bottom: -5%;
+  left: -5%;
+  width: 500px;
+  height: 500px;
+  border-radius: 9999px; 
+  background: rgba(112, 0, 255, 0.12);
+  filter: blur(140px); 
+  animation: blobDrift 25s ease-in-out infinite alternate;
+}
+
 @keyframes blobDrift {
-  0%   { transform: translate3d(0,0,0) scale(1); }
-  50%  { transform: translate3d(40px,-30px,0) scale(1.15); }
-  100% { transform: translate3d(-30px,25px,0) scale(0.95); }
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(50px, -40px, 0) scale(1.15); }
+  100% { transform: translate3d(-40px, 30px, 0) scale(0.95); }
 }
 
 .tech-grid {
-  position: absolute; inset: 0;
+  position: fixed; 
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
   background-image:
-    linear-gradient(to right, rgba(0,163,255,0.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,229,255,0.05) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 30%, #000 40%, transparent 100%);
+    linear-gradient(to right, rgba(0, 163, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+  mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
 }
 
 /* ===== Rotating gradient frame ===== */
@@ -143,12 +188,6 @@ body {
   -webkit-background-clip: text; background-clip: text; color: transparent;
 }
 .font-tech { font-family: 'Orbitron', 'Cairo', sans-serif; letter-spacing: .04em; }
-.bg-cyber-grid {
-  background-image:
-    linear-gradient(to right, rgba(0,163,255,.06) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,229,255,.05) 1px, transparent 1px);
-  background-size: 44px 44px;
-}
 
 /* ===== Brand wordmark ===== */
 .brand-mark {
@@ -199,7 +238,7 @@ body {
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 .animate-fade-in { animation: fadeIn .4s ease; }
 
-/* ===== Accessibility / SEO (visible to screen readers & crawlers, hidden visually) ===== */
+/* ===== Accessibility / SEO ===== */
 .sr-only {
   position: absolute; width: 1px; height: 1px;
   padding: 0; margin: -1px; overflow: hidden;
