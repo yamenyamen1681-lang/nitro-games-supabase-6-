@@ -19,6 +19,8 @@ import {
   Crown,
   Radio,
   Sparkles,
+  Music,
+  Disc,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -113,7 +115,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
     { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
     { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
-    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
+    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, bg: "24-48h", small: "شحن سريع" },
   ];
 
   return (
@@ -186,9 +188,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </span>
             </h1>
 
-            {/* الأزرار + شارة صاحب المتجر المميزة */}
+            {/* الأزرار + شارة صاحب المتجر */}
             <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
-              {/* شارة صاحب المتجر الـ Cyber VIP */}
+              {/* شارة صاحب المتجر */}
               <div dir="ltr" className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/70 shadow-[0_0_25px_rgba(0,163,255,0.3)]">
                 <Crown className="w-4 h-4 text-amber-400 fill-amber-400/30 animate-bounce" />
                 <span className="text-[10px] font-black text-gray-400 uppercase tracking-widest font-mono">
@@ -235,32 +237,44 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* --- LEFT: Dynamic Showcase (التصميم الملكي الجديد) --- */}
+          {/* --- LEFT: Dynamic Showcase --- */}
           <div className="lg:col-span-6 space-y-4">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative group">
-                {/* إضاءة توهج نيون خلفية */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#00a3ff] via-[#00e5ff] to-[#7000ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-80 transition duration-1000 group-hover:duration-200 animate-cyber-glow" />
 
                 <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
                   <div className="rounded-[22px] bg-[#040814] overflow-hidden">
-                    {/* Header الهيدر الفخم */}
+                    
+                    {/* Header المحدث: تم عكس الأماكن وتحديث زر الموسيقى بدون كلمة AUDIO */}
                     <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
-                      {/* زر الصوت بأسلوب Cyber Button */}
+                      
+                      {/* جهة اليمين: زر التحكم بالموسيقى والصوت بأسلوب نيون فاخر */}
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer border ${
                             isPlaying
-                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black shadow-[0_0_18px_rgba(0,229,255,0.9)] scale-105"
-                              : "bg-[#09152a] border border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
+                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.8)] scale-105"
+                              : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
                           }`}
+                          title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
                         >
-                          {isPlaying ? <Volume2 className="w-4 h-4 animate-bounce" /> : <VolumeX className="w-4 h-4" />}
-                          <span className="font-tech text-[11px] tracking-wider">{isPlaying ? "AUDIO ON" : "AUDIO OFF"}</span>
+                          {isPlaying ? (
+                            <>
+                              <Disc className="w-4 h-4 animate-spin text-black" />
+                              <Volume2 className="w-4 h-4 text-black animate-pulse" />
+                            </>
+                          ) : (
+                            <>
+                              <Music className="w-4 h-4 text-[#00e5ff]" />
+                              <VolumeX className="w-4 h-4 text-[#00e5ff]" />
+                            </>
+                          )}
                         </button>
                       ) : <div />}
 
+                      {/* جهة اليسار: شارة العرض LIVE SHOWCASE */}
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.2)]">
                           <Radio className="w-3.5 h-3.5 text-red-500 animate-pulse" /> {cfg.badgeText}
@@ -268,7 +282,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </div>
                     </div>
 
-                    {/* منطقة عرض الفيديوهات */}
+                    {/* منطقة عرض الفيديو */}
                     <div className="relative h-60 sm:h-72 w-full bg-[#000000] p-2">
                       <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#122347]">
                         <video
@@ -318,27 +332,40 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 onMouseEnter={() => setPaused(true)}
                 onMouseLeave={() => setPaused(false)}
               >
-                {/* إضاءة توهج نيون خلفية */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#00a3ff] via-[#00e5ff] to-[#7000ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-80 transition duration-1000 group-hover:duration-200 animate-cyber-glow" />
 
                 <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
                   <div className="rounded-[22px] bg-[#040814] overflow-hidden">
-                    {/* Header هيدر المنتجات */}
+                    
+                    {/* Header المحدث لصور المنتجات */}
                     <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
+                      
+                      {/* جهة اليمين: زر التحكم بالموسيقى والصوت */}
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer border ${
                             isPlaying
-                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black shadow-[0_0_18px_rgba(0,229,255,0.9)] scale-105"
-                              : "bg-[#09152a] border border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
+                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.8)] scale-105"
+                              : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
                           }`}
+                          title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
                         >
-                          {isPlaying ? <Volume2 className="w-4 h-4 animate-bounce" /> : <VolumeX className="w-4 h-4" />}
-                          <span className="font-tech text-[11px] tracking-wider">{isPlaying ? "AUDIO ON" : "AUDIO OFF"}</span>
+                          {isPlaying ? (
+                            <>
+                              <Disc className="w-4 h-4 animate-spin text-black" />
+                              <Volume2 className="w-4 h-4 text-black animate-pulse" />
+                            </>
+                          ) : (
+                            <>
+                              <Music className="w-4 h-4 text-[#00e5ff]" />
+                              <VolumeX className="w-4 h-4 text-[#00e5ff]" />
+                            </>
+                          )}
                         </button>
                       ) : <div />}
 
+                      {/* جهة اليسار: شارة المعرض + أزرار التنقل */}
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.2)]">
                           <Flame className="w-3.5 h-3.5 text-red-500 fill-red-500 animate-pulse" /> {cfg.badgeText}
@@ -363,7 +390,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </div>
                     </div>
 
-                    {/* منطقة معرض المنتج */}
+                    {/* منطقة معرض الصور */}
                     <div className="relative h-60 sm:h-72 w-full bg-gradient-to-b from-[#081226] via-[#040814] to-[#02050c]">
                       <div key={active.id} className="absolute inset-0 showcase-enter">
                         <Image
@@ -375,7 +402,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         />
                       </div>
 
-                      {/* زوايا ديكور Cyber Corner */}
                       <span className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-lg" />
                       <span className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#00a3ff] rounded-bl-lg" />
 
