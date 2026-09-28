@@ -1,9 +1,11 @@
+'use client';
+
 import React from 'react';
 import { ShoppingBag, ArrowLeft, Crown, Zap, Sparkles } from 'lucide-react';
 
-export default function HeroSection() {
+export function HeroSection() {
   return (
-    <section className="relative w-full min-h-screen bg-[#080d14] text-white flex flex-[#080d14] flex-col items-center pt-6 pb-12 px-4 overflow-hidden font-sans dir-rtl">
+    <section className="relative w-full min-h-screen bg-[#080d14] text-white flex flex-col items-center pt-6 pb-12 px-4 overflow-hidden font-sans dir-rtl">
       {/* خلفية الشبكة الجيمينج - Grid Overlay */}
       <div 
         className="absolute inset-0 opacity-15 pointer-events-none"
