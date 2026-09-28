@@ -384,7 +384,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               توصيل لكافة مناطق فلسطين والداخل المحتل 🚚 | ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
             </p>
 
-            {/* STORE OWNER (تاج ذهبي) */}
+            {/* STORE OWNER */}
             <div
               className="
                 inline-flex
@@ -398,7 +398,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 border-[#00A8FF]/40
               "
             >
-              {/* التاج باللون الذهبي */}
               <Crown className="w-4 h-4 text-amber-400 fill-amber-400/20 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]" />
 
               <span
@@ -463,63 +462,45 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* MARQUEE FEATURES (شريط متحرك محسن بالكامل للشاشات) */}
-            <div className="w-full overflow-hidden pt-3">
-              <div
-                className="
-                  panel
-                  rounded-2xl
-                  py-3
-                  px-2
-                  border
-                  border-[#00A8FF]/30
-                  bg-gradient-to-r
-                  from-[#041226]/80
-                  via-[#061830]/90
-                  to-[#041226]/80
-                  shadow-[0_0_20px_rgba(0,168,255,0.1)]
-                  overflow-hidden
-                  relative
-                "
-              >
-                <div className="flex w-max animate-marquee">
-                  {/* المجموعة الأولى */}
-                  <div className="flex items-center gap-6 shrink-0 px-3">
-                    {features.map((s, i) => (
-                      <div key={i} className="flex items-center gap-2.5 bg-[#020914]/50 px-3 py-1.5 rounded-xl border border-[#00A8FF]/20">
-                        <div className="p-1 rounded-lg bg-[#00A8FF]/10 border border-[#00A8FF]/30 shrink-0">
-                          {s.icon}
-                        </div>
-                        <div className="text-right whitespace-nowrap">
-                          <span className="text-xs font-black text-white font-tech block leading-tight">
-                            {s.big}
-                          </span>
-                          <span className="text-[10px] text-gray-300 font-bold block">
-                            {s.small}
-                          </span>
-                        </div>
+            {/* FULL WIDTH FAST MARQUEE (شريط متحرك سريع وعلى كامل عرض الشاشة بدون مستطيل) */}
+            <div className="w-screen -mx-4 sm:-mx-6 lg:-mx-8 overflow-hidden pt-4 pb-2 relative pointer-events-none">
+              <div className="flex w-max animate-fast-marquee" dir="ltr">
+                {/* المجموعة الأولى */}
+                <div className="flex items-center gap-8 shrink-0 pr-8">
+                  {features.map((s, i) => (
+                    <div key={i} className="flex items-center gap-2.5 bg-[#041226]/60 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#00A8FF]/30">
+                      <div className="p-1 rounded-lg bg-[#00A8FF]/15 border border-[#00A8FF]/40 shrink-0">
+                        {s.icon}
                       </div>
-                    ))}
-                  </div>
+                      <div className="text-right whitespace-nowrap">
+                        <span className="text-xs font-black text-white font-tech block leading-tight">
+                          {s.big}
+                        </span>
+                        <span className="text-[10px] text-gray-300 font-bold block mt-0.5">
+                          {s.small}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
 
-                  {/* مجموعة مكررة لضمان الحركة المستمرة دون فراغات */}
-                  <div className="flex items-center gap-6 shrink-0 px-3" aria-hidden="true">
-                    {features.map((s, i) => (
-                      <div key={`dup-${i}`} className="flex items-center gap-2.5 bg-[#020914]/50 px-3 py-1.5 rounded-xl border border-[#00A8FF]/20">
-                        <div className="p-1 rounded-lg bg-[#00A8FF]/10 border border-[#00A8FF]/30 shrink-0">
-                          {s.icon}
-                        </div>
-                        <div className="text-right whitespace-nowrap">
-                          <span className="text-xs font-black text-white font-tech block leading-tight">
-                            {s.big}
-                          </span>
-                          <span className="text-[10px] text-gray-300 font-bold block">
-                            {s.small}
-                          </span>
-                        </div>
+                {/* مجموعة مكررة للربط المتواصل بدون توقف */}
+                <div className="flex items-center gap-8 shrink-0 pr-8" aria-hidden="true">
+                  {features.map((s, i) => (
+                    <div key={`dup-${i}`} className="flex items-center gap-2.5 bg-[#041226]/60 backdrop-blur-md px-3.5 py-2 rounded-xl border border-[#00A8FF]/30">
+                      <div className="p-1 rounded-lg bg-[#00A8FF]/15 border border-[#00A8FF]/40 shrink-0">
+                        {s.icon}
                       </div>
-                    ))}
-                  </div>
+                      <div className="text-right whitespace-nowrap">
+                        <span className="text-xs font-black text-white font-tech block leading-tight">
+                          {s.big}
+                        </span>
+                        <span className="text-[10px] text-gray-300 font-bold block mt-0.5">
+                          {s.small}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
