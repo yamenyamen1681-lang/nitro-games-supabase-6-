@@ -3,7 +3,21 @@
 import React from 'react';
 import { ShoppingBag, ArrowLeft, Crown, Zap, Sparkles } from 'lucide-react';
 
-export function HeroSection() {
+// تعريف الـ Props لتوافق TypeScript مع page.tsx
+interface ShowcaseConfig {
+  type?: 'video' | 'slider';
+  videos?: string[];
+  images?: string[];
+  [key: string]: any;
+}
+
+interface HeroSectionProps {
+  products?: any[];
+  showcase?: ShowcaseConfig;
+  onCategorySelect?: (cat: any) => void;
+}
+
+export function HeroSection({ products = [], showcase, onCategorySelect }: HeroSectionProps) {
   return (
     <section className="relative w-full min-h-screen bg-[#080d14] text-white flex flex-col items-center pt-6 pb-12 px-4 overflow-hidden font-sans dir-rtl">
       {/* خلفية الشبكة الجيمينج - Grid Overlay */}
@@ -64,7 +78,10 @@ export function HeroSection() {
       </div>
 
       {/* 5. زر التسوق */}
-      <button className="relative z-10 mt-2 w-full max-w-xs bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-extrabold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,210,255,0.4)] transition-all active:scale-95">
+      <button 
+        onClick={() => onCategorySelect && onCategorySelect('all')}
+        className="relative z-10 mt-2 w-full max-w-xs bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-extrabold py-3.5 px-6 rounded-2xl flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,210,255,0.4)] transition-all active:scale-95"
+      >
         <ShoppingBag className="w-5 h-5 stroke-[2.5]" />
         <span className="text-base">تسوق الآن</span>
         <ArrowLeft className="w-5 h-5 stroke-[2.5] mr-auto" />
