@@ -7,13 +7,13 @@ import { ProductCard } from "@/components/ProductCard";
 import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
 import { INITIAL_PRODUCTS, DEFAULT_SHOWCASE, Product } from "@/lib/data";
+import { CartProvider } from "@/context/CartContext";
 
-export default function HomePage() {
+function HomePageContent() {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   useEffect(() => {
-    // جلب المنتجات من قاعدة البيانات إذا توفرت
     async function fetchProducts() {
       try {
         const res = await fetch("/api/products");
@@ -74,5 +74,13 @@ export default function HomePage() {
       <CartDrawer />
       <Footer />
     </div>
+  );
+}
+
+export default function HomePage() {
+  return (
+    <CartProvider>
+      <HomePageContent />
+    </CartProvider>
   );
 }
