@@ -178,33 +178,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       icon: <ShieldCheck className="w-4 h-4 text-[#00D9FF]" />,
       big: "1 سنة",
       small: "ضمان حقيقي",
-      glow:
-        "hover:shadow-[0_0_20px_rgba(0,217,255,0.3)]",
+      glow: "hover:shadow-[0_0_20px_rgba(0,217,255,0.3)]",
     },
     {
       icon: <Truck className="w-4 h-4 text-[#00D9FF]" />,
       big: "24-48h",
       small: "شحن سريع جداً",
-      glow:
-        "hover:shadow-[0_0_20px_rgba(0,217,255,0.3)]",
+      glow: "hover:shadow-[0_0_20px_rgba(0,217,255,0.3)]",
     },
     {
-      icon: (
-        <CheckCircle2 className="w-4 h-4 text-[#00A8FF]" />
-      ),
+      icon: <CheckCircle2 className="w-4 h-4 text-[#00A8FF]" />,
       big: "100%",
       small: "منتجات أصلية",
-      glow:
-        "hover:shadow-[0_0_20px_rgba(0,168,255,0.3)]",
+      glow: "hover:shadow-[0_0_20px_rgba(0,168,255,0.3)]",
     },
     {
-      icon: (
-        <Star className="w-4 h-4 text-amber-400 fill-amber-400/30" />
-      ),
+      icon: <Star className="w-4 h-4 text-amber-400 fill-amber-400/30" />,
       big: "+5,400",
       small: "لاعب يثق بنا",
-      glow:
-        "hover:shadow-[0_0_20px_rgba(251,191,36,0.3)]",
+      glow: "hover:shadow-[0_0_20px_rgba(251,191,36,0.3)]",
     },
   ];
 
@@ -223,19 +215,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       "
     >
       {/* BACKGROUND */}
-
       <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
-
       <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00A8FF]/10 blur-[130px] rounded-full pointer-events-none" />
-
       <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00D9FF]/10 blur-[130px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pb-2">
-
         {/* =========================
             TOP BADGE
         ========================= */}
-
         <div className="flex justify-center mb-6">
           <div
             className="
@@ -275,28 +262,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         {/* =========================
             HERO GRID
         ========================= */}
-
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
-
           {/* =========================
               RIGHT - TEXT
           ========================= */}
-
           <div className="lg:col-span-6 space-y-5 text-right">
-
             <div className="flex items-center gap-4 justify-end">
-
               <div className="text-right">
                 <div className="brand-mark brand-mark-lg text-white">
-                  NITRO{" "}
-                  <span className="brand-mark-games">
-                    GAMES
-                  </span>
+                  NITRO <span className="brand-mark-games">GAMES</span>
                 </div>
-
-                <div className="brand-sub mt-1">
-                  PALESTINE · ESPORTS GEAR
-                </div>
+                <div className="brand-sub mt-1">PALESTINE · ESPORTS GEAR</div>
               </div>
 
               <div
@@ -310,16 +286,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   flex-shrink-0
                 "
               >
-                <Zap
-                  className="
-                    w-7 h-7
-                    sm:w-9 sm:h-9
-                    text-[#00A8FF]
-                    drop-shadow-[0_0_14px_#00A8FF]
-                  "
-                />
+                <Zap className="w-7 h-7 sm:w-9 sm:h-9 text-[#00A8FF] drop-shadow-[0_0_14px_#00A8FF]" />
               </div>
-
             </div>
 
             <h1
@@ -338,10 +306,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </span>
 
               <span className="block mt-1">
-                <span className="sr-only">
-                  نيترو قيمز —
-                </span>
-
+                <span className="sr-only">نيترو قيمز —</span>
                 خياركم الأفضل في فلسطين
               </span>
 
@@ -356,9 +321,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 "
               >
                 للعتاد الاحترافي..{" "}
-                <span className="glow-cyan">
-                  ارفع مستوى لعبك!
-                </span>
+                <span className="glow-cyan">ارفع مستوى لعبك!</span>
               </span>
             </h1>
 
@@ -367,7 +330,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </p>
 
             <div className="flex flex-wrap items-center gap-3">
-
               <button
                 onClick={() => scrollTo("products")}
                 className="
@@ -381,22 +343,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 "
               >
                 <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5" />
-
-                <span>
-                  {cfg.ctaLabel || "تسوق الآن"}
-                </span>
-
+                <span>{cfg.ctaLabel || "تسوق الآن"}</span>
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               </button>
-
             </div>
 
             {/* FEATURES */}
-
             <div className="pt-2 overflow-x-auto no-scrollbar">
-
               <div className="grid grid-cols-4 gap-2 sm:gap-3 min-w-[300px]">
-
                 {features.map((s, i) => (
                   <div
                     key={i}
@@ -421,7 +375,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       ${s.glow}
                     `}
                   >
-
                     <div
                       className="
                         absolute
@@ -485,10 +438,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         {s.small}
                       </span>
                     </div>
-
                   </div>
                 ))}
-
               </div>
             </div>
           </div>
@@ -496,25 +447,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* =========================
               LEFT - LIVE SHOWCASE
           ========================= */}
-
           <div className="lg:col-span-6 mt-2 lg:mt-0">
-
             <div
               className="relative group max-w-md mx-auto lg:max-w-none"
               onMouseEnter={() => setPaused(true)}
               onMouseLeave={() => setPaused(false)}
             >
-
               {/* AUDIO */}
-
               {siteAudioUrl && (
                 <>
-                  <audio
-                    ref={audioRef}
-                    src={siteAudioUrl}
-                    loop
-                  />
-
+                  <audio ref={audioRef} src={siteAudioUrl} loop />
                   <button
                     onClick={toggleAudio}
                     className={`
@@ -550,7 +492,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* =========================
                   CYBER LIVE FRAME
               ========================= */}
-
               <div
                 className="
                   relative
@@ -563,34 +504,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   shadow-[0_0_45px_rgba(0,168,255,0.18)]
                 "
               >
-
                 {/* CYBER CORNERS */}
-
-                <div className="
-                  absolute
-                  -top-[1px]
-                  -right-[1px]
-                  w-20 h-10
-                  border-t-2
-                  border-r-2
-                  border-[#00D9FF]
-                  rounded-tr-[26px]
-                  pointer-events-none
-                  z-20
-                " />
-
-                <div className="
-                  absolute
-                  -bottom-[1px]
-                  -left-[1px]
-                  w-20 h-10
-                  border-b-2
-                  border-l-2
-                  border-[#00D9FF]
-                  rounded-bl-[26px]
-                  pointer-events-none
-                  z-20
-                " />
+                <div className="absolute -top-[1px] -right-[1px] w-20 h-10 border-t-2 border-r-2 border-[#00D9FF] rounded-tr-[26px] pointer-events-none z-20" />
+                <div className="absolute -bottom-[1px] -left-[1px] w-20 h-10 border-b-2 border-l-2 border-[#00D9FF] rounded-bl-[26px] pointer-events-none z-20" />
 
                 <div
                   className="
@@ -601,11 +517,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     border border-[#0c385b]
                   "
                 >
-
                   {/* =========================
                       LIVE HEADER
                   ========================= */}
-
                   <div
                     className="
                       relative
@@ -623,9 +537,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       border-[#00A8FF]/30
                     "
                   >
-
                     <div className="flex items-center gap-2">
-
                       <div
                         className="
                           flex
@@ -652,71 +564,42 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                       <div className="flex items-center gap-1.5">
                         <Eye className="w-3.5 h-3.5 text-[#00D9FF]" />
-
                         <span className="text-[9px] text-gray-300 font-tech">
                           SHOWCASE
                         </span>
                       </div>
-
                     </div>
 
                     <div className="flex items-center gap-2">
-
                       <Sparkles
-                        className="
-                          w-4 h-4
-                          text-[#00D9FF]
-                          animate-spin
-                        "
-                        style={{
-                          animationDuration: "6s",
-                        }}
+                        className="w-4 h-4 text-[#00D9FF] animate-spin"
+                        style={{ animationDuration: "6s" }}
                       />
-
-                      <span
-                        className="
-                          text-sm
-                          sm:text-base
-                          font-black
-                          font-tech
-                          text-white
-                        "
-                      >
-                        LIVE{" "}
-                        <span className="text-[#00D9FF]">
-                          SHOWCASE
-                        </span>
+                      <span className="text-sm sm:text-base font-black font-tech text-white">
+                        LIVE <span className="text-[#00D9FF]">SHOWCASE</span>
                       </span>
-
                     </div>
-
                   </div>
 
                   {/* =========================
                       SHOWCASE CONTENT
                   ========================= */}
-
                   <div className="relative">
-
                     {/* VIDEO */}
-
                     {cfg.enabled &&
                     cfg.videoUrls &&
                     cfg.videoUrls.length > 0 ? (
                       <div className="relative aspect-[16/10] w-full bg-[#010611]">
-
                         <video
                           ref={showcaseVideoRef}
                           key={
                             cfg.videoUrls[
-                              showcaseVideoIndex %
-                                cfg.videoUrls.length
+                              showcaseVideoIndex % cfg.videoUrls.length
                             ]
                           }
                           src={
                             cfg.videoUrls[
-                              showcaseVideoIndex %
-                                cfg.videoUrls.length
+                              showcaseVideoIndex % cfg.videoUrls.length
                             ]
                           }
                           autoPlay
@@ -726,524 +609,199 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           controls
                           onEnded={() =>
                             setShowcaseVideoIndex(
-                              (i) =>
-                                (i + 1) %
-                                cfg.videoUrls!.length
+                              (i) => (i + 1) % cfg.videoUrls!.length
                             )
                           }
-                          className="
-                            absolute
-                            inset-0
-                            w-full
-                            h-full
-                            object-cover
-                          "
+                          className="absolute inset-0 w-full h-full object-cover"
                         />
 
-                        {/* DARK GRADIENT */}
+                        <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-[#020914] via-transparent to-transparent" />
 
-                        <div
-                          className="
-                            absolute
-                            inset-0
-                            pointer-events-none
-                            bg-gradient-to-t
-                            from-[#020914]
-                            via-transparent
-                            to-transparent
-                          "
-                        />
-
-                        {/* LIVE BADGE */}
-
-                        <div
-                          className="
-                            absolute
-                            top-3
-                            right-3
-                            z-20
-                            flex
-                            items-center
-                            gap-2
-                            px-3
-                            py-1.5
-                            rounded-full
-                            bg-[#020914]/85
-                            border border-[#00D9FF]/50
-                            backdrop-blur-md
-                          "
-                        >
+                        <div className="absolute top-3 right-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#020914]/85 border border-[#00D9FF]/50 backdrop-blur-md">
                           <span className="relative flex w-2 h-2">
                             <span className="absolute inset-0 rounded-full bg-red-500 animate-ping" />
                             <span className="relative w-2 h-2 rounded-full bg-red-500" />
                           </span>
-
                           <span className="text-[9px] font-black text-white">
                             LIVE
                           </span>
                         </div>
 
                         {cfg.videoUrls.length > 1 && (
-                          <div
-                            className="
-                              absolute
-                              bottom-3
-                              right-3
-                              z-20
-                              px-2.5
-                              py-1
-                              rounded-lg
-                              bg-black/70
-                              border border-[#00D9FF]/30
-                              text-[#00D9FF]
-                              text-[9px]
-                              font-tech
-                              backdrop-blur-md
-                            "
-                          >
-                            {showcaseVideoIndex + 1}/
-                            {cfg.videoUrls.length}
+                          <div className="absolute bottom-3 right-3 z-20 px-2.5 py-1 rounded-lg bg-black/70 border border-[#00D9FF]/30 text-[#00D9FF] text-[9px] font-tech backdrop-blur-md">
+                            {showcaseVideoIndex + 1}/{cfg.videoUrls.length}
                           </div>
                         )}
-
                       </div>
                     ) : active ? (
-
                       /* IMAGE */
-
-                      <div
-                        className="
-                          relative
-                          aspect-[16/10]
-                          w-full
-                          bg-[#010611]
-                        "
-                      >
-
+                      <div className="relative aspect-[16/10] w-full bg-[#010611]">
                         <Image
                           src={active.image}
                           alt={active.title}
                           fill
                           priority
-                          className="
-                            object-contain
-                            p-3
-                            transition-transform
-                            duration-500
-                            group-hover:scale-[1.025]
-                          "
+                          className="object-contain p-3 transition-transform duration-500 group-hover:scale-[1.025]"
                         />
 
-                        <div
-                          className="
-                            absolute
-                            inset-0
-                            bg-gradient-to-t
-                            from-[#020914]
-                            via-transparent
-                            to-transparent
-                            pointer-events-none
-                          "
-                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#020914] via-transparent to-transparent pointer-events-none" />
 
-                        {/* LIVE */}
-
-                        <div
-                          className="
-                            absolute
-                            top-3
-                            right-3
-                            z-20
-                            flex
-                            items-center
-                            gap-2
-                            px-3
-                            py-1.5
-                            rounded-full
-                            bg-[#020914]/90
-                            border border-[#00D9FF]/50
-                            backdrop-blur-md
-                          "
-                        >
+                        <div className="absolute top-3 right-3 z-20 flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#020914]/90 border border-[#00D9FF]/50 backdrop-blur-md">
                           <span className="relative flex w-2 h-2">
                             <span className="absolute inset-0 rounded-full bg-red-500 animate-ping" />
                             <span className="relative w-2 h-2 rounded-full bg-red-500" />
                           </span>
-
                           <span className="text-[9px] font-black text-white">
                             LIVE
                           </span>
                         </div>
-
                       </div>
-
                     ) : null}
 
                     {/* =========================
                         PRODUCT INFO OVERLAY
                     ========================= */}
-
                     {active && (
-                      <div
-                        className="
-                          absolute
-                          left-3
-                          right-3
-                          bottom-3
-                          z-20
-                          flex
-                          items-end
-                          justify-between
-                          gap-3
-                          pointer-events-none
-                        "
-                      >
-
-                        <div
-                          className="
-                            max-w-[65%]
-                            text-right
-                            drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]
-                          "
-                        >
-
-                          <div
-                            className="
-                              inline-flex
-                              items-center
-                              gap-1.5
-                              mb-1
-                              px-2
-                              py-0.5
-                              rounded-md
-                              bg-[#00D9FF]/10
-                              border border-[#00D9FF]/30
-                              backdrop-blur-md
-                            "
-                          >
+                      <div className="absolute left-3 right-3 bottom-3 z-20 flex items-end justify-between gap-3 pointer-events-none">
+                        <div className="max-w-[65%] text-right drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                          <div className="inline-flex items-center gap-1.5 mb-1 px-2 py-0.5 rounded-md bg-[#00D9FF]/10 border border-[#00D9FF]/30 backdrop-blur-md">
                             <Zap className="w-3 h-3 text-[#00D9FF]" />
-
                             <span className="text-[8px] sm:text-[9px] text-[#00D9FF] font-tech font-bold">
                               CYBER GEAR
                             </span>
                           </div>
 
-                          <h3 className="
-                            text-sm
-                            sm:text-lg
-                            font-black
-                            text-white
-                            font-['Cairo']
-                            truncate
-                          ">
+                          <h3 className="text-sm sm:text-lg font-black text-white font-['Cairo'] truncate">
                             {active.title}
                           </h3>
 
-                          <div className="
-                            text-base
-                            sm:text-xl
-                            font-black
-                            text-[#00D9FF]
-                            font-tech
-                          ">
+                          <div className="text-base sm:text-xl font-black text-[#00D9FF] font-tech">
                             {active.price} ₪
                           </div>
-
                         </div>
 
                         <button
-                          onClick={() =>
-                            addToCart(active)
-                          }
-                          className="
-                            pointer-events-auto
-                            flex
-                            items-center
-                            gap-1.5
-                            px-3
-                            sm:px-4
-                            py-2
-                            rounded-xl
-                            bg-[#00D9FF]
-                            text-[#00101c]
-                            text-[10px]
-                            sm:text-xs
-                            font-black
-                            shadow-[0_0_20px_rgba(0,217,255,0.35)]
-                            hover:scale-105
-                            active:scale-95
-                            transition-all
-                            whitespace-nowrap
-                          "
+                          onClick={() => addToCart(active)}
+                          className="pointer-events-auto flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-[#00D9FF] text-[#00101c] text-[10px] sm:text-xs font-black shadow-[0_0_20px_rgba(0,217,255,0.35)] hover:scale-105 active:scale-95 transition-all whitespace-nowrap"
                         >
                           <ShoppingBag className="w-3.5 h-3.5" />
-
                           أضف للسلة
                         </button>
-
                       </div>
                     )}
-
                   </div>
 
                   {/* =========================
                       PRODUCT FEATURES
                   ========================= */}
-
                   {active && (
-                    <div
-                      className="
-                        grid
-                        grid-cols-3
-                        border-t
-                        border-[#00A8FF]/20
-                        bg-gradient-to-r
-                        from-[#031426]
-                        via-[#061d34]
-                        to-[#031426]
-                      "
-                    >
-
-                      <div className="
-                        flex
-                        flex-col
-                        items-center
-                        justify-center
-                        py-2.5
-                        border-l
-                        border-[#00A8FF]/20
-                      ">
+                    <div className="grid grid-cols-3 border-t border-[#00A8FF]/20 bg-gradient-to-r from-[#031426] via-[#061d34] to-[#031426]">
+                      <div className="flex flex-col items-center justify-center py-2.5 border-l border-[#00A8FF]/20">
                         <Zap className="w-4 h-4 text-[#00D9FF] mb-1" />
-
                         <span className="text-[8px] sm:text-[9px] text-gray-300 font-tech">
                           PERFORMANCE
                         </span>
                       </div>
 
-                      <div className="
-                        flex
-                        flex-col
-                        items-center
-                        justify-center
-                        py-2.5
-                        border-l
-                        border-[#00A8FF]/20
-                      ">
+                      <div className="flex flex-col items-center justify-center py-2.5 border-l border-[#00A8FF]/20">
                         <CheckCircle2 className="w-4 h-4 text-[#00D9FF] mb-1" />
-
                         <span className="text-[8px] sm:text-[9px] text-gray-300 font-tech">
                           ORIGINAL
                         </span>
                       </div>
 
-                      <div className="
-                        flex
-                        flex-col
-                        items-center
-                        justify-center
-                        py-2.5
-                      ">
+                      <div className="flex flex-col items-center justify-center py-2.5">
                         <ShieldCheck className="w-4 h-4 text-[#00D9FF] mb-1" />
-
                         <span className="text-[8px] sm:text-[9px] text-gray-300 font-tech">
                           1 YEAR WARRANTY
                         </span>
                       </div>
-
                     </div>
                   )}
 
                   {/* =========================
                       THUMBNAILS
                   ========================= */}
-
                   {showcaseItems.length > 1 && (
-                    <div
-                      className="
-                        relative
-                        px-3
-                        sm:px-4
-                        py-3
-                        bg-[#020b17]
-                        border-t
-                        border-[#00A8FF]/20
-                      "
-                    >
-
+                    <div className="relative px-3 sm:px-4 py-3 bg-[#020b17] border-t border-[#00A8FF]/20">
                       <button
                         onClick={() => go(-1)}
-                        className="
-                          absolute
-                          left-1
-                          top-1/2
-                          -translate-y-1/2
-                          z-20
-                          w-7
-                          h-7
-                          rounded-full
-                          flex
-                          items-center
-                          justify-center
-                          bg-[#05172b]
-                          border
-                          border-[#00D9FF]/40
-                          text-[#00D9FF]
-                          hover:bg-[#00D9FF]
-                          hover:text-[#00101c]
-                          transition-all
-                        "
+                        className="absolute left-1 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full flex items-center justify-center bg-[#05172b] border border-[#00D9FF]/40 text-[#00D9FF] hover:bg-[#00D9FF] hover:text-[#00101c] transition-all"
                       >
                         <ChevronLeft className="w-4 h-4" />
                       </button>
 
-                      <div
-                        className="
-                          flex
-                          gap-2
-                          overflow-hidden
-                          mx-7
-                        "
-                      >
-
-                        {showcaseItems
-                          .slice(0, 5)
-                          .map((item, i) => (
-                            <button
-                              key={item.id}
-                              onClick={() =>
-                                setSlide(i)
+                      <div className="flex gap-2 overflow-hidden mx-7">
+                        {showcaseItems.slice(0, 5).map((item, i) => (
+                          <button
+                            key={item.id}
+                            onClick={() => setSlide(i)}
+                            className={`
+                              relative
+                              flex-shrink-0
+                              w-[72px]
+                              sm:w-[90px]
+                              aspect-[4/3]
+                              rounded-lg
+                              overflow-hidden
+                              border
+                              transition-all
+                              duration-300
+                              ${
+                                i === slide
+                                  ? "border-[#00D9FF] shadow-[0_0_15px_rgba(0,217,255,0.4)] scale-[1.03]"
+                                  : "border-[#0d3655] opacity-70 hover:opacity-100"
                               }
-                              className={`
-                                relative
-                                flex-shrink-0
-                                w-[72px]
-                                sm:w-[90px]
-                                aspect-[4/3]
-                                rounded-lg
-                                overflow-hidden
-                                border
-                                transition-all
-                                duration-300
-                                ${
-                                  i === slide
-                                    ? "border-[#00D9FF] shadow-[0_0_15px_rgba(0,217,255,0.4)] scale-[1.03]"
-                                    : "border-[#0d3655] opacity-70 hover:opacity-100"
-                                }
-                              `}
-                            >
+                            `}
+                          >
+                            <Image
+                              src={item.image}
+                              alt={item.title}
+                              fill
+                              className="object-cover"
+                            />
 
-                              <Image
-                                src={item.image}
-                                alt={item.title}
-                                fill
-                                className="object-cover"
-                              />
-
-                              {i === slide && (
-                                <div className="
-                                  absolute
-                                  inset-0
-                                  bg-[#00D9FF]/10
-                                  ring-1
-                                  ring-inset
-                                  ring-[#00D9FF]
-                                />
-                              )}
-
-                            </button>
-                          ))}
-
+                            {i === slide && (
+                              <div className="absolute inset-0 bg-[#00D9FF]/10 ring-1 ring-inset ring-[#00D9FF]" />
+                            )}
+                          </button>
+                        ))}
                       </div>
 
                       <button
                         onClick={() => go(1)}
-                        className="
-                          absolute
-                          right-1
-                          top-1/2
-                          -translate-y-1/2
-                          z-20
-                          w-7
-                          h-7
-                          rounded-full
-                          flex
-                          items-center
-                          justify-center
-                          bg-[#05172b]
-                          border
-                          border-[#00D9FF]/40
-                          text-[#00D9FF]
-                          hover:bg-[#00D9FF]
-                          hover:text-[#00101c]
-                          transition-all
-                        "
+                        className="absolute right-1 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full flex items-center justify-center bg-[#05172b] border border-[#00D9FF]/40 text-[#00D9FF] hover:bg-[#00D9FF] hover:text-[#00101c] transition-all"
                       >
                         <ChevronRight className="w-4 h-4" />
                       </button>
-
                     </div>
                   )}
 
                   {/* =========================
                       BOTTOM STATUS
                   ========================= */}
-
-                  <div
-                    className="
-                      flex
-                      items-center
-                      justify-between
-                      gap-3
-                      px-4
-                      py-2.5
-                      border-t
-                      border-[#00A8FF]/20
-                      bg-[#030f1d]
-                    "
-                  >
-
+                  <div className="flex items-center justify-between gap-3 px-4 py-2.5 border-t border-[#00A8FF]/20 bg-[#030f1d]">
                     <div className="flex items-center gap-2">
-
                       <span className="relative flex w-2 h-2">
                         <span className="absolute inset-0 rounded-full bg-[#00D9FF] animate-ping opacity-70" />
                         <span className="relative w-2 h-2 rounded-full bg-[#00D9FF]" />
                       </span>
-
-                      <span className="
-                        text-[8px]
-                        sm:text-[9px]
-                        font-tech
-                        text-gray-400
-                      ">
+                      <span className="text-[8px] sm:text-[9px] font-tech text-gray-400">
                         NITRO GAMES · CYBER SHOWCASE
                       </span>
-
                     </div>
 
                     <button
-                      onClick={() =>
-                        scrollTo("products")
-                      }
-                      className="
-                        text-[9px]
-                        sm:text-[10px]
-                        font-bold
-                        text-[#00D9FF]
-                        hover:text-white
-                        transition-colors
-                      "
+                      onClick={() => scrollTo("products")}
+                      className="text-[9px] sm:text-[10px] font-bold text-[#00D9FF] hover:text-white transition-colors"
                     >
                       عرض جميع المنتجات ←
                     </button>
-
                   </div>
-
                 </div>
               </div>
-
             </div>
           </div>
-
         </div>
       </div>
     </section>
