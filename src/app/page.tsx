@@ -2,16 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { Header } from "@/components/Header";
-import { HeroSection } from "@/components/HeroSection";
 import { ProductCard } from "@/components/ProductCard";
 import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
-import { INITIAL_PRODUCTS, DEFAULT_SHOWCASE, Product } from "@/lib/data";
+import { INITIAL_PRODUCTS, Product } from "@/lib/data";
 import { CartProvider } from "@/context/CartContext";
 
 function HomePageContent() {
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   useEffect(() => {
     async function fetchProducts() {
@@ -24,53 +22,33 @@ function HomePageContent() {
           }
         }
       } catch (err) {
-        console.warn("Failed to fetch dynamic products, using fallback data:", err);
+        console.warn("Failed to fetch products:", err);
       }
     }
     fetchProducts();
   }, []);
 
-  const filteredProducts =
-    selectedCategory === "all"
-      ? products
-      : products.filter((p) => p.category === selectedCategory);
-
   return (
     <div className="min-h-screen bg-[#020914] text-white flex flex-col font-['Cairo']">
-      {/* الهيدر العلوي */}
+      {/* الهيدر العلوي وشريط الإشعارات */}
       <Header />
 
-      {/* الجزء الرئيسي - الهيرو */}
-      <main className="flex-1">
-        <HeroSection
-          products={products}
-          showcase={DEFAULT_SHOWCASE}
-          onCategorySelect={(cat) => setSelectedCategory(cat)}
-        />
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        {/* عنوان قسم المنتجات المتاحة */}
+        <div className="text-center my-6">
+          <h1 className="text-2xl sm:text-3xl font-black text-white flex items-center justify-center gap-2">
+            المنتجات المتاحة 🎮
+          </h1>
+        </div>
 
-        {/* قسم المنتجات */}
-        <section id="products" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-xl sm:text-2xl font-black text-white">
-              المنتجات المتاحة 🎮
-            </h2>
-          </div>
-
-          {filteredProducts.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredProducts.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12 text-gray-400 font-tech">
-              لا توجد منتجات متوفرة حالياً في القسم المختار.
-            </div>
-          )}
-        </section>
+        {/* شبكة عرض المنتجات */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
       </main>
 
-      {/* سلة المشتريات والفوتر */}
       <CartDrawer />
       <Footer />
     </div>
