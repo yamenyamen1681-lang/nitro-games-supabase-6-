@@ -21,7 +21,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
       icon: Keyboard,
       image: "/images/keyboard-custom-rgb.jpg",
       highlight: "Rapid Trigger 0.1mm",
-      accent: "#00a3ff",
+      accent: "#d4af37",
     },
     {
       id: "mice" as CategoryType,
@@ -32,7 +32,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
       icon: Mouse,
       image: "/images/mouse-pro-8k.jpg",
       highlight: "8000Hz Polling",
-      accent: "#00e5ff",
+      accent: "#f4d576",
     },
     {
       id: "mousepads" as CategoryType,
@@ -43,7 +43,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
       icon: Square,
       image: "/images/mousepad-pro.jpg",
       highlight: "Artisan Poron",
-      accent: "#00a3ff",
+      accent: "#d4af37",
     },
     {
       id: "microphones" as CategoryType,
@@ -54,7 +54,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
       icon: Mic,
       image: "/images/microphone-pro.jpg",
       highlight: "Studio Quality",
-      accent: "#00e5ff",
+      accent: "#f4d576",
     },
     {
       id: "headsets" as CategoryType,
@@ -65,7 +65,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
       icon: Headphones,
       image: "/images/headset-pro.jpg",
       highlight: "ANC & Hi-Res",
-      accent: "#00a3ff",
+      accent: "#d4af37",
     },
   ];
 
@@ -78,13 +78,13 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
   };
 
   return (
-    <section id="categories" className="py-14 relative bg-[#070b14]">
+    <section id="categories" className="py-14 relative bg-[#0d0a05]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-bold text-[#00a3ff] uppercase tracking-wider mb-2">
-              <Zap className="w-4 h-4 text-[#00a3ff]" />
+            <div className="flex items-center gap-2 text-xs font-bold text-[#d4af37] uppercase tracking-wider mb-2">
+              <Zap className="w-4 h-4 text-[#d4af37]" />
               <span>أقسام المتجر الخمسة المعتمدة</span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-white font-['Cairo']">
@@ -106,21 +106,21 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
               <div
                 key={cat.id}
                 onClick={() => handleCardClick(cat.id)}
-                className={`relative group cursor-pointer rounded-xl overflow-hidden bg-[#0b1120] border ${
+                className={`relative group cursor-pointer rounded-xl overflow-hidden bg-[#120e08] border ${
                   isSelected
-                    ? "border-[#00a3ff] shadow-[0_0_25px_rgba(0,163,255,0.3)]"
-                    : "border-[#1c2942] hover:border-[#00a3ff]/70"
+                    ? "border-[#d4af37] shadow-[0_0_25px_rgba(212,175,55,0.3)]"
+                    : "border-[#3a2f16] hover:border-[#d4af37]/70"
                 } transition-all duration-250 hover:-translate-y-1.5 flex flex-col justify-between`}
               >
                 {/* Background Image */}
-                <div className="relative h-44 w-full overflow-hidden bg-[#101a2e]">
+                <div className="relative h-44 w-full overflow-hidden bg-[#1a140a]">
                   <Image
                     src={cat.image}
                     alt={cat.name}
                     fill
                     className="object-cover object-center group-hover:scale-108 transition-transform duration-500 opacity-60 group-hover:opacity-85"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0b1120] via-[#0b1120]/70 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#120e08] via-[#120e08]/70 to-transparent" />
                 </div>
 
                 {/* Content Overlay */}
@@ -133,24 +133,24 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
                     >
                       {cat.highlight}
                     </span>
-                    <div className="w-8 h-8 rounded-lg bg-[#152034] border border-[#27405f] flex items-center justify-center text-gray-300 group-hover:bg-[#00a3ff] group-hover:text-black transition-all">
+                    <div className="w-8 h-8 rounded-lg bg-[#1a140a] border border-[#4a3a1a] flex items-center justify-center text-gray-300 group-hover:bg-[#d4af37] group-hover:text-black transition-all">
                       <Icon className="w-4 h-4" />
                     </div>
                   </div>
 
                   {/* Bottom: Name & CTA */}
                   <div>
-                    <h3 className="text-base sm:text-lg font-black text-white group-hover:text-[#00a3ff] transition-colors leading-tight font-['Cairo']">
+                    <h3 className="text-base sm:text-lg font-black text-white group-hover:text-[#d4af37] transition-colors leading-tight font-['Cairo']">
                       {cat.name}
                     </h3>
                     <p className="text-[11px] text-gray-400 mt-1 line-clamp-2 leading-relaxed">
                       {cat.desc}
                     </p>
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#1c2942] text-xs">
-                      <span className="font-mono text-[#00a3ff] font-bold">{cat.count}</span>
-                      <span className="flex items-center gap-1 text-white font-bold group-hover:text-[#00a3ff] group-hover:translate-x-[-3px] transition-all">
+                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#3a2f16] text-xs">
+                      <span className="font-mono text-[#d4af37] font-bold">{cat.count}</span>
+                      <span className="flex items-center gap-1 text-white font-bold group-hover:text-[#d4af37] group-hover:translate-x-[-3px] transition-all">
                         <span>تصفح</span>
-                        <ArrowLeft className="w-3.5 h-3.5 text-[#00a3ff]" />
+                        <ArrowLeft className="w-3.5 h-3.5 text-[#d4af37]" />
                       </span>
                     </div>
                   </div>
@@ -158,7 +158,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
 
                 {/* Active Indicator Glow Bottom */}
                 {isSelected && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#00a3ff] shadow-[0_0_10px_#00a3ff]" />
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#d4af37] shadow-[0_0_10px_#d4af37]" />
                 )}
               </div>
             );
