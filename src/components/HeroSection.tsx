@@ -2,15 +2,20 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
-import { Product, ShowcaseConfig, DEFAULT_SHOWCASE, CATEGORIES_META } from "@/lib/data";
+import {
+  Product,
+  ShowcaseConfig,
+  DEFAULT_SHOWCASE,
+  CATEGORIES_META,
+} from "@/lib/data";
 import { useCart } from "@/context/CartContext";
+
 import {
   ArrowLeft,
   ChevronRight,
   ChevronLeft,
   ShieldCheck,
   Truck,
-  Zap,
   CheckCircle2,
   ShoppingBag,
   Flame,
@@ -21,6 +26,8 @@ import {
   Sparkles,
   Music,
   Disc,
+  Users,
+  Play,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -38,448 +45,853 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const [siteAudioUrl, setSiteAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
   const showcaseVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  useEffect(() => {
-    const vid = showcaseVideoRef.current;
-    if (!vid) return;
-    const playPromise = vid.play();
-    if (playPromise && typeof playPromise.catch === "function") {
-      playPromise.catch(() => {});
-    }
-  }, [showcaseVideoIndex, cfg.videoUrls]);
+  const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
+
+  /* =========================
+     LOAD SITE AUDIO
+  ========================= */
 
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch("/api/settings?key=site_audio", { cache: "no-store" });
+        const res = await fetch("/api/settings?key=site_audio", {
+          cache: "no-store",
+        });
+
         const data = await res.json();
-        if (data.success && data.value?.url) setSiteAudioUrl(data.value.url);
+
+        if (data.success && data.value?.url) {
+          setSiteAudioUrl(data.value.url);
+        }
       } catch (err) {
         console.warn("Failed to load site audio:", err);
       }
     })();
   }, []);
 
+  /* =========================
+     VIDEO AUTOPLAY
+  ========================= */
+
+  useEffect(() => {
+    const video = showcaseVideoRef.current;
+
+    if (!video) return;
+
+    const promise = video.play();
+
+    if (promise && typeof promise.catch === "function") {
+      promise.catch(() => {});
+    }
+  }, [showcaseVideoIndex, cfg.videoUrls]);
+
+  /* =========================
+     AUDIO
+  ========================= */
+
   const toggleAudio = () => {
     if (!audioRef.current) return;
+
     if (isPlaying) {
       audioRef.current.pause();
       setIsPlaying(false);
     } else {
-      audioRef.current.play().catch(() => {});
-      setIsPlaying(true);
+      audioRef.current
+        .play()
+        .then(() => setIsPlaying(true))
+        .catch(() => {});
     }
   };
 
-  const scrollTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  /* =========================
+     SCROLL
+  ========================= */
+
+  const scrollToProducts = () => {
+    document
+      .getElementById("products")
+      ?.scrollIntoView({ behavior: "smooth" });
   };
+
+  /* =========================
+     PRODUCTS
+  ========================= */
 
   const showcaseItems = React.useMemo(() => {
     if (cfg.productIds.length > 0) {
       const picked = cfg.productIds
         .map((id) => products.find((p) => p.id === id))
         .filter((p): p is Product => Boolean(p));
+
       if (picked.length > 0) return picked;
     }
+
     return products.slice(0, 6);
   }, [cfg.productIds, products]);
 
-  const [slide, setSlide] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const active = showcaseItems[slide];
+
+  /* =========================
+     SLIDER
+  ========================= */
 
   const go = useCallback(
-    (dir: number) => {
+    (direction: number) => {
       if (showcaseItems.length === 0) return;
-      setSlide((s) => (s + dir + showcaseItems.length) % showcaseItems.length);
+
+      setSlide(
+        (current) =>
+          (current + direction + showcaseItems.length) %
+          showcaseItems.length
+      );
     },
     [showcaseItems.length]
   );
 
   useEffect(() => {
     if (!cfg.autoPlay || paused || showcaseItems.length < 2) return;
-    const t = setInterval(() => go(1), Math.max(1200, cfg.intervalMs));
-    return () => clearInterval(t);
-  }, [cfg.autoPlay, cfg.intervalMs, paused, go, showcaseItems.length]);
+
+    const timer = setInterval(() => {
+      go(1);
+    }, Math.max(1800, cfg.intervalMs));
+
+    return () => clearInterval(timer);
+  }, [
+    cfg.autoPlay,
+    cfg.intervalMs,
+    paused,
+    go,
+    showcaseItems.length,
+  ]);
 
   useEffect(() => {
-    if (slide >= showcaseItems.length) setSlide(0);
+    if (slide >= showcaseItems.length) {
+      setSlide(0);
+    }
   }, [showcaseItems.length, slide]);
 
-  const active = showcaseItems[slide];
+  /* =========================
+     STATS
+  ========================= */
 
   const stats = [
-    { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
-    { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
-    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
-    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, bg: "24-48h", small: "شحن سريع" },
+    {
+      icon: <Users className="w-4 h-4" />,
+      big: "+5,400",
+      small: "لاعب يثق بنا",
+    },
+    {
+      icon: <ShieldCheck className="w-4 h-4" />,
+      big: "1 سنة",
+      small: "ضمان حقيقي",
+    },
+    {
+      icon: <CheckCircle2 className="w-4 h-4" />,
+      big: "100%",
+      small: "أصلي معتمد",
+    },
+    {
+      icon: <Truck className="w-4 h-4" />,
+      big: "24-48h",
+      small: "شحن سريع",
+    },
   ];
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-16 pb-24 lg:pt-20 lg:pb-32 bg-[#03060f] border-b border-[#16223a]">
+    <section
+      id="hero"
+      dir="rtl"
+      className="relative overflow-hidden bg-[#02050d] border-b border-[#10203b]"
+    >
+      {/* =========================
+          BACKGROUND
+      ========================= */}
+
       <style>{`
-        @keyframes marqueeLoop {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(50%); }
+        @keyframes nitroFloat {
+          0%, 100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-7px);
+          }
         }
-        .animate-marquee-infinite {
-          display: flex;
-          width: max-content;
-          animation: marqueeLoop 32s linear infinite;
+
+        @keyframes nitroPulse {
+          0%, 100% {
+            opacity: .45;
+            transform: scale(.95);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.05);
+          }
         }
-        .animate-marquee-infinite:hover {
-          animation-play-state: paused;
+
+        @keyframes nitroGlow {
+          0%, 100% {
+            box-shadow:
+              0 0 20px rgba(0,163,255,.15),
+              inset 0 0 20px rgba(0,163,255,.03);
+          }
+          50% {
+            box-shadow:
+              0 0 35px rgba(0,229,255,.28),
+              inset 0 0 30px rgba(0,163,255,.06);
+          }
         }
-        @keyframes cyberGlow {
-          0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 15px rgba(0, 163, 255, 0.35)); }
-          50% { opacity: 0.9; filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.65)); }
+
+        @keyframes nitroShimmer {
+          0% {
+            background-position: -200% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
         }
-        .animate-cyber-glow {
-          animation: cyberGlow 5s infinite ease-in-out;
+
+        .nitro-float {
+          animation: nitroFloat 4s ease-in-out infinite;
         }
-        @keyframes shimmerSweep {
-          0% { background-position: -200% 0; }
-          100% { background-position: 200% 0; }
+
+        .nitro-pulse {
+          animation: nitroPulse 2s ease-in-out infinite;
         }
-        .shimmer-blue {
+
+        .nitro-glow {
+          animation: nitroGlow 4s ease-in-out infinite;
+        }
+
+        .nitro-shimmer {
           background-size: 200% auto;
-          animation: shimmerSweep 4.5s linear infinite;
+          animation: nitroShimmer 4s linear infinite;
+        }
+
+        .nitro-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+
+        .nitro-scrollbar {
+          scrollbar-width: none;
+        }
+
+        .hero-grid {
+          background-image:
+            linear-gradient(rgba(0,163,255,.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0,163,255,.035) 1px, transparent 1px);
+          background-size: 35px 35px;
         }
       `}</style>
 
-      <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
-      <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00a3ff]/10 blur-[130px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/10 blur-[130px] rounded-full pointer-events-none" />
+      <div className="absolute inset-0 hero-grid pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
-        {/* Top badge — thin outline instead of a solid block, calmer */}
-        <div className="flex justify-center">
-          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-[#00a3ff]/25 bg-transparent">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00a3ff] opacity-60" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
-            </span>
-            <span className="text-[11px] sm:text-xs font-medium text-gray-300 tracking-wide">
-              المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
-            </span>
-            <span className="text-[10px] font-bold text-[#00e5ff] border border-[#00e5ff]/40 px-2 py-0.5 rounded-full font-tech">
-              CYBER ESPORTS
-            </span>
-          </div>
-        </div>
+      <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[420px] h-[320px] rounded-full bg-[#0066ff]/10 blur-[100px] pointer-events-none" />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 items-start">
-          {/* --- RIGHT: Copy & Store Owner Banner --- */}
-          <div className="lg:col-span-6 space-y-8 text-right">
-            <div className="flex items-center gap-4 justify-end">
-              <div className="text-right">
-                <div className="brand-mark brand-mark-lg text-white">
-                  NITRO{" "}
-                  <span
-                    className="brand-mark-games shimmer-blue"
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(100deg, #00a3ff 0%, #00e5ff 25%, #d6f7ff 50%, #00e5ff 75%, #00a3ff 100%)",
-                    }}
-                  >
-                    GAMES
-                  </span>
-                </div>
-                <div className="brand-sub mt-2">PALESTINE · ESPORTS GEAR</div>
+      <div className="absolute bottom-0 right-[-120px] w-[300px] h-[300px] rounded-full bg-[#00e5ff]/10 blur-[100px] pointer-events-none" />
+
+      {/* =========================
+          MAIN
+      ========================= */}
+
+      <div className="relative z-10 max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+
+        {/* =========================
+            MOBILE TOP BAR
+        ========================= */}
+
+        <div className="pt-4 sm:pt-7">
+
+          <div className="flex items-center justify-between gap-2">
+
+            {/* Logo */}
+
+            <div className="text-right min-w-0">
+
+              <div className="leading-none">
+
+                <span className="text-[25px] sm:text-3xl font-black italic tracking-[-1.5px] text-white">
+                  NITRO
+                </span>
+
+                <span
+                  className="text-[25px] sm:text-3xl font-black italic tracking-[-1.5px] ml-1 nitro-shimmer"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(90deg,#00a3ff,#00e5ff,#ffffff,#00e5ff,#00a3ff)",
+                    WebkitBackgroundClip: "text",
+                    WebkitTextFillColor: "transparent",
+                  }}
+                >
+                  GAMES
+                </span>
+
               </div>
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl grad-frame flex items-center justify-center flex-shrink-0">
-                <Zap className="w-8 h-8 sm:w-9 sm:h-9 text-[#00a3ff] drop-shadow-[0_0_14px_#00a3ff]" />
+
+              <div className="text-[7px] sm:text-[9px] tracking-[3px] text-[#6282a8] mt-1">
+                PALESTINE · ESPORTS GEAR
               </div>
+
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-[3.2rem] font-light text-white leading-[1.3] font-['Cairo']">
-              <span className="brand-mark brand-mark-md text-white font-normal">NITRO GAMES</span>
-              <span className="block mt-3 font-black">
-                <span className="sr-only">نيترو قيمز — </span>خياركم الأفضل في فلسطين
-              </span>
-              <span className="block text-2xl sm:text-4xl lg:text-[2.5rem] text-gray-200 mt-2 font-light">
-                للعتاد الاحترافي.. <span className="glow-cyan font-bold">ارفع مستوى لعبك!</span>
-              </span>
-            </h1>
+            {/* Owner */}
 
-            {/* الأزرار + شارة صاحب المتجر */}
-            <div className="flex flex-wrap items-center justify-end gap-3.5 pt-2">
-              {/* شارة صاحب المتجر */}
-              <div dir="ltr" className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
-                <Crown className="w-4 h-4 text-[#00e5ff] fill-[#00a3ff]/30" />
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">
-                  STORE OWNER:
-                </span>
-                <span className="text-sm font-black text-[#00e5ff] tracking-widest drop-shadow-[0_0_12px_rgba(0,229,255,0.7)] font-mono">
+            <div className="flex items-center gap-2 px-2.5 py-2 rounded-xl border border-[#00a3ff]/30 bg-[#071326]/80 backdrop-blur-md shadow-[0_0_20px_rgba(0,163,255,.08)]">
+
+              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#00a3ff] to-[#00e5ff] flex items-center justify-center">
+                <Crown className="w-3.5 h-3.5 text-[#02121f]" />
+              </div>
+
+              <div className="text-left leading-none">
+                <div className="text-[7px] text-gray-500 tracking-widest">
+                  OWNER
+                </div>
+
+                <div className="text-[11px] sm:text-xs font-black text-[#00e5ff] mt-1">
                   YamEn
-                </span>
-                <Sparkles className="w-3.5 h-3.5 text-[#00a3ff]" />
+                </div>
               </div>
 
-              {/* زر تسوق الآن */}
-              <button
-                onClick={() => scrollTo("products")}
-                className="btn-neon text-sm sm:text-base px-6 py-2.5 flex items-center gap-2 cursor-pointer group"
-              >
-                <ShoppingBag className="w-4 h-4" />
-                <span>{cfg.ctaLabel || "تسوق الآن"}</span>
-                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-              </button>
             </div>
 
-            {/* الشريط المتحرك المتصل بدون انقطاع — أبطأ وأهدأ */}
-            <div className="w-full overflow-hidden pt-4 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-              <div className="animate-marquee-infinite gap-3.5">
-                {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
-                  <div
-                    key={i}
-                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/60 rounded-xl px-4 py-2.5 text-right flex items-center gap-3 shrink-0 ml-3 transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
-                  >
-                    <div className="text-base font-black text-white font-tech flex items-center gap-2 relative z-10">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-60" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
-                      </span>
-                      {s.big} {s.icon}
-                    </div>
-                    <div className="text-[11px] text-gray-300 font-medium font-['Cairo'] relative z-10 border-r border-[#1e345b] pr-3">
-                      {s.small}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
 
-          {/* --- LEFT: Dynamic Showcase --- */}
-          <div className="lg:col-span-6 space-y-4">
-            {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
-              <div className="relative group">
-                {/* هالة خلفية متوهجة بالأزرق بالكامل */}
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-90 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
-
-                {/* برواز زجاجي فاخر بحدّ متدرّج */}
-                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/70 via-[#00a3ff]/40 to-[#0a1630]/90 shadow-[0_25px_60px_-15px_rgba(0,163,255,0.4)]">
-                  <div className="relative rounded-[22px] bg-[#040814] overflow-hidden">
-
-                    {/* شريط لمعان علوي خفيف (زجاج) */}
-                    <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/[0.06] to-transparent z-20" />
-
-                    <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
-
-                      {siteAudioUrl ? (
-                        <button
-                          onClick={toggleAudio}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer border ${
-                            isPlaying
-                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.7)] scale-105"
-                              : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
-                          }`}
-                          title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
-                        >
-                          {isPlaying ? (
-                            <>
-                              <Disc className="w-4 h-4 animate-spin text-black" />
-                              <Volume2 className="w-4 h-4 text-black animate-pulse" />
-                            </>
-                          ) : (
-                            <>
-                              <Music className="w-4 h-4 text-[#00e5ff]" />
-                              <VolumeX className="w-4 h-4 text-[#00e5ff]" />
-                            </>
-                          )}
-                        </button>
-                      ) : (
-                        <span className="text-[9px] font-tech tracking-widest text-[#3a5a8a] uppercase select-none">
-                          NITRO · GAMES
-                        </span>
-                      )}
-
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.18)]">
-                          <Radio className="w-3.5 h-3.5 text-[#00e5ff] animate-pulse" /> {cfg.badgeText}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="relative h-60 sm:h-72 w-full bg-black p-2.5">
-                      <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#122347] shadow-[inset_0_0_0_1px_rgba(0,163,255,0.08)]">
-                        <video
-                          ref={showcaseVideoRef}
-                          key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
-                          src={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
-                          autoPlay
-                          muted
-                          loop={cfg.videoUrls.length === 1}
-                          playsInline
-                          controls
-                          onEnded={() =>
-                            setShowcaseVideoIndex((i) => (i + 1) % cfg.videoUrls!.length)
-                          }
-                          className="absolute inset-0 w-full h-full object-cover rounded-xl"
-                        />
-
-                        {/* تظليل سينمائي خفيف على الحواف لعمق أكبر */}
-                        <span className="absolute inset-0 pointer-events-none rounded-xl bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.45)_100%)]" />
-
-                        {/* إطار داخلي مزدوج فاخر */}
-                        <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/40 rounded-xl pointer-events-none shadow-[inset_0_0_30px_rgba(0,163,255,0.3)]" />
-                        <span className="absolute inset-[6px] ring-1 ring-inset ring-white/[0.06] rounded-lg pointer-events-none" />
-
-                        {/* زوايا ذهبية-زرقاء فاخرة */}
-                        <span className="absolute top-2.5 right-2.5 w-5 h-5 border-t-2 border-r-2 border-[#00e5ff]/80 rounded-tr-md pointer-events-none" />
-                        <span className="absolute bottom-2.5 left-2.5 w-5 h-5 border-b-2 border-l-2 border-[#00a3ff]/80 rounded-bl-md pointer-events-none" />
-
-                        {cfg.videoUrls.length > 1 && (
-                          <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/80 text-[#00e5ff] px-2.5 py-1 rounded-md border border-[#00e5ff]/40 backdrop-blur-md">
-                            {(showcaseVideoIndex % cfg.videoUrls.length) + 1} / {cfg.videoUrls.length}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <div className="relative z-10 px-5 py-3.5 border-t border-[#142342] bg-[#060c1d]/90 backdrop-blur-md flex items-center justify-between gap-3">
-                      <span className="pointer-events-none absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[#00e5ff]/70 to-transparent" />
-                      <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo'] tracking-wide">
-                        {cfg.headline}
-                      </h3>
-                      <a
-                        href="#products"
-                        className="relative overflow-hidden flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl text-[11px] font-black px-4 py-2 text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,229,255,0.55)] hover:shadow-[0_0_28px_rgba(0,229,255,0.85)] hover:scale-[1.04] transition-all duration-300"
-                      >
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>{cfg.ctaLabel}</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-
-                {siteAudioUrl && <audio ref={audioRef} src={siteAudioUrl} loop />}
-              </div>
-            ) : cfg.enabled && active ? (
-              <div
-                className="relative group"
-                onMouseEnter={() => setPaused(true)}
-                onMouseLeave={() => setPaused(false)}
-              >
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-90 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
-
-                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
-                  <div className="rounded-[22px] bg-[#040814] overflow-hidden">
-
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
-
-                      {siteAudioUrl ? (
-                        <button
-                          onClick={toggleAudio}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer border ${
-                            isPlaying
-                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.7)] scale-105"
-                              : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
-                          }`}
-                          title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
-                        >
-                          {isPlaying ? (
-                            <>
-                              <Disc className="w-4 h-4 animate-spin text-black" />
-                              <Volume2 className="w-4 h-4 text-black animate-pulse" />
-                            </>
-                          ) : (
-                            <>
-                              <Music className="w-4 h-4 text-[#00e5ff]" />
-                              <VolumeX className="w-4 h-4 text-[#00e5ff]" />
-                            </>
-                          )}
-                        </button>
-                      ) : <div />}
-
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.18)]">
-                          <Flame className="w-3.5 h-3.5 text-[#00e5ff] fill-[#00a3ff]/40 animate-pulse" /> {cfg.badgeText}
-                        </span>
-
-                        <div className="flex items-center gap-1.5 mr-2">
-                          <button
-                            onClick={() => go(-1)}
-                            className="p-1.5 rounded-lg bg-[#0e1d3a] hover:bg-[#00a3ff] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#1d3461]"
-                            aria-label="السابق"
-                          >
-                            <ChevronRight className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => go(1)}
-                            className="p-1.5 rounded-lg bg-[#0e1d3a] hover:bg-[#00a3ff] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#1d3461]"
-                            aria-label="التالي"
-                          >
-                            <ChevronLeft className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="relative h-60 sm:h-72 w-full bg-gradient-to-b from-[#081226] via-[#040814] to-[#02050c]">
-                      <div key={active.id} className="absolute inset-0 showcase-enter">
-                        <Image
-                          src={active.image}
-                          alt={active.title}
-                          fill
-                          priority
-                          className="object-contain p-5 drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
-                        />
-                      </div>
-
-                      <span className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-lg" />
-                      <span className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#00a3ff] rounded-bl-lg" />
-
-                      <div className="absolute top-4 left-4 flex flex-col items-start gap-1">
-                        {active.originalPrice && (
-                          <span className="text-[11px] font-mono text-gray-400 line-through bg-black/70 px-2 py-0.5 rounded-md">
-                            {active.originalPrice.toLocaleString()} ₪
-                          </span>
-                        )}
-                        <span className="text-base font-black font-mono text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] px-3 py-1 rounded-lg shadow-[0_0_20px_rgba(0,163,255,0.6)]">
-                          {active.price.toLocaleString()} ₪
-                        </span>
-                      </div>
-
-                      <span className="absolute bottom-4 right-4 text-[10px] font-bold font-tech text-[#00e5ff] bg-[#061124]/90 border border-[#00e5ff]/50 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.3)]">
-                        {CATEGORIES_META.find((c) => c.id === active.category)?.name ?? active.category}
-                      </span>
-                    </div>
-
-                    <div className="px-5 py-3.5 border-t border-[#142342] bg-[#060c1d] flex items-center justify-between gap-3">
-                      <div className="min-w-0 text-right">
-                        <div className="text-[10px] font-tech text-[#00a3ff] uppercase tracking-wider">{active.brand}</div>
-                        <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
-                          {active.title}
-                        </h3>
-                      </div>
-
-                      <button
-                        onClick={() => addToCart(active, 1)}
-                        className="relative overflow-hidden flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl text-[11px] font-black px-4 py-2 text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,229,255,0.55)] hover:shadow-[0_0_28px_rgba(0,229,255,0.85)] hover:scale-[1.04] transition-all duration-300"
-                      >
-                        <ShoppingBag className="w-3.5 h-3.5" />
-                        <span>أضف للسلة</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {siteAudioUrl && <audio ref={audioRef} src={siteAudioUrl} loop />}
-              </div>
-            ) : (
-              <div className="panel rounded-2xl h-56 flex flex-col items-center justify-center gap-3 text-center border border-[#16223a]">
-                <Zap className="w-10 h-10 text-[#00a3ff]/40" />
-                <p className="text-xs text-gray-400">المربع المميز معطّل حالياً من لوحة التحكم</p>
-              </div>
-            )}
-          </div>
         </div>
+
+        {/* =========================
+            HERO INTRO
+        ========================= */}
+
+        <div className="text-center pt-7 sm:pt-12 pb-6">
+
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#00a3ff]/30 bg-[#061329]/70 text-[9px] sm:text-xs text-gray-300">
+
+            <span className="relative flex w-1.5 h-1.5">
+              <span className="absolute inset-0 rounded-full bg-[#00e5ff] animate-ping" />
+              <span className="relative rounded-full w-1.5 h-1.5 bg-[#00e5ff]" />
+            </span>
+
+            المتجر الأول لطرفيات الجيمينج في فلسطين
+
+          </div>
+
+          <h1 className="mt-5 text-[29px] sm:text-5xl font-black leading-[1.15] text-white">
+
+            العب بشكل
+            <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-[#00a3ff] via-[#00e5ff] to-white">
+              مختلف تمامًا
+            </span>
+
+          </h1>
+
+          <p className="mt-3 max-w-[350px] mx-auto text-[12px] sm:text-base leading-6 text-gray-400">
+            عتاد جيمينج احترافي، أصلي ومضمون،
+            بأسعار تناسب اللاعب الفلسطيني.
+          </p>
+
+        </div>
+
+        {/* =========================
+            MAIN SHOWCASE
+        ========================= */}
+
+        {cfg.enabled && cfg.videoUrls?.length > 0 ? (
+
+          /* =========================
+             VIDEO SHOWCASE
+          ========================= */
+
+          <div className="relative pb-6">
+
+            <div className="absolute -inset-1 rounded-[28px] bg-gradient-to-r from-[#0055ff] via-[#00e5ff] to-[#0055ff] blur-xl opacity-25" />
+
+            <div className="relative rounded-[24px] p-[1px] bg-gradient-to-br from-[#00e5ff]/70 via-[#0066ff]/30 to-[#14284b]">
+
+              <div className="rounded-[23px] overflow-hidden bg-[#030812]">
+
+                {/* Video Header */}
+
+                <div className="flex items-center justify-between px-3.5 py-3 border-b border-[#132544] bg-[#071225]">
+
+                  {siteAudioUrl ? (
+                    <button
+                      onClick={toggleAudio}
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all ${
+                        isPlaying
+                          ? "bg-[#00e5ff] text-black border-[#00e5ff]"
+                          : "bg-[#0a1830] text-[#00e5ff] border-[#00a3ff]/30"
+                      }`}
+                    >
+                      {isPlaying ? (
+                        <Volume2 className="w-4 h-4" />
+                      ) : (
+                        <Music className="w-4 h-4" />
+                      )}
+                    </button>
+                  ) : (
+                    <div />
+                  )}
+
+                  <div className="flex items-center gap-2">
+
+                    <span className="flex items-center gap-1.5 text-[9px] font-black text-[#00e5ff] px-2.5 py-1.5 rounded-lg bg-[#081a32] border border-[#00e5ff]/20">
+
+                      <Radio className="w-3 h-3 animate-pulse" />
+
+                      {cfg.badgeText}
+
+                    </span>
+
+                  </div>
+
+                </div>
+
+                {/* Video */}
+
+                <div className="p-2">
+
+                  <div className="relative aspect-[16/10] sm:aspect-video overflow-hidden rounded-[17px] bg-black border border-[#143057]">
+
+                    <video
+                      ref={showcaseVideoRef}
+                      key={
+                        cfg.videoUrls[
+                          showcaseVideoIndex % cfg.videoUrls.length
+                        ]
+                      }
+                      src={
+                        cfg.videoUrls[
+                          showcaseVideoIndex % cfg.videoUrls.length
+                        ]
+                      }
+                      autoPlay
+                      muted
+                      loop={cfg.videoUrls.length === 1}
+                      playsInline
+                      controls
+                      onEnded={() =>
+                        setShowcaseVideoIndex(
+                          (i) => (i + 1) % cfg.videoUrls.length
+                        )
+                      }
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+
+                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/40 via-transparent to-black/10" />
+
+                    {cfg.videoUrls.length > 1 && (
+                      <div className="absolute top-3 left-3 z-10 px-2.5 py-1 rounded-lg bg-black/70 backdrop-blur border border-[#00e5ff]/30 text-[#00e5ff] text-[9px]">
+                        {showcaseVideoIndex + 1} /{" "}
+                        {cfg.videoUrls.length}
+                      </div>
+                    )}
+
+                  </div>
+
+                </div>
+
+                {/* Video Footer */}
+
+                <div className="flex items-center justify-between gap-3 p-3.5">
+
+                  <div className="min-w-0 text-right">
+
+                    <div className="text-[9px] text-[#00a3ff] font-bold uppercase tracking-wider">
+                      NITRO GAMES
+                    </div>
+
+                    <h3 className="text-[12px] sm:text-sm font-bold text-white truncate mt-1">
+                      {cfg.headline}
+                    </h3>
+
+                  </div>
+
+                  <button
+                    onClick={scrollToProducts}
+                    className="shrink-0 h-10 px-4 rounded-xl bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-[#02121f] text-[10px] font-black flex items-center gap-1.5 shadow-[0_0_20px_rgba(0,229,255,.35)] active:scale-95"
+                  >
+                    <ShoppingBag className="w-3.5 h-3.5" />
+                    تسوق الآن
+                  </button>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            {siteAudioUrl && (
+              <audio ref={audioRef} src={siteAudioUrl} loop />
+            )}
+
+          </div>
+
+        ) : cfg.enabled && active ? (
+
+          /* =========================
+             PRODUCT SHOWCASE
+          ========================= */
+
+          <div
+            className="relative pb-6"
+            onMouseEnter={() => setPaused(true)}
+            onMouseLeave={() => setPaused(false)}
+          >
+
+            {/* Glow */}
+
+            <div className="absolute -inset-1 rounded-[28px] bg-gradient-to-r from-[#0055ff] via-[#00e5ff] to-[#0055ff] blur-2xl opacity-20" />
+
+            <div className="relative rounded-[25px] p-[1px] bg-gradient-to-br from-[#00e5ff]/80 via-[#0066ff]/30 to-[#13284d]">
+
+              <div className="rounded-[24px] overflow-hidden bg-[#030812]">
+
+                {/* Showcase Header */}
+
+                <div className="flex items-center justify-between p-3 border-b border-[#132544] bg-[#071225]">
+
+                  {/* Audio */}
+
+                  {siteAudioUrl ? (
+                    <button
+                      onClick={toggleAudio}
+                      className={`w-9 h-9 rounded-xl flex items-center justify-center border transition-all ${
+                        isPlaying
+                          ? "bg-[#00e5ff] text-black border-[#00e5ff]"
+                          : "bg-[#09182f] text-[#00e5ff] border-[#00a3ff]/30"
+                      }`}
+                    >
+                      {isPlaying ? (
+                        <Disc className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Music className="w-4 h-4" />
+                      )}
+                    </button>
+                  ) : (
+                    <div className="w-9" />
+                  )}
+
+                  {/* Controls */}
+
+                  <div className="flex items-center gap-2">
+
+                    <span className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#091a34] border border-[#00e5ff]/20 text-[#00e5ff] text-[9px] font-black">
+
+                      <Flame className="w-3 h-3" />
+
+                      {cfg.badgeText}
+
+                    </span>
+
+                    <button
+                      onClick={() => go(-1)}
+                      className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#0b1b35] border border-[#1a355d] text-gray-200 active:scale-90"
+                      aria-label="السابق"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+
+                    <button
+                      onClick={() => go(1)}
+                      className="w-9 h-9 rounded-xl flex items-center justify-center bg-[#0b1b35] border border-[#1a355d] text-gray-200 active:scale-90"
+                      aria-label="التالي"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+
+                  </div>
+
+                </div>
+
+                {/* =========================
+                    PRODUCT IMAGE
+                ========================= */}
+
+                <div className="relative aspect-[1/1] sm:aspect-[4/3] bg-gradient-to-b from-[#09172e] via-[#040914] to-[#02050b] overflow-hidden">
+
+                  {/* Background Glow */}
+
+                  <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[230px] h-[230px] rounded-full bg-[#006eff]/10 blur-[65px]" />
+
+                  {/* Product */}
+
+                  <div
+                    key={active.id}
+                    className="absolute inset-0 nitro-float"
+                  >
+
+                    <Image
+                      src={active.image}
+                      alt={active.title}
+                      fill
+                      priority
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                      className="object-contain p-8 sm:p-12 drop-shadow-[0_20px_35px_rgba(0,0,0,.9)]"
+                    />
+
+                  </div>
+
+                  {/* Product Counter */}
+
+                  <div className="absolute top-3 left-3 px-3 py-1.5 rounded-xl bg-black/65 backdrop-blur border border-[#00e5ff]/30 text-[#00e5ff] text-[9px] font-bold">
+                    {slide + 1} / {showcaseItems.length}
+                  </div>
+
+                  {/* HOT */}
+
+                  <div className="absolute top-3 right-3 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#100d16]/80 backdrop-blur border border-[#ff315b]/40 text-[#ff5476] text-[9px] font-black">
+
+                    <Flame className="w-3 h-3 fill-current" />
+
+                    HOT DEAL
+
+                  </div>
+
+                  {/* PRICE */}
+
+                  <div className="absolute bottom-4 left-4">
+
+                    {active.originalPrice && (
+                      <div className="text-[10px] text-gray-400 line-through mb-1 bg-black/60 px-2 py-0.5 rounded">
+                        {active.originalPrice.toLocaleString()} ₪
+                      </div>
+                    )}
+
+                    <div className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-[#02121f] shadow-[0_0_25px_rgba(0,229,255,.4)]">
+
+                      <div className="text-[9px] font-bold opacity-70">
+                        السعر
+                      </div>
+
+                      <div className="text-xl font-black font-mono leading-none">
+                        {active.price.toLocaleString()} ₪
+                      </div>
+
+                    </div>
+
+                  </div>
+
+                  {/* CATEGORY */}
+
+                  <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-[#061124]/90 border border-[#00e5ff]/30 text-[#00e5ff] text-[9px] font-bold backdrop-blur">
+
+                    {
+                      CATEGORIES_META.find(
+                        (c) => c.id === active.category
+                      )?.name ?? active.category
+                    }
+
+                  </div>
+
+                </div>
+
+                {/* =========================
+                    PRODUCT INFO
+                ========================= */}
+
+                <div className="p-4 bg-[#050c1a] border-t border-[#132544]">
+
+                  <div className="flex items-end justify-between gap-3">
+
+                    <div className="min-w-0 text-right">
+
+                      <div className="text-[9px] font-bold text-[#00a3ff] tracking-wider uppercase">
+                        {active.brand}
+                      </div>
+
+                      <h2 className="mt-1 text-sm sm:text-base font-black text-white leading-6 line-clamp-2">
+                        {active.title}
+                      </h2>
+
+                    </div>
+
+                    <button
+                      onClick={() => addToCart(active, 1)}
+                      className="shrink-0 h-11 px-4 rounded-xl bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-[#02121f] font-black text-[10px] flex items-center gap-2 shadow-[0_0_22px_rgba(0,229,255,.35)] active:scale-95 transition-transform"
+                    >
+                      <ShoppingBag className="w-4 h-4" />
+                      أضف للسلة
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+            {siteAudioUrl && (
+              <audio ref={audioRef} src={siteAudioUrl} loop />
+            )}
+
+          </div>
+
+        ) : (
+
+          <div className="rounded-2xl border border-[#132544] bg-[#050b17] py-16 flex flex-col items-center justify-center text-center">
+
+            <Sparkles className="w-10 h-10 text-[#00a3ff]/40" />
+
+            <p className="mt-3 text-xs text-gray-500">
+              المربع المميز معطّل حالياً من لوحة التحكم
+            </p>
+
+          </div>
+
+        )}
+
+        {/* =========================
+            CTA BUTTONS
+        ========================= */}
+
+        <div className="grid grid-cols-2 gap-2.5 pb-5">
+
+          <button
+            onClick={scrollToProducts}
+            className="h-12 rounded-xl bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-[#02121f] font-black text-xs flex items-center justify-center gap-2 shadow-[0_0_25px_rgba(0,229,255,.2)] active:scale-[.97]"
+          >
+            <ShoppingBag className="w-4 h-4" />
+            تسوق الآن
+            <ArrowLeft className="w-4 h-4" />
+          </button>
+
+          <button
+            onClick={scrollToProducts}
+            className="h-12 rounded-xl bg-[#071326] border border-[#1b3b69] text-white font-bold text-xs flex items-center justify-center gap-2 active:scale-[.97]"
+          >
+            تصفح المنتجات
+            <ChevronLeft className="w-4 h-4 text-[#00e5ff]" />
+          </button>
+
+        </div>
+
+        {/* =========================
+            MOBILE STATS
+        ========================= */}
+
+        <div className="pb-6">
+
+          <div className="flex gap-2.5 overflow-x-auto nitro-scrollbar snap-x">
+
+            {stats.map((stat, index) => (
+
+              <div
+                key={index}
+                className="snap-start shrink-0 w-[145px] sm:flex-1 sm:w-auto rounded-2xl border border-[#142b4e] bg-[#061022]/90 backdrop-blur-md p-3.5"
+              >
+
+                <div className="flex items-center gap-2.5">
+
+                  <div className="w-9 h-9 shrink-0 rounded-xl bg-[#071a32] border border-[#00a3ff]/20 flex items-center justify-center text-[#00e5ff]">
+                    {stat.icon}
+                  </div>
+
+                  <div className="min-w-0">
+
+                    <div className="text-sm font-black text-white font-mono">
+                      {stat.big}
+                    </div>
+
+                    <div className="text-[8px] text-gray-500 mt-0.5 whitespace-nowrap">
+                      {stat.small}
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </div>
+
+        {/* =========================
+            TRUST BAR
+        ========================= */}
+
+        <div className="pb-8">
+
+          <div className="relative overflow-hidden rounded-2xl border border-[#12305a] bg-gradient-to-r from-[#061021] via-[#08172c] to-[#061021] p-4">
+
+            <div className="flex items-center justify-center gap-2 mb-3">
+
+              <Sparkles className="w-3.5 h-3.5 text-[#00e5ff]" />
+
+              <span className="text-[9px] font-black tracking-[2px] text-[#00e5ff]">
+                WHY NITRO GAMES
+              </span>
+
+              <Sparkles className="w-3.5 h-3.5 text-[#00e5ff]" />
+
+            </div>
+
+            <div className="grid grid-cols-3 divide-x divide-[#163156] divide-x-reverse">
+
+              <div className="text-center px-2">
+
+                <ShieldCheck className="w-5 h-5 mx-auto text-[#00e5ff]" />
+
+                <div className="text-[9px] font-bold text-white mt-1.5">
+                  ضمان حقيقي
+                </div>
+
+                <div className="text-[7px] text-gray-500 mt-1">
+                  سنة كاملة
+                </div>
+
+              </div>
+
+              <div className="text-center px-2">
+
+                <CheckCircle2 className="w-5 h-5 mx-auto text-[#00e5ff]" />
+
+                <div className="text-[9px] font-bold text-white mt-1.5">
+                  أصلي 100%
+                </div>
+
+                <div className="text-[7px] text-gray-500 mt-1">
+                  منتجات موثوقة
+                </div>
+
+              </div>
+
+              <div className="text-center px-2">
+
+                <Truck className="w-5 h-5 mx-auto text-[#00e5ff]" />
+
+                <div className="text-[9px] font-bold text-white mt-1.5">
+                  شحن سريع
+                </div>
+
+                <div className="text-[7px] text-gray-500 mt-1">
+                  24 - 48 ساعة
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
       </div>
+
+      {/* =========================
+          BOTTOM GLOW
+      ========================= */}
+
+      <div className="h-[2px] bg-gradient-to-r from-transparent via-[#00a3ff] to-transparent opacity-70" />
+
     </section>
   );
 };
