@@ -112,14 +112,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const active = showcaseItems[slide];
 
   const stats = [
-    { icon: <span className="text-[#d4af37]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
-    { icon: <ShieldCheck className="w-4 h-4 text-[#f4d576]" />, big: "1 سنة", small: "ضمان حقيقي" },
-    { icon: <CheckCircle2 className="w-4 h-4 text-[#d4af37]" />, big: "100%", small: "أصلي معتمد" },
-    { icon: <Truck className="w-4 h-4 text-[#f4d576]" />, bg: "24-48h", small: "شحن سريع" },
+    { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
+    { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
+    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
+    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, bg: "24-48h", small: "شحن سريع" },
   ];
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-16 pb-24 lg:pt-20 lg:pb-32 bg-[#080603] border-b border-[#3a2f16]">
+    <section id="hero" className="relative overflow-hidden pt-16 pb-24 lg:pt-20 lg:pb-32 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
         @keyframes marqueeLoop {
           0% { transform: translateX(0%); }
@@ -134,8 +134,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           animation-play-state: paused;
         }
         @keyframes cyberGlow {
-          0%, 100% { opacity: 0.45; filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.35)); }
-          50% { opacity: 0.85; filter: drop-shadow(0 0 25px rgba(244, 213, 118, 0.6)); }
+          0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 15px rgba(0, 163, 255, 0.35)); }
+          50% { opacity: 0.9; filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.65)); }
         }
         .animate-cyber-glow {
           animation: cyberGlow 5s infinite ease-in-out;
@@ -144,28 +144,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }
         }
-        .shimmer-gold {
+        .shimmer-blue {
           background-size: 200% auto;
           animation: shimmerSweep 4.5s linear infinite;
         }
       `}</style>
 
       <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
-      <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#d4af37]/10 blur-[130px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#f4d576]/10 blur-[130px] rounded-full pointer-events-none" />
+      <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00a3ff]/10 blur-[130px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/10 blur-[130px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
         {/* Top badge — thin outline instead of a solid block, calmer */}
         <div className="flex justify-center">
-          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-[#d4af37]/25 bg-transparent">
+          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-[#00a3ff]/25 bg-transparent">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#d4af37] opacity-60" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#d4af37]" />
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00a3ff] opacity-60" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
             </span>
             <span className="text-[11px] sm:text-xs font-medium text-gray-300 tracking-wide">
               المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
             </span>
-            <span className="text-[10px] font-bold text-[#f4d576] border border-[#f4d576]/40 px-2 py-0.5 rounded-full font-tech">
+            <span className="text-[10px] font-bold text-[#00e5ff] border border-[#00e5ff]/40 px-2 py-0.5 rounded-full font-tech">
               CYBER ESPORTS
             </span>
           </div>
@@ -179,10 +179,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div className="brand-mark brand-mark-lg text-white">
                   NITRO{" "}
                   <span
-                    className="brand-mark-games shimmer-gold"
+                    className="brand-mark-games shimmer-blue"
                     style={{
                       backgroundImage:
-                        "linear-gradient(100deg, #d4af37 0%, #f4d576 25%, #fff6d8 50%, #f4d576 75%, #d4af37 100%)",
+                        "linear-gradient(100deg, #00a3ff 0%, #00e5ff 25%, #d6f7ff 50%, #00e5ff 75%, #00a3ff 100%)",
                     }}
                   >
                     GAMES
@@ -191,7 +191,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div className="brand-sub mt-2">PALESTINE · ESPORTS GEAR</div>
               </div>
               <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl grad-frame flex items-center justify-center flex-shrink-0">
-                <Zap className="w-8 h-8 sm:w-9 sm:h-9 text-[#d4af37] drop-shadow-[0_0_14px_#d4af37]" />
+                <Zap className="w-8 h-8 sm:w-9 sm:h-9 text-[#00a3ff] drop-shadow-[0_0_14px_#00a3ff]" />
               </div>
             </div>
 
@@ -208,15 +208,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             {/* الأزرار + شارة صاحب المتجر */}
             <div className="flex flex-wrap items-center justify-end gap-3.5 pt-2">
               {/* شارة صاحب المتجر */}
-              <div dir="ltr" className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#0d0a05] via-[#1a140a] to-[#0d0a05] border border-[#d4af37]/50 shadow-[0_0_25px_rgba(212,175,55,0.2)]">
-                <Crown className="w-4 h-4 text-[#d4af37] fill-[#d4af37]/30" />
+              <div dir="ltr" className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
+                <Crown className="w-4 h-4 text-amber-400 fill-amber-400/30" />
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">
                   STORE OWNER:
                 </span>
-                <span className="text-sm font-black text-[#f4d576] tracking-widest drop-shadow-[0_0_12px_rgba(244,213,118,0.7)] font-mono">
+                <span className="text-sm font-black text-[#00e5ff] tracking-widest drop-shadow-[0_0_12px_rgba(0,229,255,0.7)] font-mono">
                   YamEn
                 </span>
-                <Sparkles className="w-3.5 h-3.5 text-[#d4af37]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#00a3ff]" />
               </div>
 
               {/* زر تسوق الآن */}
@@ -236,16 +236,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
                   <div
                     key={i}
-                    className="relative group overflow-hidden bg-[#0d0a05]/90 backdrop-blur-md border border-[#3a2f16] hover:border-[#f4d576]/60 rounded-xl px-4 py-2.5 text-right flex items-center gap-3 shrink-0 ml-3 transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/60 rounded-xl px-4 py-2.5 text-right flex items-center gap-3 shrink-0 ml-3 transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
                   >
                     <div className="text-base font-black text-white font-tech flex items-center gap-2 relative z-10">
                       <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#f4d576] opacity-60" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#d4af37]" />
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-60" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
                       </span>
                       {s.big} {s.icon}
                     </div>
-                    <div className="text-[11px] text-gray-300 font-medium font-['Cairo'] relative z-10 border-r border-[#3a2f16] pr-3">
+                    <div className="text-[11px] text-gray-300 font-medium font-['Cairo'] relative z-10 border-r border-[#1e345b] pr-3">
                       {s.small}
                     </div>
                   </div>
@@ -258,20 +258,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="lg:col-span-6 space-y-4">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#d4af37] via-[#f4d576] to-[#8a6d1f] rounded-3xl blur-xl opacity-40 group-hover:opacity-70 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#00a3ff] via-[#00e5ff] to-[#7000ff] rounded-3xl blur-xl opacity-45 group-hover:opacity-80 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
 
-                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#f4d576]/50 via-[#d4af37]/25 to-[#1a140a]/80 shadow-[0_0_40px_rgba(212,175,55,0.2)]">
-                  <div className="rounded-[22px] bg-[#0a0704] overflow-hidden">
+                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
+                  <div className="rounded-[22px] bg-[#040814] overflow-hidden">
 
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#3a2f16] bg-gradient-to-r from-[#0d0a05] via-[#1a140a] to-[#0d0a05]">
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
 
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
                           className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer border ${
                             isPlaying
-                              ? "bg-gradient-to-r from-[#d4af37] to-[#f4d576] text-black border-[#f4d576] shadow-[0_0_20px_rgba(244,213,118,0.6)] scale-105"
-                              : "bg-[#120e08] border-[#d4af37]/40 text-[#f4d576] hover:border-[#f4d576]"
+                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.7)] scale-105"
+                              : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
                           }`}
                           title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
                         >
@@ -282,22 +282,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                             </>
                           ) : (
                             <>
-                              <Music className="w-4 h-4 text-[#f4d576]" />
-                              <VolumeX className="w-4 h-4 text-[#f4d576]" />
+                              <Music className="w-4 h-4 text-[#00e5ff]" />
+                              <VolumeX className="w-4 h-4 text-[#00e5ff]" />
                             </>
                           )}
                         </button>
                       ) : <div />}
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-tech font-black text-[#f4d576] flex items-center gap-1.5 bg-[#120e08] px-3 py-1 rounded-lg border border-[#f4d576]/30 shadow-[inset_0_0_10px_rgba(244,213,118,0.15)]">
-                          <Radio className="w-3.5 h-3.5 text-[#d4af37] animate-pulse" /> {cfg.badgeText}
+                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.18)]">
+                          <Radio className="w-3.5 h-3.5 text-red-500 animate-pulse" /> {cfg.badgeText}
                         </span>
                       </div>
                     </div>
 
                     <div className="relative h-60 sm:h-72 w-full bg-black p-2">
-                      <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#3a2f16]">
+                      <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#122347]">
                         <video
                           ref={showcaseVideoRef}
                           key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
@@ -313,21 +313,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           className="absolute inset-0 w-full h-full object-cover rounded-xl"
                         />
                         {cfg.videoUrls.length > 1 && (
-                          <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/80 text-[#f4d576] px-2.5 py-1 rounded-md border border-[#f4d576]/40 backdrop-blur-md">
+                          <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/80 text-[#00e5ff] px-2.5 py-1 rounded-md border border-[#00e5ff]/40 backdrop-blur-md">
                             {(showcaseVideoIndex % cfg.videoUrls.length) + 1} / {cfg.videoUrls.length}
                           </span>
                         )}
-                        <span className="absolute inset-0 ring-1 ring-inset ring-[#d4af37]/35 rounded-xl pointer-events-none shadow-[inset_0_0_30px_rgba(212,175,55,0.25)]" />
+                        <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/40 rounded-xl pointer-events-none shadow-[inset_0_0_30px_rgba(0,163,255,0.3)]" />
                       </div>
                     </div>
 
-                    <div className="px-5 py-3.5 border-t border-[#3a2f16] bg-[#0d0a05] flex items-center justify-between gap-3">
+                    <div className="px-5 py-3.5 border-t border-[#142342] bg-[#060c1d] flex items-center justify-between gap-3">
                       <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo'] tracking-wide">
                         {cfg.headline}
                       </h3>
                       <a
                         href="#products"
-                        className="btn-pink text-[11px] px-4 py-2 flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl shadow-[0_0_15px_rgba(244,213,118,0.3)]"
+                        className="btn-pink text-[11px] px-4 py-2 flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl shadow-[0_0_15px_rgba(255,0,128,0.4)]"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>{cfg.ctaLabel}</span>
@@ -344,20 +344,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 onMouseEnter={() => setPaused(true)}
                 onMouseLeave={() => setPaused(false)}
               >
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#d4af37] via-[#f4d576] to-[#8a6d1f] rounded-3xl blur-xl opacity-40 group-hover:opacity-70 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#00a3ff] via-[#00e5ff] to-[#7000ff] rounded-3xl blur-xl opacity-45 group-hover:opacity-80 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
 
-                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#f4d576]/50 via-[#d4af37]/25 to-[#1a140a]/80 shadow-[0_0_40px_rgba(212,175,55,0.2)]">
-                  <div className="rounded-[22px] bg-[#0a0704] overflow-hidden">
+                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
+                  <div className="rounded-[22px] bg-[#040814] overflow-hidden">
 
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#3a2f16] bg-gradient-to-r from-[#0d0a05] via-[#1a140a] to-[#0d0a05]">
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
 
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
                           className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer border ${
                             isPlaying
-                              ? "bg-gradient-to-r from-[#d4af37] to-[#f4d576] text-black border-[#f4d576] shadow-[0_0_20px_rgba(244,213,118,0.6)] scale-105"
-                              : "bg-[#120e08] border-[#d4af37]/40 text-[#f4d576] hover:border-[#f4d576]"
+                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.7)] scale-105"
+                              : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
                           }`}
                           title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
                         >
@@ -368,29 +368,29 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                             </>
                           ) : (
                             <>
-                              <Music className="w-4 h-4 text-[#f4d576]" />
-                              <VolumeX className="w-4 h-4 text-[#f4d576]" />
+                              <Music className="w-4 h-4 text-[#00e5ff]" />
+                              <VolumeX className="w-4 h-4 text-[#00e5ff]" />
                             </>
                           )}
                         </button>
                       ) : <div />}
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-tech font-black text-[#f4d576] flex items-center gap-1.5 bg-[#120e08] px-3 py-1 rounded-lg border border-[#f4d576]/30 shadow-[inset_0_0_10px_rgba(244,213,118,0.15)]">
-                          <Flame className="w-3.5 h-3.5 text-[#d4af37] fill-[#d4af37] animate-pulse" /> {cfg.badgeText}
+                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.18)]">
+                          <Flame className="w-3.5 h-3.5 text-red-500 fill-red-500 animate-pulse" /> {cfg.badgeText}
                         </span>
 
                         <div className="flex items-center gap-1.5 mr-2">
                           <button
                             onClick={() => go(-1)}
-                            className="p-1.5 rounded-lg bg-[#120e08] hover:bg-[#d4af37] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#3a2f16]"
+                            className="p-1.5 rounded-lg bg-[#0e1d3a] hover:bg-[#00a3ff] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#1d3461]"
                             aria-label="السابق"
                           >
                             <ChevronRight className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => go(1)}
-                            className="p-1.5 rounded-lg bg-[#120e08] hover:bg-[#d4af37] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#3a2f16]"
+                            className="p-1.5 rounded-lg bg-[#0e1d3a] hover:bg-[#00a3ff] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#1d3461]"
                             aria-label="التالي"
                           >
                             <ChevronLeft className="w-4 h-4" />
@@ -399,7 +399,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </div>
                     </div>
 
-                    <div className="relative h-60 sm:h-72 w-full bg-gradient-to-b from-[#120e08] via-[#0a0704] to-[#050402]">
+                    <div className="relative h-60 sm:h-72 w-full bg-gradient-to-b from-[#081226] via-[#040814] to-[#02050c]">
                       <div key={active.id} className="absolute inset-0 showcase-enter">
                         <Image
                           src={active.image}
@@ -410,8 +410,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         />
                       </div>
 
-                      <span className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#f4d576] rounded-tr-lg" />
-                      <span className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#d4af37] rounded-bl-lg" />
+                      <span className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-lg" />
+                      <span className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#00a3ff] rounded-bl-lg" />
 
                       <div className="absolute top-4 left-4 flex flex-col items-start gap-1">
                         {active.originalPrice && (
@@ -419,19 +419,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                             {active.originalPrice.toLocaleString()} ₪
                           </span>
                         )}
-                        <span className="text-base font-black font-mono text-[#1a1000] bg-gradient-to-r from-[#d4af37] to-[#f4d576] px-3 py-1 rounded-lg shadow-[0_0_20px_rgba(212,175,55,0.5)]">
+                        <span className="text-base font-black font-mono text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] px-3 py-1 rounded-lg shadow-[0_0_20px_rgba(0,163,255,0.6)]">
                           {active.price.toLocaleString()} ₪
                         </span>
                       </div>
 
-                      <span className="absolute bottom-4 right-4 text-[10px] font-bold font-tech text-[#f4d576] bg-[#0d0a05]/90 border border-[#f4d576]/50 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(244,213,118,0.25)]">
+                      <span className="absolute bottom-4 right-4 text-[10px] font-bold font-tech text-[#00e5ff] bg-[#061124]/90 border border-[#00e5ff]/50 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.3)]">
                         {CATEGORIES_META.find((c) => c.id === active.category)?.name ?? active.category}
                       </span>
                     </div>
 
-                    <div className="px-5 py-3.5 border-t border-[#3a2f16] bg-[#0d0a05] flex items-center justify-between gap-3">
+                    <div className="px-5 py-3.5 border-t border-[#142342] bg-[#060c1d] flex items-center justify-between gap-3">
                       <div className="min-w-0 text-right">
-                        <div className="text-[10px] font-tech text-[#d4af37] uppercase tracking-wider">{active.brand}</div>
+                        <div className="text-[10px] font-tech text-[#00a3ff] uppercase tracking-wider">{active.brand}</div>
                         <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
                           {active.title}
                         </h3>
@@ -439,7 +439,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                       <button
                         onClick={() => addToCart(active, 1)}
-                        className="btn-pink text-[11px] px-4 py-2 flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl shadow-[0_0_15px_rgba(244,213,118,0.3)]"
+                        className="btn-pink text-[11px] px-4 py-2 flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl shadow-[0_0_15px_rgba(255,0,128,0.4)]"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>أضف للسلة</span>
@@ -451,8 +451,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {siteAudioUrl && <audio ref={audioRef} src={siteAudioUrl} loop />}
               </div>
             ) : (
-              <div className="panel rounded-2xl h-56 flex flex-col items-center justify-center gap-3 text-center border border-[#3a2f16]">
-                <Zap className="w-10 h-10 text-[#d4af37]/40" />
+              <div className="panel rounded-2xl h-56 flex flex-col items-center justify-center gap-3 text-center border border-[#16223a]">
+                <Zap className="w-10 h-10 text-[#00a3ff]/40" />
                 <p className="text-xs text-gray-400">المربع المميز معطّل حالياً من لوحة التحكم</p>
               </div>
             )}
