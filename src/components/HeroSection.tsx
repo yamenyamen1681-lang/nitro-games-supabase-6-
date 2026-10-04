@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { Product, ShowcaseConfig, DEFAULT_SHOWCASE, CATEGORIES_META } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
@@ -13,10 +13,14 @@ import {
   Zap,
   CheckCircle2,
   ShoppingBag,
-  Sparkles,
   Flame,
-  Music,
   Volume2,
+  VolumeX,
+  Crown,
+  Radio,
+  Sparkles,
+  Music,
+  Disc,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -28,28 +32,22 @@ interface HeroSectionProps {
 export const HeroSection: React.FC<HeroSectionProps> = ({
   products,
   showcase,
-  onCategorySelect,
 }) => {
   const { addToCart } = useCart();
   const cfg = showcase ?? DEFAULT_SHOWCASE;
 
   const [siteAudioUrl, setSiteAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
-  const showcaseVideoRef = React.useRef<HTMLVideoElement | null>(null);
+  const showcaseVideoRef = useRef<HTMLVideoElement | null>(null);
 
   useEffect(() => {
     const vid = showcaseVideoRef.current;
     if (!vid) return;
-    // Force playback whenever the active video changes — some browsers don't
-    // reliably honor the `autoPlay` attribute on a remounted <video> element.
     const playPromise = vid.play();
     if (playPromise && typeof playPromise.catch === "function") {
-      playPromise.catch(() => {
-        /* Autoplay can still be blocked in some contexts — the visible
-           play button lets the visitor start it manually in that case. */
-      });
+      playPromise.catch(() => {});
     }
   }, [showcaseVideoIndex, cfg.videoUrls]);
 
@@ -80,7 +78,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Resolve showcase items: admin-picked order first, fallback to first 6 products
   const showcaseItems = React.useMemo(() => {
     if (cfg.productIds.length > 0) {
       const picked = cfg.productIds
@@ -108,43 +105,88 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     return () => clearInterval(t);
   }, [cfg.autoPlay, cfg.intervalMs, paused, go, showcaseItems.length]);
 
-  // Keep index in range when admin changes the list
   useEffect(() => {
     if (slide >= showcaseItems.length) setSlide(0);
   }, [showcaseItems.length, slide]);
 
   const active = showcaseItems[slide];
 
+  const stats = [
+    { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
+    { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
+    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
+    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, bg: "24-48h", small: "شحن سريع" },
+  ];
+
   return (
-    <section id="hero" className="relative overflow-hidden pt-10 pb-16 lg:pt-14 lg:pb-24 bg-[#05070d] border-b border-[#16223a]">
+    <section id="hero" className="relative overflow-hidden pt-16 pb-24 lg:pt-20 lg:pb-32 bg-[#03060f] border-b border-[#16223a]">
+      <style>{`
+        @keyframes marqueeLoop {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(50%); }
+        }
+        .animate-marquee-infinite {
+          display: flex;
+          width: max-content;
+          animation: marqueeLoop 32s linear infinite;
+        }
+        .animate-marquee-infinite:hover {
+          animation-play-state: paused;
+        }
+        @keyframes cyberGlow {
+          0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 15px rgba(0, 163, 255, 0.35)); }
+          50% { opacity: 0.9; filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.65)); }
+        }
+        .animate-cyber-glow {
+          animation: cyberGlow 5s infinite ease-in-out;
+        }
+        @keyframes shimmerSweep {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        .shimmer-blue {
+          background-size: 200% auto;
+          animation: shimmerSweep 4.5s linear infinite;
+        }
+      `}</style>
+
       <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
       <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00a3ff]/10 blur-[130px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/10 blur-[130px] rounded-full pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Top badge */}
-        <div className="flex justify-center mb-8">
-          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full panel border-[#00a3ff]/30">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00a3ff] opacity-75" />
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00a3ff]" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
+        {/* Top badge — thin outline instead of a solid block, calmer */}
+        <div className="flex justify-center">
+          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-[#00a3ff]/25 bg-transparent">
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00a3ff] opacity-60" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
             </span>
-            <span className="text-[11px] sm:text-xs font-bold text-gray-200">
+            <span className="text-[11px] sm:text-xs font-medium text-gray-300 tracking-wide">
               المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
             </span>
-            <span className="text-[10px] font-black bg-[#00e5ff] text-[#02121f] px-2 py-0.5 rounded-full font-tech">
+            <span className="text-[10px] font-bold text-[#00e5ff] border border-[#00e5ff]/40 px-2 py-0.5 rounded-full font-tech">
               CYBER ESPORTS
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          {/* --- RIGHT: Copy --- */}
-          <div className="lg:col-span-6 space-y-6 text-right">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 items-start">
+          {/* --- RIGHT: Copy & Store Owner Banner --- */}
+          <div className="lg:col-span-6 space-y-8 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
                 <div className="brand-mark brand-mark-lg text-white">
-                  NITRO <span className="brand-mark-games">GAMES</span>
+                  NITRO{" "}
+                  <span
+                    className="brand-mark-games shimmer-blue"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(100deg, #00a3ff 0%, #00e5ff 25%, #d6f7ff 50%, #00e5ff 75%, #00a3ff 100%)",
+                    }}
+                  >
+                    GAMES
+                  </span>
                 </div>
                 <div className="brand-sub mt-2">PALESTINE · ESPORTS GEAR</div>
               </div>
@@ -153,82 +195,118 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-[3.2rem] font-black text-white leading-[1.25] font-['Cairo']">
-              <span className="brand-mark brand-mark-md text-white">NITRO GAMES</span>
-              <span className="block mt-2">
+            <h1 className="text-3xl sm:text-5xl lg:text-[3.2rem] font-light text-white leading-[1.3] font-['Cairo']">
+              <span className="brand-mark brand-mark-md text-white font-normal">NITRO GAMES</span>
+              <span className="block mt-3 font-black">
                 <span className="sr-only">نيترو قيمز — </span>خياركم الأفضل في فلسطين
               </span>
-              <span className="block text-2xl sm:text-4xl lg:text-[2.5rem] text-gray-100 mt-1.5">
-                للعتاد الاحترافي.. <span className="glow-cyan">ارفع مستوى لعبك!</span>
+              <span className="block text-2xl sm:text-4xl lg:text-[2.5rem] text-gray-200 mt-2 font-light">
+                للعتاد الاحترافي.. <span className="glow-cyan font-bold">ارفع مستوى لعبك!</span>
               </span>
             </h1>
 
-            <p className="text-sm sm:text-base text-gray-300 max-w-xl leading-relaxed">
-              توصيل لكافة مناطق فلسطين والداخل المحتل 🚚 | ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
-            </p>
+            {/* الأزرار + شارة صاحب المتجر */}
+            <div className="flex flex-wrap items-center justify-end gap-3.5 pt-2">
+              {/* شارة صاحب المتجر */}
+              <div dir="ltr" className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
+                <Crown className="w-4 h-4 text-[#00e5ff] fill-[#00a3ff]/30" />
+                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">
+                  STORE OWNER:
+                </span>
+                <span className="text-sm font-black text-[#00e5ff] tracking-widest drop-shadow-[0_0_12px_rgba(0,229,255,0.7)] font-mono">
+                  YamEn
+                </span>
+                <Sparkles className="w-3.5 h-3.5 text-[#00a3ff]" />
+              </div>
 
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00a3ff]/40 bg-[#00a3ff]/5 w-fit">
-              <span className="text-base leading-none">👑</span>
-              <span className="text-xs sm:text-sm font-tech text-gray-300 tracking-wide">
-                STORE OWNER:
-              </span>
-              <span className="text-xs sm:text-sm font-black font-tech text-[#00e5ff]">
-                YamEn
-              </span>
-              <Sparkles className="w-3.5 h-3.5 text-[#00a3ff]" />
-            </div>
-
-            <div className="flex flex-wrap items-center gap-3.5">
+              {/* زر تسوق الآن */}
               <button
                 onClick={() => scrollTo("products")}
-                className="btn-neon text-sm sm:text-base px-7 py-3.5 flex items-center gap-2.5 cursor-pointer group"
+                className="btn-neon text-sm sm:text-base px-6 py-2.5 flex items-center gap-2 cursor-pointer group"
               >
-                <ShoppingBag className="w-5 h-5" />
+                <ShoppingBag className="w-4 h-4" />
                 <span>{cfg.ctaLabel || "تسوق الآن"}</span>
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               </button>
-
-              <button
-                onClick={() => scrollTo("categories")}
-                className="btn-ghost text-sm sm:text-base px-6 py-3.5 flex items-center gap-2 cursor-pointer"
-              >
-                <Sparkles className="w-4 h-4 text-[#00e5ff]" />
-                <span>الأقسام الخمسة</span>
-              </button>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-2">
-              {[
-                { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
-                { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
-                { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
-                { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
-              ].map((s, i) => (
-                <div key={i} className="panel rounded-xl px-3 py-2.5 text-right">
-                  <div className="text-base font-black text-white font-tech flex items-center justify-end gap-1.5">
-                    {s.big} {s.icon}
+            {/* الشريط المتحرك المتصل بدون انقطاع — أبطأ وأهدأ */}
+            <div className="w-full overflow-hidden pt-4 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+              <div className="animate-marquee-infinite gap-3.5">
+                {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
+                  <div
+                    key={i}
+                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/60 rounded-xl px-4 py-2.5 text-right flex items-center gap-3 shrink-0 ml-3 transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+                  >
+                    <div className="text-base font-black text-white font-tech flex items-center gap-2 relative z-10">
+                      <span className="relative flex h-2 w-2">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-60" />
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
+                      </span>
+                      {s.big} {s.icon}
+                    </div>
+                    <div className="text-[11px] text-gray-300 font-medium font-['Cairo'] relative z-10 border-r border-[#1e345b] pr-3">
+                      {s.small}
+                    </div>
                   </div>
-                  <div className="text-[10px] text-gray-400 mt-0.5">{s.small}</div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
 
-          {/* --- LEFT: Admin-controlled Dynamic Showcase --- */}
-          <div className="lg:col-span-6">
+          {/* --- LEFT: Dynamic Showcase --- */}
+          <div className="lg:col-span-6 space-y-4">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
-              <div className="relative">
-                <div className="absolute -inset-6 bg-gradient-to-tr from-[#00a3ff]/15 via-transparent to-[#00e5ff]/15 blur-2xl rounded-full pointer-events-none" />
-                <div className="relative grad-frame p-1.5">
-                  <div className="rounded-[16px] bg-[#080d18] overflow-hidden">
-                    <div className="flex items-center px-4 py-2.5 border-b border-[#16223a] bg-[#080d18]">
-                      <span className="text-[10px] font-tech text-[#00e5ff] flex items-center gap-1">
-                        <Flame className="w-3 h-3" /> {cfg.badgeText}
-                      </span>
+              <div className="relative group">
+                {/* هالة خلفية متوهجة بالأزرق بالكامل */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-90 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
+
+                {/* برواز زجاجي فاخر بحدّ متدرّج */}
+                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/70 via-[#00a3ff]/40 to-[#0a1630]/90 shadow-[0_25px_60px_-15px_rgba(0,163,255,0.4)]">
+                  <div className="relative rounded-[22px] bg-[#040814] overflow-hidden">
+
+                    {/* شريط لمعان علوي خفيف (زجاج) */}
+                    <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/[0.06] to-transparent z-20" />
+
+                    <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
+
+                      {siteAudioUrl ? (
+                        <button
+                          onClick={toggleAudio}
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer border ${
+                            isPlaying
+                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.7)] scale-105"
+                              : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
+                          }`}
+                          title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
+                        >
+                          {isPlaying ? (
+                            <>
+                              <Disc className="w-4 h-4 animate-spin text-black" />
+                              <Volume2 className="w-4 h-4 text-black animate-pulse" />
+                            </>
+                          ) : (
+                            <>
+                              <Music className="w-4 h-4 text-[#00e5ff]" />
+                              <VolumeX className="w-4 h-4 text-[#00e5ff]" />
+                            </>
+                          )}
+                        </button>
+                      ) : (
+                        <span className="text-[9px] font-tech tracking-widest text-[#3a5a8a] uppercase select-none">
+                          NITRO · GAMES
+                        </span>
+                      )}
+
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.18)]">
+                          <Radio className="w-3.5 h-3.5 text-[#00e5ff] animate-pulse" /> {cfg.badgeText}
+                        </span>
+                      </div>
                     </div>
 
-                    <div className="relative h-64 sm:h-80 w-full bg-black p-2">
-                      <div className="relative w-full h-full rounded-2xl overflow-hidden">
+                    <div className="relative h-60 sm:h-72 w-full bg-black p-2.5">
+                      <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#122347] shadow-[inset_0_0_0_1px_rgba(0,163,255,0.08)]">
                         <video
                           ref={showcaseVideoRef}
                           key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
@@ -241,25 +319,36 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           onEnded={() =>
                             setShowcaseVideoIndex((i) => (i + 1) % cfg.videoUrls!.length)
                           }
-                          className="absolute inset-0 w-full h-full object-cover rounded-2xl"
+                          className="absolute inset-0 w-full h-full object-cover rounded-xl"
                         />
+
+                        {/* تظليل سينمائي خفيف على الحواف لعمق أكبر */}
+                        <span className="absolute inset-0 pointer-events-none rounded-xl bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.45)_100%)]" />
+
+                        {/* إطار داخلي مزدوج فاخر */}
+                        <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/40 rounded-xl pointer-events-none shadow-[inset_0_0_30px_rgba(0,163,255,0.3)]" />
+                        <span className="absolute inset-[6px] ring-1 ring-inset ring-white/[0.06] rounded-lg pointer-events-none" />
+
+                        {/* زوايا ذهبية-زرقاء فاخرة */}
+                        <span className="absolute top-2.5 right-2.5 w-5 h-5 border-t-2 border-r-2 border-[#00e5ff]/80 rounded-tr-md pointer-events-none" />
+                        <span className="absolute bottom-2.5 left-2.5 w-5 h-5 border-b-2 border-l-2 border-[#00a3ff]/80 rounded-bl-md pointer-events-none" />
+
                         {cfg.videoUrls.length > 1 && (
-                          <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/70 text-[#00e5ff] px-2 py-0.5 rounded-md border border-[#00e5ff]/30">
-                            {(showcaseVideoIndex % cfg.videoUrls.length) + 1}/{cfg.videoUrls.length}
+                          <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/80 text-[#00e5ff] px-2.5 py-1 rounded-md border border-[#00e5ff]/40 backdrop-blur-md">
+                            {(showcaseVideoIndex % cfg.videoUrls.length) + 1} / {cfg.videoUrls.length}
                           </span>
                         )}
-                        <span className="absolute inset-0 bg-gradient-to-b from-[#00a3ff]/15 via-transparent to-[#00a3ff]/20 pointer-events-none mix-blend-overlay rounded-2xl" />
-                        <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/50 rounded-2xl pointer-events-none shadow-[inset_0_0_25px_rgba(0,163,255,0.25)]" />
                       </div>
                     </div>
 
-                    <div className="px-4 py-3.5 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
-                      <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
+                    <div className="relative z-10 px-5 py-3.5 border-t border-[#142342] bg-[#060c1d]/90 backdrop-blur-md flex items-center justify-between gap-3">
+                      <span className="pointer-events-none absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[#00e5ff]/70 to-transparent" />
+                      <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo'] tracking-wide">
                         {cfg.headline}
                       </h3>
                       <a
                         href="#products"
-                        className="btn-pink text-[11px] px-3.5 py-2 flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                        className="relative overflow-hidden flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl text-[11px] font-black px-4 py-2 text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,229,255,0.55)] hover:shadow-[0_0_28px_rgba(0,229,255,0.85)] hover:scale-[1.04] transition-all duration-300"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>{cfg.ctaLabel}</span>
@@ -268,126 +357,102 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   </div>
                 </div>
 
-                {siteAudioUrl && (
-                  <>
-                    <audio ref={audioRef} src={siteAudioUrl} loop />
-                    <button
-                      onClick={toggleAudio}
-                      className={`absolute -top-4 left-6 z-10 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 ${
-                        isPlaying
-                          ? "bg-[#00a3ff] text-black"
-                          : "bg-[#080d18] border border-[#00a3ff]/50 text-[#00a3ff]"
-                      }`}
-                      title={isPlaying ? "إيقاف الموسيقى" : "تشغيل موسيقى الموقع"}
-                    >
-                      {isPlaying ? <Volume2 className="w-4 h-4" /> : <Music className="w-4 h-4" />}
-                    </button>
-                  </>
-                )}
-
-                <div className="hidden sm:flex absolute -bottom-4 right-6 items-center gap-2 px-3 py-1.5 rounded-xl panel border-[#00a3ff]/40 animate-floaty">
-                  <Zap className="w-3.5 h-3.5 text-[#00a3ff]" />
-                  <span className="text-[10px] font-bold text-gray-200">{cfg.headline}</span>
-                </div>
+                {siteAudioUrl && <audio ref={audioRef} src={siteAudioUrl} loop />}
               </div>
             ) : cfg.enabled && active ? (
               <div
-                className="relative"
+                className="relative group"
                 onMouseEnter={() => setPaused(true)}
                 onMouseLeave={() => setPaused(false)}
               >
-                <div className="absolute -inset-6 bg-gradient-to-tr from-[#00a3ff]/15 via-transparent to-[#00e5ff]/15 blur-2xl rounded-full pointer-events-none" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-90 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
 
-                {siteAudioUrl && (
-                  <>
-                    <audio ref={audioRef} src={siteAudioUrl} loop />
-                    <button
-                      onClick={toggleAudio}
-                      className={`absolute -top-4 left-6 z-10 w-9 h-9 rounded-full flex items-center justify-center shadow-lg transition-all hover:scale-110 ${
-                        isPlaying
-                          ? "bg-[#00a3ff] text-black"
-                          : "bg-[#080d18] border border-[#00a3ff]/50 text-[#00a3ff]"
-                      }`}
-                      title={isPlaying ? "إيقاف الموسيقى" : "تشغيل موسيقى الموقع"}
-                    >
-                      {isPlaying ? <Volume2 className="w-4 h-4" /> : <Music className="w-4 h-4" />}
-                    </button>
-                  </>
-                )}
+                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
+                  <div className="rounded-[22px] bg-[#040814] overflow-hidden">
 
-                <div className="relative grad-frame p-1.5">
-                  <div className="rounded-[16px] bg-[#080d18] overflow-hidden">
-                    {/* Top bar */}
-                    <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#16223a] bg-[#080d18]">
-                      <div className="flex items-center gap-1.5">
-                        {showcaseItems.map((_, i) => (
-                          <button
-                            key={i}
-                            onClick={() => setSlide(i)}
-                            aria-label={`صورة ${i + 1}`}
-                            className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                              i === slide ? "w-6 bg-[#00a3ff]" : "w-1.5 bg-[#22375a]"
-                            }`}
-                          />
-                        ))}
-                      </div>
+                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
+
+                      {siteAudioUrl ? (
+                        <button
+                          onClick={toggleAudio}
+                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer border ${
+                            isPlaying
+                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.7)] scale-105"
+                              : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
+                          }`}
+                          title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
+                        >
+                          {isPlaying ? (
+                            <>
+                              <Disc className="w-4 h-4 animate-spin text-black" />
+                              <Volume2 className="w-4 h-4 text-black animate-pulse" />
+                            </>
+                          ) : (
+                            <>
+                              <Music className="w-4 h-4 text-[#00e5ff]" />
+                              <VolumeX className="w-4 h-4 text-[#00e5ff]" />
+                            </>
+                          )}
+                        </button>
+                      ) : <div />}
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-tech text-[#00e5ff] flex items-center gap-1">
-                          <Flame className="w-3 h-3" /> {cfg.badgeText}
+                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.18)]">
+                          <Flame className="w-3.5 h-3.5 text-[#00e5ff] fill-[#00a3ff]/40 animate-pulse" /> {cfg.badgeText}
                         </span>
-                        <button
-                          onClick={() => go(-1)}
-                          className="p-1 rounded-lg bg-[#152034] hover:bg-[#00a3ff] hover:text-black text-gray-300 transition-colors cursor-pointer"
-                          aria-label="السابق"
-                        >
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
-                        <button
-                          onClick={() => go(1)}
-                          className="p-1 rounded-lg bg-[#152034] hover:bg-[#00a3ff] hover:text-black text-gray-300 transition-colors cursor-pointer"
-                          aria-label="التالي"
-                        >
-                          <ChevronLeft className="w-3.5 h-3.5" />
-                        </button>
+
+                        <div className="flex items-center gap-1.5 mr-2">
+                          <button
+                            onClick={() => go(-1)}
+                            className="p-1.5 rounded-lg bg-[#0e1d3a] hover:bg-[#00a3ff] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#1d3461]"
+                            aria-label="السابق"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => go(1)}
+                            className="p-1.5 rounded-lg bg-[#0e1d3a] hover:bg-[#00a3ff] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#1d3461]"
+                            aria-label="التالي"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Image */}
-                    <div className="relative h-64 sm:h-80 w-full bg-gradient-to-b from-[#0d1524] to-[#05070d]">
+                    <div className="relative h-60 sm:h-72 w-full bg-gradient-to-b from-[#081226] via-[#040814] to-[#02050c]">
                       <div key={active.id} className="absolute inset-0 showcase-enter">
                         <Image
                           src={active.image}
                           alt={active.title}
                           fill
                           priority
-                          className="object-contain p-6"
+                          className="object-contain p-5 drop-shadow-[0_10px_20px_rgba(0,0,0,0.8)]"
                         />
                       </div>
 
-                      <span className="absolute top-3 right-3 w-5 h-5 border-t-2 border-r-2 border-[#00a3ff]/60 rounded-tr-md" />
-                      <span className="absolute bottom-3 left-3 w-5 h-5 border-b-2 border-l-2 border-[#00e5ff]/60 rounded-bl-md" />
+                      <span className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-lg" />
+                      <span className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#00a3ff] rounded-bl-lg" />
 
-                      <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5">
+                      <div className="absolute top-4 left-4 flex flex-col items-start gap-1">
                         {active.originalPrice && (
-                          <span className="text-[10px] font-mono text-gray-400 line-through bg-black/60 px-2 py-0.5 rounded">
+                          <span className="text-[11px] font-mono text-gray-400 line-through bg-black/70 px-2 py-0.5 rounded-md">
                             {active.originalPrice.toLocaleString()} ₪
                           </span>
                         )}
-                        <span className="text-lg font-black font-mono text-[#02121f] bg-[#00a3ff] px-2.5 py-1 rounded-lg shadow-[0_0_20px_rgba(0,163,255,.5)]">
+                        <span className="text-base font-black font-mono text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] px-3 py-1 rounded-lg shadow-[0_0_20px_rgba(0,163,255,0.6)]">
                           {active.price.toLocaleString()} ₪
                         </span>
                       </div>
 
-                      <span className="absolute bottom-3 right-3 text-[10px] font-bold font-tech text-[#00e5ff] bg-black/70 border border-[#00e5ff]/40 px-2.5 py-1 rounded-full">
+                      <span className="absolute bottom-4 right-4 text-[10px] font-bold font-tech text-[#00e5ff] bg-[#061124]/90 border border-[#00e5ff]/50 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.3)]">
                         {CATEGORIES_META.find((c) => c.id === active.category)?.name ?? active.category}
                       </span>
                     </div>
 
-                    {/* Bottom info */}
-                    <div className="px-4 py-3.5 border-t border-[#16223a] bg-[#080d18] flex items-center justify-between gap-3">
+                    <div className="px-5 py-3.5 border-t border-[#142342] bg-[#060c1d] flex items-center justify-between gap-3">
                       <div className="min-w-0 text-right">
-                        <div className="text-[10px] font-tech text-[#00a3ff] uppercase">{active.brand}</div>
+                        <div className="text-[10px] font-tech text-[#00a3ff] uppercase tracking-wider">{active.brand}</div>
                         <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
                           {active.title}
                         </h3>
@@ -395,7 +460,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                       <button
                         onClick={() => addToCart(active, 1)}
-                        className="btn-pink text-[11px] px-3.5 py-2 flex items-center gap-1.5 cursor-pointer whitespace-nowrap"
+                        className="relative overflow-hidden flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl text-[11px] font-black px-4 py-2 text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,229,255,0.55)] hover:shadow-[0_0_28px_rgba(0,229,255,0.85)] hover:scale-[1.04] transition-all duration-300"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>أضف للسلة</span>
@@ -404,58 +469,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   </div>
                 </div>
 
-                <div className="hidden sm:flex absolute -bottom-4 right-6 items-center gap-2 px-3 py-1.5 rounded-xl panel border-[#00a3ff]/40 animate-floaty">
-                  <Zap className="w-3.5 h-3.5 text-[#00a3ff]" />
-                  <span className="text-[10px] font-bold text-gray-200">{cfg.headline}</span>
-                </div>
+                {siteAudioUrl && <audio ref={audioRef} src={siteAudioUrl} loop />}
               </div>
             ) : (
-              <div className="panel rounded-2xl h-64 flex flex-col items-center justify-center gap-3 text-center">
+              <div className="panel rounded-2xl h-56 flex flex-col items-center justify-center gap-3 text-center border border-[#16223a]">
                 <Zap className="w-10 h-10 text-[#00a3ff]/40" />
                 <p className="text-xs text-gray-400">المربع المميز معطّل حالياً من لوحة التحكم</p>
               </div>
             )}
-          </div>
-        </div>
-
-        {/* 5 Categories */}
-        <div id="hero-categories" className="pt-12">
-          <div className="text-[11px] font-tech text-gray-400 uppercase tracking-[0.2em] mb-3.5 flex items-center justify-center gap-3">
-            <span className="w-10 h-px bg-gradient-to-l from-[#00a3ff]/50 to-transparent" />
-            الأقسام الخمسة
-            <span className="w-10 h-px bg-gradient-to-r from-[#00e5ff]/50 to-transparent" />
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-            {CATEGORIES_META.map((c, i) => {
-              const count = products.filter((p) => p.category === c.id).length;
-              return (
-                <button
-                  key={c.id}
-                  onClick={() => {
-                    onCategorySelect?.(c.id);
-                    scrollTo("products");
-                  }}
-                  className="group panel rounded-2xl px-4 py-4 text-right cursor-pointer flex items-center justify-between gap-3"
-                >
-                  <div>
-                    <div className="text-sm font-black text-white group-hover:text-[#00a3ff] transition-colors font-['Cairo']">
-                      {c.name}
-                    </div>
-                    <div className="text-[10px] text-gray-400 font-tech mt-0.5">{count} منتج</div>
-                  </div>
-                  <span
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center text-xs font-tech ${
-                      i % 2 === 0
-                        ? "bg-[#00a3ff]/10 text-[#00a3ff] border border-[#00a3ff]/30"
-                        : "bg-[#00e5ff]/10 text-[#00e5ff] border border-[#00e5ff]/30"
-                    } group-hover:scale-110 transition-transform`}
-                  >
-                    0{i + 1}
-                  </span>
-                </button>
-              );
-            })}
           </div>
         </div>
       </div>
