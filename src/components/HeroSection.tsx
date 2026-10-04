@@ -209,7 +209,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="flex flex-wrap items-center justify-end gap-3.5 pt-2">
               {/* شارة صاحب المتجر */}
               <div dir="ltr" className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
-                <Crown className="w-4 h-4 text-amber-400 fill-amber-400/30" />
+                <Crown className="w-4 h-4 text-[#00e5ff] fill-[#00a3ff]/30" />
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">
                   STORE OWNER:
                 </span>
@@ -258,12 +258,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="lg:col-span-6 space-y-4">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#00a3ff] via-[#00e5ff] to-[#7000ff] rounded-3xl blur-xl opacity-45 group-hover:opacity-80 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
+                {/* هالة خلفية متوهجة بالأزرق بالكامل */}
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-90 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
 
-                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
-                  <div className="rounded-[22px] bg-[#040814] overflow-hidden">
+                {/* برواز زجاجي فاخر بحدّ متدرّج */}
+                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/70 via-[#00a3ff]/40 to-[#0a1630]/90 shadow-[0_25px_60px_-15px_rgba(0,163,255,0.4)]">
+                  <div className="relative rounded-[22px] bg-[#040814] overflow-hidden">
 
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
+                    {/* شريط لمعان علوي خفيف (زجاج) */}
+                    <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/[0.06] to-transparent z-20" />
+
+                    <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
 
                       {siteAudioUrl ? (
                         <button
@@ -287,17 +292,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                             </>
                           )}
                         </button>
-                      ) : <div />}
+                      ) : (
+                        <span className="text-[9px] font-tech tracking-widest text-[#3a5a8a] uppercase select-none">
+                          NITRO · GAMES
+                        </span>
+                      )}
 
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.18)]">
-                          <Radio className="w-3.5 h-3.5 text-red-500 animate-pulse" /> {cfg.badgeText}
+                          <Radio className="w-3.5 h-3.5 text-[#00e5ff] animate-pulse" /> {cfg.badgeText}
                         </span>
                       </div>
                     </div>
 
-                    <div className="relative h-60 sm:h-72 w-full bg-black p-2">
-                      <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#122347]">
+                    <div className="relative h-60 sm:h-72 w-full bg-black p-2.5">
+                      <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#122347] shadow-[inset_0_0_0_1px_rgba(0,163,255,0.08)]">
                         <video
                           ref={showcaseVideoRef}
                           key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
@@ -312,22 +321,34 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           }
                           className="absolute inset-0 w-full h-full object-cover rounded-xl"
                         />
+
+                        {/* تظليل سينمائي خفيف على الحواف لعمق أكبر */}
+                        <span className="absolute inset-0 pointer-events-none rounded-xl bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.45)_100%)]" />
+
+                        {/* إطار داخلي مزدوج فاخر */}
+                        <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/40 rounded-xl pointer-events-none shadow-[inset_0_0_30px_rgba(0,163,255,0.3)]" />
+                        <span className="absolute inset-[6px] ring-1 ring-inset ring-white/[0.06] rounded-lg pointer-events-none" />
+
+                        {/* زوايا ذهبية-زرقاء فاخرة */}
+                        <span className="absolute top-2.5 right-2.5 w-5 h-5 border-t-2 border-r-2 border-[#00e5ff]/80 rounded-tr-md pointer-events-none" />
+                        <span className="absolute bottom-2.5 left-2.5 w-5 h-5 border-b-2 border-l-2 border-[#00a3ff]/80 rounded-bl-md pointer-events-none" />
+
                         {cfg.videoUrls.length > 1 && (
                           <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/80 text-[#00e5ff] px-2.5 py-1 rounded-md border border-[#00e5ff]/40 backdrop-blur-md">
                             {(showcaseVideoIndex % cfg.videoUrls.length) + 1} / {cfg.videoUrls.length}
                           </span>
                         )}
-                        <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/40 rounded-xl pointer-events-none shadow-[inset_0_0_30px_rgba(0,163,255,0.3)]" />
                       </div>
                     </div>
 
-                    <div className="px-5 py-3.5 border-t border-[#142342] bg-[#060c1d] flex items-center justify-between gap-3">
+                    <div className="relative z-10 px-5 py-3.5 border-t border-[#142342] bg-[#060c1d]/90 backdrop-blur-md flex items-center justify-between gap-3">
+                      <span className="pointer-events-none absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[#00e5ff]/70 to-transparent" />
                       <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo'] tracking-wide">
                         {cfg.headline}
                       </h3>
                       <a
                         href="#products"
-                        className="btn-pink text-[11px] px-4 py-2 flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl shadow-[0_0_15px_rgba(255,0,128,0.4)]"
+                        className="relative overflow-hidden flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl text-[11px] font-black px-4 py-2 text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,229,255,0.55)] hover:shadow-[0_0_28px_rgba(0,229,255,0.85)] hover:scale-[1.04] transition-all duration-300"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>{cfg.ctaLabel}</span>
@@ -344,7 +365,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 onMouseEnter={() => setPaused(true)}
                 onMouseLeave={() => setPaused(false)}
               >
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#00a3ff] via-[#00e5ff] to-[#7000ff] rounded-3xl blur-xl opacity-45 group-hover:opacity-80 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-90 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
 
                 <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
                   <div className="rounded-[22px] bg-[#040814] overflow-hidden">
@@ -377,7 +398,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                       <div className="flex items-center gap-2">
                         <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.18)]">
-                          <Flame className="w-3.5 h-3.5 text-red-500 fill-red-500 animate-pulse" /> {cfg.badgeText}
+                          <Flame className="w-3.5 h-3.5 text-[#00e5ff] fill-[#00a3ff]/40 animate-pulse" /> {cfg.badgeText}
                         </span>
 
                         <div className="flex items-center gap-1.5 mr-2">
@@ -439,7 +460,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                       <button
                         onClick={() => addToCart(active, 1)}
-                        className="btn-pink text-[11px] px-4 py-2 flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl shadow-[0_0_15px_rgba(255,0,128,0.4)]"
+                        className="relative overflow-hidden flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl text-[11px] font-black px-4 py-2 text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,229,255,0.55)] hover:shadow-[0_0_28px_rgba(0,229,255,0.85)] hover:scale-[1.04] transition-all duration-300"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>أضف للسلة</span>
