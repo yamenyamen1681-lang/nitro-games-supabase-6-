@@ -121,16 +121,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section id="hero" className="relative overflow-hidden pt-10 pb-20 lg:pt-14 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        @keyframes smoothInfiniteScroll {
+        @keyframes tickerLoop {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        .animate-infinite-scroll {
+        .ticker-container {
           display: flex;
           width: max-content;
-          animation: smoothInfiniteScroll 20s linear infinite;
+          animation: tickerLoop 18s linear infinite;
         }
-        .animate-infinite-scroll:hover {
+        .ticker-container:hover {
           animation-play-state: paused;
         }
 
@@ -165,7 +165,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الجديد --- */}
+          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الجديد بالكامل --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -211,12 +211,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* الشريط المتحرك المتصل بدون أي اختفاء وبشكل سلس تماماً */}
-            <div className="w-full pt-4 pb-2 relative overflow-hidden">
-              <div className="w-full overflow-hidden flex whitespace-nowrap">
-                <div className="animate-infinite-scroll flex items-center gap-4">
-                  {/* تكرار المصفوفة 4 مرات لضمان استمرار الحركة بسلاسة تامة بدون أي فراغ */}
-                  {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
+            {/* الشريط المتحرك المستقر بدون قص وبحركات متصلة 100% */}
+            <div className="w-full pt-4 pb-2">
+              <div className="w-full overflow-hidden relative">
+                <div className="ticker-container gap-4 items-center py-1">
+                  {/* تكرار المصفوفة 6 مرات لضمان عدم حدوث أي فراغ أو اختفاء أثناء الحركة */}
+                  {[...stats, ...stats, ...stats, ...stats, ...stats, ...stats].map((s, i) => (
                     <div
                       key={i}
                       className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-3 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)]"
