@@ -155,11 +155,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             <h1 className="text-3xl sm:text-5xl lg:text-[3.2rem] font-black text-white leading-[1.25] font-['Cairo']">
               <span className="brand-mark brand-mark-md text-white">NITRO GAMES</span>
-              <span className="block mt-2">
+              <span className="block mt-2 drop-shadow-[0_0_25px_rgba(255,255,255,0.25)]">
                 <span className="sr-only">نيترو قيمز — </span>خياركم الأفضل في فلسطين
               </span>
               <span className="block text-2xl sm:text-4xl lg:text-[2.5rem] text-gray-100 mt-1.5">
-                للعتاد الاحترافي.. <span className="glow-cyan">ارفع مستوى لعبك!</span>
+                للعتاد الاحترافي.. <span className="glow-cyan drop-shadow-[0_0_20px_rgba(0,163,255,0.9)]">ارفع مستوى لعبك!</span>
               </span>
             </h1>
 
@@ -167,25 +167,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               توصيل لكافة مناطق فلسطين والداخل المحتل 🚚 | ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
             </p>
 
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#00a3ff]/40 bg-[#00a3ff]/5 w-fit">
-              <span className="text-base leading-none">👑</span>
-              <span className="text-xs sm:text-sm font-tech text-gray-300 tracking-wide">
+            <div
+              dir="ltr"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-[#00a3ff] bg-[#00a3ff]/10 w-fit shadow-[0_0_20px_rgba(0,163,255,0.4)]"
+            >
+              <span className="text-lg leading-none">👑</span>
+              <span className="text-xs sm:text-sm font-black font-tech text-gray-200 tracking-wide">
                 STORE OWNER:
               </span>
-              <span className="text-xs sm:text-sm font-black font-tech text-[#00e5ff]">
+              <span className="text-sm sm:text-base font-black font-tech text-[#00e5ff] drop-shadow-[0_0_10px_rgba(0,229,255,0.8)]">
                 YamEn
               </span>
-              <Sparkles className="w-3.5 h-3.5 text-[#00a3ff]" />
+              <Sparkles className="w-4 h-4 text-[#00a3ff]" />
             </div>
 
             <div className="flex flex-wrap items-center gap-3.5">
               <button
                 onClick={() => scrollTo("products")}
-                className="btn-neon text-sm sm:text-base px-7 py-3.5 flex items-center gap-2.5 cursor-pointer group"
+                className="btn-neon text-base sm:text-lg px-9 py-4 flex items-center gap-2.5 cursor-pointer group font-black shadow-[0_0_30px_rgba(0,163,255,0.6)] hover:shadow-[0_0_45px_rgba(0,163,255,0.9)] hover:scale-105 transition-all"
               >
-                <ShoppingBag className="w-5 h-5" />
+                <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6" />
                 <span>{cfg.ctaLabel || "تسوق الآن"}</span>
-                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 group-hover:-translate-x-1 transition-transform" />
               </button>
 
               <button
