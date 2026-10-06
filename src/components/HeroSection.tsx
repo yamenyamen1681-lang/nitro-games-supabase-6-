@@ -429,7 +429,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </div>
 
                       <button
-                        direction="right"
                         onClick={() => addToCart(active, 1)}
                         className="relative overflow-hidden flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl text-[11px] font-black px-4 py-2 text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,229,255,0.55)] hover:scale-[1.04] transition-all duration-300"
                       >
