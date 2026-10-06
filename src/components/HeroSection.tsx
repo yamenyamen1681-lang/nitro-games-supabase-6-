@@ -121,16 +121,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section id="hero" className="relative overflow-hidden pt-10 pb-20 lg:pt-14 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        @keyframes marqueeFixed {
-          0% { transform: translateX(0%); }
+        @keyframes smoothInfiniteScroll {
+          0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        .animate-marquee-fixed {
+        .animate-infinite-scroll {
           display: flex;
           width: max-content;
-          animation: marqueeFixed 25s linear infinite;
+          animation: smoothInfiniteScroll 20s linear infinite;
         }
-        .animate-marquee-fixed:hover {
+        .animate-infinite-scroll:hover {
           animation-play-state: paused;
         }
 
@@ -165,7 +165,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر وشريط الإحصائيات الآمن --- */}
+          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الجديد --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -211,14 +211,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* شريط الإحصائيات المتحرك بدون اختفاء أو قص */}
+            {/* الشريط المتحرك المتصل بدون أي اختفاء وبشكل سلس تماماً */}
             <div className="w-full pt-4 pb-2 relative overflow-hidden">
-              <div className="overflow-hidden w-full mask-linear">
-                <div className="animate-marquee-fixed gap-4 items-center">
-                  {[...stats, ...stats, ...stats].map((s, i) => (
+              <div className="w-full overflow-hidden flex whitespace-nowrap">
+                <div className="animate-infinite-scroll flex items-center gap-4">
+                  {/* تكرار المصفوفة 4 مرات لضمان استمرار الحركة بسلاسة تامة بدون أي فراغ */}
+                  {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
                     <div
                       key={i}
-                      className="relative group bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 hover:border-[#00e5ff] rounded-2xl px-4 py-3 text-right flex items-center gap-3 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)]"
+                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-3 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)]"
                     >
                       <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
                         {s.big} {s.icon}
