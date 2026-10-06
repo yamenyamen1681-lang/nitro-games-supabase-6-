@@ -112,7 +112,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const active = showcaseItems[slide];
 
   const stats = [
-    { icon: <span className="text-[#00a3ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
+    { icon: <span className="text-[#00e5ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
     { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
     { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
     { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
@@ -121,27 +121,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section id="hero" className="relative overflow-hidden pt-10 pb-20 lg:pt-14 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        @keyframes marqueeSmooth {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(-50%); }
+        @keyframes marqueeSmoothRev {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0%); }
         }
         .animate-marquee-smooth {
           display: flex;
           width: max-content;
-          animation: marqueeSmooth 38s linear infinite;
+          animation: marqueeSmoothRev 32s linear infinite;
         }
         .animate-marquee-smooth:hover {
           animation-play-state: paused;
-        }
-
-        @keyframes topTickerSmooth {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
-        }
-        .animate-top-ticker-smooth {
-          display: inline-block;
-          white-space: nowrap;
-          animation: topTickerSmooth 26s linear infinite;
         }
 
         @keyframes cyberGlow {
@@ -157,21 +147,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
       <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00a3ff]/10 blur-[130px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/10 blur-[130px] rounded-full pointer-events-none" />
-
-      {/* الشريط المتحرك العلوي برأس الصفحة (مستقر وآمن داخل حدود الصفحة) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
-        <div className="relative overflow-hidden bg-gradient-to-r from-[#070f22] via-[#0b1836] to-[#070f22] border border-[#00a3ff]/35 rounded-full py-2 px-6 shadow-[0_0_22px_rgba(0,163,255,0.18)]">
-          <div className="overflow-hidden whitespace-nowrap">
-            <div className="animate-top-ticker-smooth text-xs font-bold text-[#00e5ff] tracking-wide font-['Cairo'] flex items-center gap-8">
-              <span className="flex items-center gap-2"><Sparkles className="w-3.5 h-3.5 text-[#00a3ff]" /> توصيل سريع لكافة مناطق فلسطين والداخل المحتل 🚚</span>
-              <span className="text-gray-500">•</span>
-              <span className="flex items-center gap-2"><ShieldCheck className="w-3.5 h-3.5 text-[#00e5ff]" /> ضمان حقيقي لمدة سنة كاملة على جميع أجهزة وطرفيات الجيمينج ⭐</span>
-              <span className="text-gray-500">•</span>
-              <span className="flex items-center gap-2"><Zap className="w-3.5 h-3.5 text-[#00a3ff]" /> ارتقِ بمستوى لعبك مع عتاد NITRO GAMES الاحترافي 🎮</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10">
         
@@ -193,7 +168,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك للإحصائيات --- */}
+          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر وشريط الإحصائيات المحسّن --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -217,7 +192,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </span>
             </h1>
 
-            {/* شارة صاحب المتجر (بدون أي نصوص تحتها وبدون الأقسام الخمسة) */}
+            {/* شارة صاحب المتجر */}
             <div className="flex flex-wrap items-center justify-end gap-3.5 pt-1">
               <div dir="ltr" className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
                 <Crown className="w-4 h-4 text-[#00e5ff] fill-[#00a3ff]/30" />
@@ -240,47 +215,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* الشريط المتحرك للإحصائيات (صف واحد يمشي ببطء وسلاسة ويخرج ويعود من الجهة الأخرى) */}
-            <div className="w-full overflow-hidden pt-3 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
-              <div className="animate-marquee-smooth gap-4">
-                {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
-                  <div
-                    key={i}
-                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/60 rounded-xl px-5 py-3 text-right flex items-center gap-4 shrink-0 transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
-                  >
-                    <div className="text-base font-black text-white font-tech flex items-center gap-2 relative z-10">
-                      <span className="relative flex h-2 w-2">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-60" />
-                        <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
-                      </span>
-                      {s.big} {s.icon}
+            {/* شريط الإحصائيات المتحرك المعدل بوضوح وأطراف زرقاء متناسقة */}
+            <div className="w-full overflow-hidden pt-4 pb-2 relative">
+              <div className="absolute left-0 inset-y-0 w-12 bg-gradient-to-r from-[#03060f] to-transparent z-10 pointer-events-none" />
+              <div className="absolute right-0 inset-y-0 w-12 bg-gradient-to-l from-[#03060f] to-transparent z-10 pointer-events-none" />
+              
+              <div className="overflow-hidden w-full">
+                <div className="animate-marquee-smooth gap-4 items-center">
+                  {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
+                    <div
+                      key={i}
+                      className="relative group overflow-hidden bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 hover:border-[#00e5ff] rounded-2xl px-5 py-3.5 text-right flex items-center gap-4 shrink-0 transition-all duration-300 shadow-[0_4px_25px_rgba(0,163,255,0.18)]"
+                    >
+                      <div className="text-base font-black text-[#00e5ff] font-tech flex items-center gap-2 relative z-10 bg-[#00a3ff]/15 px-3 py-1 rounded-xl border border-[#00a3ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.2)]">
+                        <span className="relative flex h-2 w-2">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-75" />
+                          <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00e5ff]" />
+                        </span>
+                        {s.big} {s.icon}
+                      </div>
+                      <div className="text-xs text-gray-200 font-bold font-['Cairo'] relative z-10 pr-2 border-r border-[#00a3ff]/30">
+                        {s.small}
+                      </div>
                     </div>
-                    <div className="text-[11px] text-gray-300 font-medium font-['Cairo'] relative z-10 border-r border-[#1e345b] pr-3">
-                      {s.small}
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
 
           </div>
 
-          {/* --- القسم الأيسر: المربع المميز مع إطار زخرفي سايبربانك فاخر --- */}
+          {/* --- القسم الأيسر: المربع المميز --- */}
           <div className="lg:col-span-6 space-y-4">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative group">
-                {/* هالة خلفية متوهجة */}
                 <div className="absolute -inset-1.5 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-90 transition duration-1000 animate-cyber-glow" />
 
-                {/* إطار مزخرف واحترافي للمربع المميز */}
                 <div className="relative p-[3px] rounded-3xl bg-gradient-to-b from-[#00e5ff] via-[#00a3ff]/70 to-[#0a1630] shadow-[0_25px_60px_-15px_rgba(0,163,255,0.45)]">
                   <div className="relative rounded-[22px] bg-[#040814] overflow-hidden border border-[#00a3ff]/40">
 
-                    {/* زخارف هندسية وزوايا سايبربانك متطورة */}
                     <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#00e5ff] to-transparent z-30" />
                     <span className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-md z-30 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
-                    <span className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-[#00a3ff] rounded-tl-md z-30 pointer-events-none shadow-[0_0_10px_#00a3ff]" />
-                    <span className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-[#00a3ff] rounded-br-md z-30 pointer-events-none shadow-[0_0_10px_#00a3ff]" />
+                    <span className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-[#00a3ff] rounded-tl-md z-30 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
+                    <span className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-[#00a3ff] rounded-br-md z-30 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
                     <span className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#00a3ff] rounded-bl-md z-30 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
 
                     <div className="relative z-20 flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
@@ -366,11 +343,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div className="relative p-[3px] rounded-3xl bg-gradient-to-b from-[#00e5ff] via-[#00a3ff]/70 to-[#101c38] shadow-[0_0_40px_rgba(0,163,255,0.3)]">
                   <div className="rounded-[22px] bg-[#040814] overflow-hidden border border-[#00a3ff]/40 relative">
                     
-                    {/* زوايا وزخارف سايبربانك */}
                     <span className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-md z-30 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
                     <span className="absolute top-3 left-3 w-6 h-6 border-t-2 border-l-2 border-[#00e5ff] rounded-tl-md z-30 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
-                    <span className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-[#00e5ff] rounded-br-md z-30 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
-                    <span className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#00e5ff] rounded-bl-md z-30 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
+                    <span className="absolute bottom-3 right-3 w-6 h-6 border-b-2 border-r-2 border-[#00a3ff] rounded-br-md z-30 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
+                    <span className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#00a3ff] rounded-bl-md z-30 pointer-events-none shadow-[0_0_10px_#00e5ff]" />
 
                     <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20] relative z-20">
                       {siteAudioUrl ? (
@@ -453,6 +429,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </div>
 
                       <button
+                        direction="right"
                         onClick={() => addToCart(active, 1)}
                         className="relative overflow-hidden flex items-center gap-2 cursor-pointer whitespace-nowrap rounded-xl text-[11px] font-black px-4 py-2 text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,229,255,0.55)] hover:scale-[1.04] transition-all duration-300"
                       >
