@@ -152,7 +152,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك --- */}
+          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الجديد --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -198,14 +198,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* شريط الإحصائيات المتحرك باستخدام كلاس الـ marquee المعرّف في globals.css */}
+            {/* الشريط المتحرك الحقيقي بدون أي قص */}
             <div className="w-full pt-4 pb-2">
               <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/30 bg-[#040914]/80 py-2.5">
-                <div className="animate-marquee gap-4 items-center">
-                  {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
+                <div className="animate-marquee flex gap-4 items-center w-max">
+                  {[...stats, ...stats, ...stats, ...stats, ...stats, ...stats].map((s, i) => (
                     <div
                       key={i}
-                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)] mx-2"
+                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)] mx-1"
                     >
                       <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
                         {s.big} {s.icon}
