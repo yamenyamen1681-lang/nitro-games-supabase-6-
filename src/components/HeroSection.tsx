@@ -121,16 +121,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section id="hero" className="relative overflow-hidden pt-10 pb-20 lg:pt-14 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        @keyframes continuousTicker {
+        @keyframes trueMarquee {
           0% { transform: translateX(0); }
           100% { transform: translateX(-50%); }
         }
-        .ticker-track {
+        .marquee-wrapper {
           display: flex;
           width: max-content;
-          animation: continuousTicker 22s linear infinite;
+          animation: trueMarquee 18s linear infinite;
         }
-        .ticker-track:hover {
+        .marquee-wrapper:hover {
           animation-play-state: paused;
         }
 
@@ -158,21 +158,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
             </span>
             <span className="text-[11px] sm:text-xs font-medium text-gray-300 tracking-wide">
-              المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين[span_0](start_span)[span_0](end_span)
+              المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
             </span>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الدائم --- */}
+          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الحقيقي --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
                 <div className="brand-mark brand-mark-lg text-white">
                   NITRO <span className="brand-mark-games">GAMES</span>
                 </div>
-                <div className="brand-sub mt-2">PALESTINE · ESPORTS GEAR[span_1](start_span)[span_1](end_span)</div>
+                <div className="brand-sub mt-2">PALESTINE · ESPORTS GEAR</div>
               </div>
               <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl grad-frame flex items-center justify-center flex-shrink-0">
                 <Zap className="w-8 h-8 sm:w-9 sm:h-9 text-[#00a3ff] drop-shadow-[0_0_14px_#00a3ff]" />
@@ -181,7 +181,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             <h1 className="text-3xl sm:text-5xl lg:text-[3.2rem] font-light text-white leading-[1.4] font-['Cairo']">
               <span className="block font-black text-white">
-                خياركم الأفضل في فلسطين[span_2](start_span)[span_2](end_span)
+                خياركم الأفضل في فلسطين
               </span>
               <span className="block text-2xl sm:text-4xl lg:text-[2.5rem] text-gray-200 mt-2 font-light">
                 للعتاد الاحترافي.. <span className="glow-cyan font-bold">ارفع مستوى لعبك!</span>
@@ -211,19 +211,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* شريط الإحصائيات المتحرك باستمرار وبدون أي انقطاع أو فراغات */}
+            {/* شريط الإحصائيات المتحرك بلا توقف وبشكل متصل تماماً */}
             <div className="w-full pt-4 pb-2">
-              <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/20 bg-[#040914]/40 py-2">
-                <div className="ticker-track gap-4 items-center">
+              <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/30 bg-[#040914]/60 py-2.5">
+                <div className="marquee-wrapper gap-5 items-center">
                   {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
                     <div
                       key={i}
-                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)]"
+                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/50 rounded-2xl px-5 py-3 shrink-0 shadow-[0_4px_25px_rgba(0,163,255,0.2)]"
                     >
-                      <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
+                      <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-3 py-1 rounded-xl border border-[#00a3ff]/30">
                         {s.big} {s.icon}
                       </div>
-                      <div className="text-xs text-gray-200 font-bold font-['Cairo'] pr-2 border-r border-[#00a3ff]/30">
+                      <div className="text-xs text-gray-100 font-bold font-['Cairo'] pr-2 border-r border-[#00a3ff]/30">
                         {s.small}
                       </div>
                     </div>
@@ -274,7 +274,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       )}
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00a3ff]/30">
+                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30">
                           <Radio className="w-3.5 h-3.5 text-[#00e5ff] animate-pulse" /> {cfg.badgeText}
                         </span>
                       </div>
