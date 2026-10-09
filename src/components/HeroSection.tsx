@@ -118,20 +118,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
   ];
 
+  // مؤشر لتنقل الإحصائيات بشكل تلقائي مستقر
+  const [statIndex, setStatIndex] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStatIndex((prev) => (prev + 1) % stats.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [stats.length]);
+
+  const currentStat = stats[statIndex];
+
   return (
     <section id="hero" className="relative overflow-hidden pt-10 pb-20 lg:pt-14 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        @keyframes trueMarquee {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
+        @keyframes fadeInOut {
+          0% { opacity: 0; transform: translateY(6px); }
+          20% { opacity: 1; transform: translateY(0); }
+          80% { opacity: 1; transform: translateY(0); }
+          100% { opacity: 0; transform: translateY(-6px); }
         }
-        .marquee-wrapper {
-          display: flex;
-          width: max-content;
-          animation: trueMarquee 18s linear infinite;
-        }
-        .marquee-wrapper:hover {
-          animation-play-state: paused;
+        .animate-fade-stat {
+          animation: fadeInOut 3s ease-in-out infinite;
         }
 
         @keyframes cyberGlow {
@@ -165,7 +173,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الحقيقي --- */}
+          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر وشريط الإحصائيات المستقر --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -211,23 +219,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* شريط الإحصائيات المتحرك بلا توقف وبشكل متصل تماماً */}
+            {/* شريط الإحصائيات المتغير بسلاسة ودون أي اختفاء نهائياً */}
             <div className="w-full pt-4 pb-2">
-              <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/30 bg-[#040914]/60 py-2.5">
-                <div className="marquee-wrapper gap-5 items-center">
-                  {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
-                    <div
-                      key={i}
-                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/50 rounded-2xl px-5 py-3 shrink-0 shadow-[0_4px_25px_rgba(0,163,255,0.2)]"
-                    >
-                      <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-3 py-1 rounded-xl border border-[#00a3ff]/30">
-                        {s.big} {s.icon}
-                      </div>
-                      <div className="text-xs text-gray-100 font-bold font-['Cairo'] pr-2 border-r border-[#00a3ff]/30">
-                        {s.small}
-                      </div>
-                    </div>
-                  ))}
+              <div className="w-full overflow-hidden relative border border-[#00a3ff]/40 bg-gradient-to-r from-[#071124] via-[#040914] to-[#071124] rounded-2xl p-3.5 shadow-[0_4px_25px_rgba(0,163,255,0.2)] flex items-center justify-end">
+                <div key={statIndex} className="animate-fade-stat flex items-center gap-4">
+                  <div className="text-xs text-gray-200 font-bold font-['Cairo'] pl-3 border-l border-[#00a3ff]/30">
+                    {currentStat.small}
+                  </div>
+                  <div className="text-base font-black text-[#00e5ff] font-tech flex items-center gap-2 bg-[#00a3ff]/15 px-3 py-1 rounded-xl border border-[#00a3ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.2)]">
+                    {currentStat.big} {currentStat.icon}
+                  </div>
                 </div>
               </div>
             </div>
