@@ -119,7 +119,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   // يغطي أي عرض شاشة، فما ينفد الشريط ولا يبين فراغ أبدًا — وبما إنه
   // الإزاحة بترجع "تلف" (modulo) بالضبط على طول نسخة وحدة، الحركة
   // بتضل متصلة للأبد بدون أي قطع.
-  const TICKER_SPEED_PX_PER_SEC = 140;
+  const TICKER_SPEED_PX_PER_SEC = 220;
   const TICKER_REPEAT = 8;
 
   const stats = [
