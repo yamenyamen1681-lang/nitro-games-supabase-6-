@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import { Product, ShowcaseConfig, DEFAULT_SHOWCASE } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
@@ -38,9 +38,37 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const [siteAudioUrl, setSiteAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = React.useRef<HTMLAudioElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
-  const showcaseVideoRef = React.useRef<HTMLVideoElement | null>(null);
+  const showcaseVideoRef = useRef<HTMLVideoElement | null>(null);
+
+  // مرجع لشريط الإحصائيات لتحريكه بـ JS
+  const tickerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const scrollContainer = tickerRef.current;
+    if (!scrollContainer) return;
+
+    let animationFrameId: number;
+    let scrollPos = 0;
+    const speed = 0.8; // سرعة الحركة (كلما زادت أصبح أسرع)
+
+    const step = () => {
+      scrollPos += speed;
+      // إذا وصل للنصف (لأن العناصر مكررة)، يعيد البداية بسلاسة تامة
+      if (scrollContainer.scrollWidth / 2 <= scrollPos) {
+        scrollPos = 0;
+      }
+      scrollContainer.scrollLeft = scrollPos;
+      animationFrameId = requestAnimationFrame(step);
+    };
+
+    animationFrameId = requestAnimationFrame(step);
+
+    return () => {
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
 
   useEffect(() => {
     const vid = showcaseVideoRef.current;
@@ -128,6 +156,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         .animate-cyber-glow {
           animation: cyberGlow 5s infinite ease-in-out;
         }
+        /* إخفاء شريط التمرير للبصريات النظيفة */
+        .no-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .no-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
       `}</style>
 
       {/* خلفية تفاعلية */}
@@ -152,7 +188,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الجديد --- */}
+          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك بـ JS --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -198,10 +234,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* الشريط المتحرك الحقيقي بدون أي قص */}
+            {/* الشريط المتحرك بالاعتماد على JavaScript لضمان عدم التعليق نهائياً */}
             <div className="w-full pt-4 pb-2">
               <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/30 bg-[#040914]/80 py-2.5">
-                <div className="animate-marquee flex gap-4 items-center w-max">
+                <div
+                  ref={tickerRef}
+                  className="flex gap-4 items-center overflow-x-auto no-scrollbar whitespace-nowrap select-none pointer-events-auto"
+                >
+                  {/* تكرار العناصر لضمان استمرارية الحركة الدائرية بدون فراغات */}
                   {[...stats, ...stats, ...stats, ...stats, ...stats, ...stats].map((s, i) => (
                     <div
                       key={i}
