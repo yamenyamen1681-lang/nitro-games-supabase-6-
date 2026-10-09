@@ -121,16 +121,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section id="hero" className="relative overflow-hidden pt-10 pb-20 lg:pt-14 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        @keyframes fullLineTicker {
-          0% { transform: translateX(100%); }
-          100% { transform: translateX(-100%); }
+        @keyframes continuousTicker {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
         }
-        .full-ticker-track {
+        .ticker-track {
           display: flex;
           width: max-content;
-          animation: fullLineTicker 15s linear infinite;
+          animation: continuousTicker 22s linear infinite;
         }
-        .full-ticker-track:hover {
+        .ticker-track:hover {
           animation-play-state: paused;
         }
 
@@ -165,7 +165,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الخطي --- */}
+          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الدائم --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -211,19 +211,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* شريط الإحصائيات الذي يمر بالكامل على الخط ويخرج من الجهة الأخرى */}
-            <div className="w-full pt-4 pb-2 overflow-hidden border-y border-[#00a3ff]/20 bg-[#040914]/50">
-              <div className="w-full overflow-hidden relative py-1">
-                <div className="full-ticker-track gap-8 items-center">
-                  {stats.map((s, i) => (
+            {/* شريط الإحصائيات المتحرك باستمرار وبدون أي انقطاع أو فراغات */}
+            <div className="w-full pt-4 pb-2">
+              <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/20 bg-[#040914]/40 py-2">
+                <div className="ticker-track gap-4 items-center">
+                  {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
                     <div
                       key={i}
-                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/50 rounded-2xl px-5 py-3 shrink-0 shadow-[0_0_25px_rgba(0,163,255,0.2)]"
+                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)]"
                     >
-                      <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-3 py-1 rounded-xl border border-[#00a3ff]/30">
+                      <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
                         {s.big} {s.icon}
                       </div>
-                      <div className="text-xs text-gray-100 font-bold font-['Cairo'] pr-2 border-r border-[#00a3ff]/30">
+                      <div className="text-xs text-gray-200 font-bold font-['Cairo'] pr-2 border-r border-[#00a3ff]/30">
                         {s.small}
                       </div>
                     </div>
@@ -274,7 +274,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       )}
 
                       <div className="flex items-center gap-2">
-                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30">
+                        <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00a3ff]/30">
                           <Radio className="w-3.5 h-3.5 text-[#00e5ff] animate-pulse" /> {cfg.badgeText}
                         </span>
                       </div>
