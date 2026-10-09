@@ -149,7 +149,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         .ticker-track {
           display: flex;
           width: max-content;
-          animation: tickerLoop 22s linear infinite;
+          animation: tickerLoop 34s linear infinite;
           will-change: transform;
         }
         .ticker-track:hover {
@@ -261,11 +261,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="w-full pt-4 pb-2">
               <div className="w-full overflow-hidden relative [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
                 <div className="ticker-track">
+                  {/* كل مجموعة فيها نفس العناصر مكررة 4 مرات داخليًا، حتى تضمن
+                      أن عرض المجموعة الواحدة أعرض من أي حاوية (موبايل أو ديسكتوب)
+                      ولا تنفد المحتوى قبل اكتمال اللفّة — المجموعتان متطابقتان تمامًا
+                      فيبقى انزلاق الـ50% = عرض مجموعة واحدة بالضبط */}
                   <div className="ticker-group">
-                    {stats.map((s, i) => renderStatCard(s, `a-${i}`))}
+                    {[...stats, ...stats, ...stats, ...stats].map((s, i) => renderStatCard(s, `a-${i}`))}
                   </div>
                   <div className="ticker-group" aria-hidden="true">
-                    {stats.map((s, i) => renderStatCard(s, `b-${i}`))}
+                    {[...stats, ...stats, ...stats, ...stats].map((s, i) => renderStatCard(s, `b-${i}`))}
                   </div>
                 </div>
               </div>
