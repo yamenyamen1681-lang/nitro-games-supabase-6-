@@ -119,21 +119,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   ];
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-10 pb-20 lg:pt-14 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
+    <section id="hero" className="relative pt-10 pb-20 lg:pt-14 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        @keyframes scrollTicker {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .ticker-box {
-          display: flex;
-          width: max-content;
-          animation: scrollTicker 20s linear infinite;
-        }
-        .ticker-box:hover {
-          animation-play-state: paused;
-        }
-
         @keyframes cyberGlow {
           0%, 100% { opacity: 0.45; filter: drop-shadow(0 0 14px rgba(0, 163, 255, 0.35)); }
           50% { opacity: 0.85; filter: drop-shadow(0 0 24px rgba(0, 229, 255, 0.65)); }
@@ -144,7 +131,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       `}</style>
 
       {/* خلفية تفاعلية */}
-      <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
+      <div className="absolute inset-0 tech-grid opacity-85 pointer-events-none" />
       <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00a3ff]/10 blur-[130px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/10 blur-[130px] rounded-full pointer-events-none" />
 
@@ -165,7 +152,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك الحقيقي --- */}
+          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -211,14 +198,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* شريط الإحصائيات المتحرك باستمرار وبشكل متصل */}
+            {/* شريط الإحصائيات المتحرك باستخدام كلاس الـ marquee المعرّف في globals.css */}
             <div className="w-full pt-4 pb-2">
               <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/30 bg-[#040914]/80 py-2.5">
-                <div className="ticker-box gap-4 items-center">
+                <div className="animate-marquee gap-4 items-center">
                   {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
                     <div
                       key={i}
-                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)]"
+                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)] mx-2"
                     >
                       <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
                         {s.big} {s.icon}
