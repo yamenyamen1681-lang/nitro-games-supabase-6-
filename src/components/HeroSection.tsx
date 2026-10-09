@@ -111,42 +111,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const active = showcaseItems[slide];
 
-  // ---------- الشريط المتحرك: قياس حقيقي للعرض بدل رقم ثابت ----------
-  // نقيس عرض "نسخة واحدة" من الكروت فعليًا، ونحسب منه كم نسخة لازم نكرر
-  // جوّا كل مجموعة حتى تضمن أنها أعرض من أي حاوية ممكنة (مهما كبر عرض
-  // الشاشة أو تغيّر حجم الخط)، فما يصير فراغ أو "اختفاء" قبل اكتمال اللفّة.
-  const TICKER_SPEED_PX_PER_SEC = 55;
-  const [tickerRepeat, setTickerRepeat] = useState(4);
-  const [tickerDuration, setTickerDuration] = useState(30);
-  const tickerOuterRef = React.useRef<HTMLDivElement>(null);
-  const tickerMeasureRef = React.useRef<HTMLDivElement>(null);
-  const tickerGroupRef = React.useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const recomputeRepeat = () => {
-      const outerW = tickerOuterRef.current?.offsetWidth ?? 0;
-      const oneSetW = tickerMeasureRef.current?.offsetWidth ?? 0;
-      if (outerW > 0 && oneSetW > 0) {
-        const needed = Math.max(3, Math.ceil(outerW / oneSetW) + 2);
-        setTickerRepeat((prev) => (prev === needed ? prev : needed));
-      }
-    };
-    recomputeRepeat();
-    const ro = new ResizeObserver(recomputeRepeat);
-    if (tickerOuterRef.current) ro.observe(tickerOuterRef.current);
-    window.addEventListener("resize", recomputeRepeat);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", recomputeRepeat);
-    };
-  }, []);
-
-  useEffect(() => {
-    const groupW = tickerGroupRef.current?.offsetWidth ?? 0;
-    if (groupW > 0) {
-      setTickerDuration(Math.max(14, groupW / TICKER_SPEED_PX_PER_SEC));
-    }
-  }, [tickerRepeat]);
+  // ---------- الشريط المتحرك: محرّك JS مباشر (requestAnimationFrame) ----------
+  // بدل الاعتماد على CSS keyframes ونسب مئوية قابلة للخطأ، هون بنحرّك
+  // الشريط فريم-فريم بالـJS، ومدّة "الدورة" (period) بتتقاس مباشرة من
+  // المسافة الحقيقية بين أول كرت وأول كرت بالتكرار التالي داخل الـDOM
+  // الفعلي. بما إنه عدد النسخ المكرر كبير (8)، دايمًا في محتوى كافي
+  // يغطي أي عرض شاشة، فما ينفد الشريط ولا يبين فراغ أبدًا — وبما إنه
+  // الإزاحة بترجع "تلف" (modulo) بالضبط على طول نسخة وحدة، الحركة
+  // بتضل متصلة للأبد بدون أي قطع.
+  const TICKER_SPEED_PX_PER_SEC = 50;
+  const TICKER_REPEAT = 8;
 
   const stats = [
     { icon: <span className="text-[#00e5ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
@@ -155,10 +129,63 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
   ];
 
-  // عنصر الكارت نفسه، مستخرج لدالة واحدة حتى تبقى النسختان (الأصلية + المكررة) متطابقتين تماماً
+  const tickerOuterRef = React.useRef<HTMLDivElement>(null);
+  const tickerTrackRef = React.useRef<HTMLDivElement>(null);
+  const tickerPeriodRef = React.useRef<number>(0);
+  const tickerOffsetRef = React.useRef<number>(0);
+  const tickerRafRef = React.useRef<number | undefined>(undefined);
+  const tickerLastTsRef = React.useRef<number | null>(null);
+
+  useEffect(() => {
+    const track = tickerTrackRef.current;
+    if (!track) return;
+
+    const measurePeriod = () => {
+      const items = track.querySelectorAll<HTMLElement>("[data-ticker-item]");
+      if (items.length > stats.length) {
+        const first = items[0].getBoundingClientRect().left;
+        const next = items[stats.length].getBoundingClientRect().left;
+        const period = Math.abs(next - first);
+        if (period > 0) tickerPeriodRef.current = period;
+      }
+    };
+
+    measurePeriod();
+    const ro = new ResizeObserver(measurePeriod);
+    ro.observe(track);
+    window.addEventListener("resize", measurePeriod);
+
+    const step = (ts: number) => {
+      if (tickerLastTsRef.current == null) tickerLastTsRef.current = ts;
+      const dt = Math.min(0.05, (ts - tickerLastTsRef.current) / 1000);
+      tickerLastTsRef.current = ts;
+
+      const period = tickerPeriodRef.current;
+      if (period > 0 && tickerTrackRef.current) {
+        tickerOffsetRef.current += TICKER_SPEED_PX_PER_SEC * dt;
+        if (tickerOffsetRef.current >= period) {
+          tickerOffsetRef.current -= period;
+        }
+        tickerTrackRef.current.style.transform = `translateX(-${tickerOffsetRef.current}px)`;
+      }
+      tickerRafRef.current = requestAnimationFrame(step);
+    };
+    tickerRafRef.current = requestAnimationFrame(step);
+
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measurePeriod);
+      if (tickerRafRef.current) cancelAnimationFrame(tickerRafRef.current);
+      tickerLastTsRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // عنصر الكارت نفسه — data-ticker-item تُستخدم فقط لقياس طول "دورة" واحدة
   const renderStatCard = (s: (typeof stats)[number], key: string) => (
     <div
       key={key}
+      data-ticker-item
       className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 hover:border-[#00e5ff]/70 rounded-2xl px-4 py-3 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)] transition-colors duration-300"
     >
       <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
@@ -173,34 +200,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section id="hero" className="relative overflow-hidden pt-10 pb-20 lg:pt-14 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        /* ------------------------------------------------------------------
-           شريط الإحصائيات: تقنية "المجموعتين المتطابقتين" لضمان حركة متصلة
-           100% بدون أي قفزة أو اختفاء — المجموعة الثانية نسخة طبق الأصل من
-           الأولى، والانزلاق بمقدار 50% من عرض الحاوية الكلي = عرض مجموعة
-           واحدة بالضبط، فتدخل الثانية مكان الأولى بسلاسة تامة ثم تتكرر للأبد.
-        ------------------------------------------------------------------ */
-        @keyframes tickerLoop {
-          0%   { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .ticker-track {
-          display: flex;
-          width: max-content;
-          animation-name: tickerLoop;
-          animation-timing-function: linear;
-          animation-iteration-count: infinite;
-          will-change: transform;
-        }
-        .ticker-track:hover {
-          animation-play-state: paused;
-        }
-        .ticker-group {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          padding-inline-end: 1rem; /* يحاكي نفس المسافة بين العناصر، فتبقى المسافة بين نهاية مجموعة وبداية التالية متطابقة */
-        }
-
         @keyframes cyberGlow {
           0%, 100% { opacity: 0.45; filter: drop-shadow(0 0 14px rgba(0, 163, 255, 0.35)); }
           50% { opacity: 0.85; filter: drop-shadow(0 0 24px rgba(0, 229, 255, 0.65)); }
@@ -302,30 +301,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 ref={tickerOuterRef}
                 className="w-full overflow-hidden relative [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
               >
-                {/* نسخة واحدة مخفية، تُستخدم فقط لقياس عرضها الحقيقي بالبكسل */}
+                {/* شريط واحد مستمر — نفس مجموعة الكروت مكررة 8 مرات، ومتحرّك
+                    مباشرة بالـJS (transform محسوب فريم-فريم)، فلا داعي لأي
+                    @keyframes ولا نسب مئوية قد تختل حسب عرض المحتوى */}
                 <div
-                  ref={tickerMeasureRef}
-                  className="ticker-group absolute top-0 right-0 opacity-0 pointer-events-none -z-10"
-                  aria-hidden="true"
+                  ref={tickerTrackRef}
+                  className="flex items-center gap-4"
+                  style={{ willChange: "transform" }}
                 >
-                  {stats.map((s, i) => renderStatCard(s, `measure-${i}`))}
-                </div>
-
-                <div className="ticker-track" style={{ animationDuration: `${tickerDuration}s` }}>
-                  {/* مجموعتان متطابقتان تمامًا، وكل وحدة فيهما مكرّرة بعدد
-                      محسوب فعليًا (tickerRepeat) ليكون عرضها أكبر من عرض
-                      الحاوية مهما كان حجم الشاشة — فتبقى الحركة متصلة 100%
-                      بدون أي قطع أو اختفاء، والانزلاق 50% = عرض مجموعة واحدة بالضبط */}
-                  <div className="ticker-group" ref={tickerGroupRef}>
-                    {Array.from({ length: tickerRepeat }).flatMap((_, g) =>
-                      stats.map((s, i) => renderStatCard(s, `a-${g}-${i}`))
-                    )}
-                  </div>
-                  <div className="ticker-group" aria-hidden="true">
-                    {Array.from({ length: tickerRepeat }).flatMap((_, g) =>
-                      stats.map((s, i) => renderStatCard(s, `b-${g}-${i}`))
-                    )}
-                  </div>
+                  {Array.from({ length: TICKER_REPEAT }).flatMap((_, g) =>
+                    stats.map((s, i) => renderStatCard(s, `t-${g}-${i}`))
+                  )}
                 </div>
               </div>
             </div>
