@@ -119,7 +119,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   // يغطي أي عرض شاشة، فما ينفد الشريط ولا يبين فراغ أبدًا — وبما إنه
   // الإزاحة بترجع "تلف" (modulo) بالضبط على طول نسخة وحدة، الحركة
   // بتضل متصلة للأبد بدون أي قطع.
-  const TICKER_SPEED_PX_PER_SEC = 50;
+  const TICKER_SPEED_PX_PER_SEC = 140;
   const TICKER_REPEAT = 8;
 
   const stats = [
@@ -307,7 +307,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div
                   ref={tickerTrackRef}
                   className="flex items-center gap-4"
-                  style={{ willChange: "transform" }}
+                  style={{ willChange: "transform", width: "max-content" }}
                 >
                   {Array.from({ length: TICKER_REPEAT }).flatMap((_, g) =>
                     stats.map((s, i) => renderStatCard(s, `t-${g}-${i}`))
