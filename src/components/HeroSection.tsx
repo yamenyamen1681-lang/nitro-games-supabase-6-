@@ -42,7 +42,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
   const showcaseVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  // مرجع لشريط الإحصائيات لتحريكه بـ JS
+  // مرجع وحركة شريط الإحصائيات المستمرة
   const tickerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -51,11 +51,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
     let animationFrameId: number;
     let scrollPos = 0;
-    const speed = 0.8; // سرعة الحركة (كلما زادت أصبح أسرع)
+    const speed = 1.2;
 
     const step = () => {
       scrollPos += speed;
-      // إذا وصل للنصف (لأن العناصر مكررة)، يعيد البداية بسلاسة تامة
       if (scrollContainer.scrollWidth / 2 <= scrollPos) {
         scrollPos = 0;
       }
@@ -156,7 +155,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         .animate-cyber-glow {
           animation: cyberGlow 5s infinite ease-in-out;
         }
-        /* إخفاء شريط التمرير للبصريات النظيفة */
         .no-scrollbar::-webkit-scrollbar {
           display: none;
         }
@@ -188,7 +186,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           
-          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك بـ JS --- */}
+          {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -234,14 +232,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* الشريط المتحرك بالاعتماد على JavaScript لضمان عدم التعليق نهائياً */}
+            {/* شريط الإحصائيات المتحرك باستمرار */}
             <div className="w-full pt-4 pb-2">
               <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/30 bg-[#040914]/80 py-2.5">
                 <div
                   ref={tickerRef}
-                  className="flex gap-4 items-center overflow-x-auto no-scrollbar whitespace-nowrap select-none pointer-events-auto"
+                  className="flex gap-4 items-center overflow-x-auto no-scrollbar whitespace-nowrap select-none"
+                  style={{ width: "100%" }}
                 >
-                  {/* تكرار العناصر لضمان استمرارية الحركة الدائرية بدون فراغات */}
                   {[...stats, ...stats, ...stats, ...stats, ...stats, ...stats].map((s, i) => (
                     <div
                       key={i}
