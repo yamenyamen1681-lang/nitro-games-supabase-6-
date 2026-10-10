@@ -42,33 +42,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
   const showcaseVideoRef = useRef<HTMLVideoElement | null>(null);
 
-  // مرجع وحركة شريط الإحصائيات المستمرة
-  const tickerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const scrollContainer = tickerRef.current;
-    if (!scrollContainer) return;
-
-    let animationFrameId: number;
-    let scrollPos = 0;
-    const speed = 1.2;
-
-    const step = () => {
-      scrollPos += speed;
-      if (scrollContainer.scrollWidth / 2 <= scrollPos) {
-        scrollPos = 0;
-      }
-      scrollContainer.scrollLeft = scrollPos;
-      animationFrameId = requestAnimationFrame(step);
-    };
-
-    animationFrameId = requestAnimationFrame(step);
-
-    return () => {
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
   useEffect(() => {
     const vid = showcaseVideoRef.current;
     if (!vid) return;
@@ -141,7 +114,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const stats = [
     { icon: <span className="text-[#00e5ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
     { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
-    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, big: "100%", small: "أصلي معتمد" },
+    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, bg: "100%", small: "أصلي معتمد" },
     { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
   ];
 
@@ -154,13 +127,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }
         .animate-cyber-glow {
           animation: cyberGlow 5s infinite ease-in-out;
-        }
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
         }
       `}</style>
 
@@ -232,27 +198,43 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* شريط الإحصائيات المتحرك باستمرار */}
+            {/* شريط الإحصائيات المتحرك باستخدام animate-marquee بشكل صحيح 100% */}
             <div className="w-full pt-4 pb-2">
-              <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/30 bg-[#040914]/80 py-2.5">
-                <div
-                  ref={tickerRef}
-                  className="flex gap-4 items-center overflow-x-auto no-scrollbar whitespace-nowrap select-none"
-                  style={{ width: "100%" }}
-                >
-                  {[...stats, ...stats, ...stats, ...stats, ...stats, ...stats].map((s, i) => (
-                    <div
-                      key={i}
-                      className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)] mx-1"
-                    >
-                      <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
-                        {s.big} {s.icon}
+              <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/30 bg-[#040914]/80 py-2.5" dir="ltr">
+                <div className="animate-marquee flex items-center gap-4">
+                  {/* النصف الأول من العناصر */}
+                  <div className="flex items-center gap-4 shrink-0">
+                    {stats.map((s, i) => (
+                      <div
+                        key={`s1-${i}`}
+                        className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)]"
+                      >
+                        <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
+                          {s.big} {s.icon}
+                        </div>
+                        <div className="text-xs text-gray-200 font-bold font-['Cairo'] pr-2 border-r border-[#00a3ff]/30">
+                          {s.small}
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-200 font-bold font-['Cairo'] pr-2 border-r border-[#00a3ff]/30">
-                        {s.small}
+                    ))}
+                  </div>
+
+                  {/* النصف الثاني المطابق لضمان تكرار الحركة بدون فراغات أو اختفاء */}
+                  <div className="flex items-center gap-4 shrink-0">
+                    {stats.map((s, i) => (
+                      <div
+                        key={`s2-${i}`}
+                        className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)]"
+                      >
+                        <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
+                          {s.big} {s.icon}
+                        </div>
+                        <div className="text-xs text-gray-200 font-bold font-['Cairo'] pr-2 border-r border-[#00a3ff]/30">
+                          {s.small}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
