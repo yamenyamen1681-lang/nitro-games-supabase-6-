@@ -71,53 +71,79 @@ export const Header: React.FC<HeaderProps> = ({
         }
       `}</style>
 
-      {/* ===== 1. Announcement Bar — زجاجي فاخر بدل الخلفية الداكنة الصلبة ===== */}
+      {/* ===== 1. Announcement Bar — شريط متحرك مستمر وسلس ===== */}
       <div className="relative bg-gradient-to-r from-[#070b14]/95 via-[#0b1120]/95 to-[#070b14]/95 backdrop-blur-md border-b border-white/[0.06] text-white text-xs font-semibold py-2.5 px-4 overflow-hidden shadow-[0_4px_25px_rgba(0,163,255,0.15)]">
         <span className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#00e5ff]/70 to-transparent" />
         <span className="absolute -top-10 right-1/3 w-64 h-24 bg-[#00a3ff]/10 blur-3xl rounded-full pointer-events-none" />
 
         <div className="relative flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex-1 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
-            {/* مهم: نفس المحتوى بالضبط مكرر مرتين (مجموعة أ + مجموعة ب) —
-                هاد شرط أساسي حتى تكون لفّة animate-marquee (0% → -50%) مثالية
-                بدون أي قطع أو اختفاء. قبل كان في عنصر فريد (التاغلاين وكود
-                الخصم) موجود مرة وحدة بس، فما كانت نص الحركة تطابق النص التاني. */}
-            <div className="animate-marquee items-center gap-10 whitespace-nowrap text-xs font-bold text-gray-200">
-              {(["a", "b"] as const).map((groupKey) => (
-                <div key={groupKey} className="flex items-center gap-10 shrink-0" aria-hidden={groupKey === "b"}>
-                  <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.07]">
-                    <Truck className="w-3.5 h-3.5 text-[#00a3ff]" />
-                    توصيل لكافة مناطق فلسطين والداخل المحتل 🚚
-                  </span>
-                  <span className="text-[#00e5ff]/60">✦</span>
+          <div className="flex-1 overflow-hidden">
+            <div className="animate-marquee flex items-center gap-8 whitespace-nowrap text-xs font-bold text-gray-200">
+              {/* مجموعة العناصر الأولى */}
+              <div className="flex items-center gap-8 shrink-0">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.07]">
+                  <Truck className="w-3.5 h-3.5 text-[#00a3ff]" />
+                  توصيل لكافة مناطق فلسطين والداخل المحتل 🚚
+                </span>
+                <span className="text-[#00e5ff]/60">✦</span>
 
-                  <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.07]">
-                    <ShieldCheck className="w-3.5 h-3.5 text-[#00e5ff]" />
-                    ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
-                  </span>
-                  <span className="text-[#00a3ff]/60">✦</span>
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.07]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#00a3ff]" />
+                  ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
+                </span>
+                <span className="text-[#00e5ff]/60">✦</span>
 
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] font-extrabold">
-                    NITRO GAMES: خياركم الأفضل في فلسطين للعتاد الاحترافي.. ارفع مستوى لعبك!
-                  </span>
-                  <span className="text-[#00e5ff]/60">✦</span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] font-extrabold">
+                  NITRO GAMES: خياركم الأفضل في فلسطين للعتاد الاحترافي.. ارفع مستوى لعبك!
+                </span>
+                <span className="text-[#00e5ff]/60">✦</span>
 
-                  <span
-                    className="shimmer-badge bg-[length:220%_auto] text-[#02121f] px-3 py-1.5 rounded-full border border-[#00e5ff]/40 font-mono font-black shadow-[0_0_14px_rgba(0,229,255,0.35)]"
-                    style={{
-                      backgroundImage:
-                        "linear-gradient(100deg, #00a3ff 0%, #00e5ff 25%, #d6f7ff 50%, #00e5ff 75%, #00a3ff 100%)",
-                    }}
-                  >
-                    كود خصم فوري: NITRO10 (وفر 10%)
-                  </span>
-                  <span className="text-[#00a3ff]/60">✦</span>
-                </div>
-              ))}
+                <span
+                  className="shimmer-badge bg-[length:220%_auto] text-[#02121f] px-3 py-1.5 rounded-full border border-[#00e5ff]/40 font-mono font-black shadow-[0_0_14px_rgba(0,229,255,0.35)]"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(100deg, #00a3ff 0%, #00e5ff 25%, #d6f7ff 50%, #00e5ff 75%, #00a3ff 100%)",
+                  }}
+                >
+                  كود خصم فوري: NITRO10 (وفر 10%)
+                </span>
+                <span className="text-[#00e5ff]/60">✦</span>
+              </div>
+
+              {/* مجموعة العناصر المطابقة تماماً لضمان استمرارية الحركة بدون أي فراغ */}
+              <div className="flex items-center gap-8 shrink-0" aria-hidden="true">
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.07]">
+                  <Truck className="w-3.5 h-3.5 text-[#00a3ff]" />
+                  توصيل لكافة مناطق فلسطين والداخل المحتل 🚚
+                </span>
+                <span className="text-[#00e5ff]/60">✦</span>
+
+                <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.07]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#00a3ff]" />
+                  ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
+                </span>
+                <span className="text-[#00e5ff]/60">✦</span>
+
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] font-extrabold">
+                  NITRO GAMES: خياركم الأفضل في فلسطين للعتاد الاحترافي.. ارفع مستوى لعبك!
+                </span>
+                <span className="text-[#00e5ff]/60">✦</span>
+
+                <span
+                  className="shimmer-badge bg-[length:220%_auto] text-[#02121f] px-3 py-1.5 rounded-full border border-[#00e5ff]/40 font-mono font-black shadow-[0_0_14px_rgba(0,229,255,0.35)]"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(100deg, #00a3ff 0%, #00e5ff 25%, #d6f7ff 50%, #00e5ff 75%, #00a3ff 100%)",
+                  }}
+                >
+                  كود خصم فوري: NITRO10 (وفر 10%)
+                </span>
+                <span className="text-[#00e5ff]/60">✦</span>
+              </div>
             </div>
           </div>
 
-          {/* Customer service — single source of truth */}
+          {/* Customer service */}
           <div className="hidden md:flex items-center gap-2 text-xs text-gray-300 flex-shrink-0 mr-4">
             <span className="text-gray-400">خدمة العملاء:</span>
             <a
