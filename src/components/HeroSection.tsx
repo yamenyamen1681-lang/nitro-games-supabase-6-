@@ -111,12 +111,56 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
   const active = showcaseItems[slide];
 
+  // كل إحصائية فيها لون مميز خفيف (cyan/blue بالتبادل) لإحساس أرقى وأقل تكرارًا بصريًا
   const stats = [
-    { icon: <span className="text-[#00e5ff]">⭐</span>, big: "+5,400", small: "لاعب يثق بنا" },
-    { icon: <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />, big: "1 سنة", small: "ضمان حقيقي" },
-    { icon: <CheckCircle2 className="w-4 h-4 text-[#00a3ff]" />, bg: "100%", small: "أصلي معتمد" },
-    { icon: <Truck className="w-4 h-4 text-[#00e5ff]" />, big: "24-48h", small: "شحن سريع" },
+    { icon: <span>⭐</span>, big: "+5,400", small: "لاعب يثق بنا", accent: "#00e5ff" },
+    { icon: <ShieldCheck className="w-4 h-4" />, big: "1 سنة", small: "ضمان حقيقي", accent: "#00a3ff" },
+    { icon: <CheckCircle2 className="w-4 h-4" />, big: "100%", small: "أصلي معتمد", accent: "#00e5ff" },
+    { icon: <Truck className="w-4 h-4" />, big: "24-48h", small: "شحن سريع", accent: "#00a3ff" },
   ];
+
+  // كارت فاخر: شارة أيقونة دائرية متوهجة + رقم بتدرّج + فاصل نقطي بدل خط عادي
+  const renderStatCard = (s: (typeof stats)[number], key: string) => (
+    <div
+      key={key}
+      className="group/stat relative inline-flex items-center gap-3 shrink-0 rounded-2xl px-4 py-2.5
+                 bg-gradient-to-b from-white/[0.05] to-white/[0.015] backdrop-blur-md
+                 border border-white/[0.08] shadow-[0_8px_24px_-8px_rgba(0,0,0,0.6)]
+                 transition-all duration-300 hover:border-[color:var(--accent)]/50 hover:-translate-y-[1px]"
+      style={{ ["--accent" as any]: s.accent }}
+    >
+      {/* خط توهج رفيع أعلى الكارت بلون العنصر */}
+      <span
+        className="pointer-events-none absolute inset-x-3 -top-px h-px opacity-70"
+        style={{ background: `linear-gradient(90deg, transparent, ${s.accent}, transparent)` }}
+      />
+
+      {/* شارة الأيقونة الدائرية */}
+      <span
+        className="relative flex items-center justify-center w-8 h-8 rounded-full shrink-0 border"
+        style={{
+          background: `radial-gradient(circle at 35% 30%, ${s.accent}33, #04091400 70%)`,
+          borderColor: `${s.accent}55`,
+          color: s.accent,
+          boxShadow: `0 0 14px ${s.accent}40`,
+        }}
+      >
+        {s.icon}
+      </span>
+
+      <div className="flex flex-col items-start leading-tight">
+        <span
+          className="text-sm font-black font-tech tracking-wide bg-clip-text text-transparent"
+          style={{ backgroundImage: `linear-gradient(95deg, #ffffff, ${s.accent})` }}
+        >
+          {s.big}
+        </span>
+        <span className="text-[11px] text-gray-400 font-semibold font-['Cairo']">
+          {s.small}
+        </span>
+      </div>
+    </div>
+  );
 
   return (
     <section id="hero" className="relative pt-10 pb-20 lg:pt-14 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
@@ -136,7 +180,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/10 blur-[130px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-10">
-        
+
         {/* شارة التأسيس العلوية */}
         <div className="flex justify-center">
           <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-[#00a3ff]/25 bg-transparent text-center">
@@ -151,7 +195,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-          
+
           {/* --- القسم الأيمن: النصوص ومعلومات صاحب المتجر والشريط المتحرك --- */}
           <div className="lg:col-span-6 space-y-7 text-right">
             <div className="flex items-center gap-4 justify-end">
@@ -198,42 +242,29 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* شريط الإحصائيات المتحرك باستخدام animate-marquee بشكل صحيح 100% */}
+            {/* شريط الإحصائيات الفاخر — نفس آلية animate-marquee المثبتة (نصفان متطابقان)،
+                بس بتصميم زجاجي أرقى: برواز متدرّج خفيف + تعتيم تدريجي على الحواف بدل
+                الحدود المربّعة، وكروت بشارات أيقونة دائرية متوهجة وأرقام بتدرّج لوني */}
             <div className="w-full pt-4 pb-2">
-              <div className="w-full overflow-hidden relative border-y border-[#00a3ff]/30 bg-[#040914]/80 py-2.5" dir="ltr">
+              <div
+                className="relative w-full overflow-hidden rounded-2xl py-3 px-1
+                           bg-gradient-to-b from-white/[0.03] to-transparent
+                           border border-white/[0.06]
+                           [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
+                dir="ltr"
+              >
+                {/* خط توهج علوي رفيع بعرض الشريط كاملاً */}
+                <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00a3ff]/50 to-transparent" />
+
                 <div className="animate-marquee flex items-center gap-4">
                   {/* النصف الأول من العناصر */}
                   <div className="flex items-center gap-4 shrink-0">
-                    {stats.map((s, i) => (
-                      <div
-                        key={`s1-${i}`}
-                        className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)]"
-                      >
-                        <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
-                          {s.big} {s.icon}
-                        </div>
-                        <div className="text-xs text-gray-200 font-bold font-['Cairo'] pr-2 border-r border-[#00a3ff]/30">
-                          {s.small}
-                        </div>
-                      </div>
-                    ))}
+                    {stats.map((s, i) => renderStatCard(s, `s1-${i}`))}
                   </div>
 
                   {/* النصف الثاني المطابق لضمان تكرار الحركة بدون فراغات أو اختفاء */}
-                  <div className="flex items-center gap-4 shrink-0">
-                    {stats.map((s, i) => (
-                      <div
-                        key={`s2-${i}`}
-                        className="inline-flex items-center gap-3 bg-gradient-to-r from-[#071124] to-[#040914] border border-[#00a3ff]/40 rounded-2xl px-4 py-2.5 shrink-0 shadow-[0_4px_20px_rgba(0,163,255,0.15)]"
-                      >
-                        <div className="text-sm font-black text-[#00e5ff] font-tech flex items-center gap-1.5 bg-[#00a3ff]/15 px-2.5 py-1 rounded-xl border border-[#00a3ff]/30">
-                          {s.big} {s.icon}
-                        </div>
-                        <div className="text-xs text-gray-200 font-bold font-['Cairo'] pr-2 border-r border-[#00a3ff]/30">
-                          {s.small}
-                        </div>
-                      </div>
-                    ))}
+                  <div className="flex items-center gap-4 shrink-0" aria-hidden="true">
+                    {stats.map((s, i) => renderStatCard(s, `s2-${i}`))}
                   </div>
                 </div>
               </div>
@@ -251,7 +282,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <div className="relative rounded-[22px] bg-[#040814] overflow-hidden border border-[#00a3ff]/40">
 
                     <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-[#00e5ff] to-transparent z-30" />
-                    
+
                     <div className="relative z-20 flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
                       {siteAudioUrl ? (
                         <button
@@ -333,7 +364,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                 <div className="relative p-[3px] rounded-3xl bg-gradient-to-b from-[#00e5ff] via-[#00a3ff]/70 to-[#101c38] shadow-[0_0_40px_rgba(0,163,255,0.3)]">
                   <div className="rounded-[22px] bg-[#040814] overflow-hidden border border-[#00a3ff]/40 relative">
-                    
+
                     <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20] relative z-20">
                       {siteAudioUrl ? (
                         <button
