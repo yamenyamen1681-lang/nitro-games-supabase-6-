@@ -60,11 +60,23 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className="sticky top-0 z-40 w-full transition-all duration-300">
-      {/* ===== 1. Announcement Bar ===== */}
-      <div className="relative bg-gradient-to-r from-[#070b14] via-[#0b1120] to-[#070b14] border-b border-[#00a3ff]/30 text-white text-xs font-semibold py-2.5 px-4 overflow-hidden shadow-[0_4px_25px_rgba(0,163,255,0.2)]">
-        <div className="absolute top-0 left-0 right-0 h-[1.5px] bg-gradient-to-r from-transparent via-[#00a3ff] via-[#00e5ff] to-transparent animate-pulse" />
+      <style>{`
+        @keyframes shimmerSweep {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
+        }
+        .shimmer-badge {
+          background-size: 220% auto;
+          animation: shimmerSweep 3.2s linear infinite;
+        }
+      `}</style>
 
-        <div className="flex items-center justify-between max-w-7xl mx-auto">
+      {/* ===== 1. Announcement Bar — زجاجي فاخر بدل الخلفية الداكنة الصلبة ===== */}
+      <div className="relative bg-gradient-to-r from-[#070b14]/95 via-[#0b1120]/95 to-[#070b14]/95 backdrop-blur-md border-b border-white/[0.06] text-white text-xs font-semibold py-2.5 px-4 overflow-hidden shadow-[0_4px_25px_rgba(0,163,255,0.15)]">
+        <span className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#00e5ff]/70 to-transparent" />
+        <span className="absolute -top-10 right-1/3 w-64 h-24 bg-[#00a3ff]/10 blur-3xl rounded-full pointer-events-none" />
+
+        <div className="relative flex items-center justify-between max-w-7xl mx-auto">
           <div className="flex-1 overflow-hidden">
             <div className="animate-marquee inline-flex items-center gap-12 whitespace-nowrap text-xs font-bold text-gray-200">
               <span className="flex items-center gap-2">
@@ -81,7 +93,13 @@ export const Header: React.FC<HeaderProps> = ({
                 توصيل لكافة مناطق فلسطين والداخل المحتل 🚚 | ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
               </span>
               <span className="text-[#00e5ff]">✦</span>
-              <span className="bg-[#00a3ff]/15 text-[#00a3ff] px-2.5 py-0.5 rounded-full border border-[#00a3ff]/40 font-mono">
+              <span
+                className="shimmer-badge bg-[length:220%_auto] text-[#02121f] px-3 py-1 rounded-full border border-[#00e5ff]/40 font-mono font-black shadow-[0_0_14px_rgba(0,229,255,0.35)]"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(100deg, #00a3ff 0%, #00e5ff 25%, #d6f7ff 50%, #00e5ff 75%, #00a3ff 100%)",
+                }}
+              >
                 كود خصم فوري: NITRO10 (وفر 10%)
               </span>
             </div>
@@ -103,12 +121,14 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* ===== 2. Main Navbar ===== */}
-      <div className="bg-[#05070d]/95 backdrop-blur-xl border-b border-[#1c2942] shadow-[0_10px_35px_rgba(0,0,0,0.85)]">
+      <div className="relative bg-[#05070d]/90 backdrop-blur-xl border-b border-white/[0.06] shadow-[0_10px_35px_rgba(0,0,0,0.85)]">
+        <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#00a3ff]/40 to-transparent" />
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
           {/* Logo */}
           <a href="#" className="flex items-center gap-3 group">
-            <div className="relative w-11 h-11 rounded-xl bg-[#0b1120] border border-[#1c2942] group-hover:border-[#00a3ff] flex items-center justify-center transition-all duration-300 shadow-[0_0_15px_rgba(0,163,255,0.2)] group-hover:shadow-[0_0_25px_rgba(0,163,255,0.5)]">
-              <Zap className="w-6 h-6 text-[#00a3ff] group-hover:scale-110 transition-transform" />
+            <div className="relative w-11 h-11 rounded-xl grad-frame flex items-center justify-center transition-all duration-300">
+              <Zap className="w-6 h-6 text-[#00a3ff] group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_#00a3ff]" />
               <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00e5ff]"></span>
@@ -120,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="brand-mark brand-mark-sm text-white">
                   NITRO <span className="brand-mark-games">GAMES</span>
                 </span>
-                <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-[#00e5ff]/15 text-[#00e5ff] border border-[#00e5ff]/30 font-tech">
+                <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-[#00a3ff]/20 to-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/30 font-tech shadow-[0_0_10px_rgba(0,229,255,0.2)]">
                   PRO
                 </span>
               </div>
@@ -129,12 +149,13 @@ export const Header: React.FC<HeaderProps> = ({
           </a>
 
           {/* Desktop nav */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#0b1120] p-1.5 rounded-xl border border-[#1c2942]">
+          <nav className="hidden lg:flex items-center gap-1 bg-white/[0.03] backdrop-blur-sm p-1.5 rounded-xl border border-white/[0.06]">
             <a
               href="#hero"
-              className="px-3.5 py-2 text-xs font-bold text-gray-200 hover:text-[#00a3ff] transition-colors rounded-lg hover:bg-[#101a2e]"
+              className="relative px-3.5 py-2 text-xs font-bold text-gray-200 hover:text-[#00a3ff] transition-colors rounded-lg hover:bg-white/[0.04] group/nav"
             >
               الرئيسية
+              <span className="absolute inset-x-3 bottom-1 h-px bg-[#00a3ff] scale-x-0 group-hover/nav:scale-x-100 transition-transform origin-center" />
             </a>
             {categories.map((cat) => {
               const Icon = cat.icon;
@@ -142,10 +163,11 @@ export const Header: React.FC<HeaderProps> = ({
                 <button
                   key={cat.id}
                   onClick={() => handleCategoryClick(cat.id)}
-                  className="px-3.5 py-2 text-xs font-bold text-gray-300 hover:text-white hover:bg-[#101a2e] rounded-lg transition-all flex items-center gap-1.5 cursor-pointer group"
+                  className="relative px-3.5 py-2 text-xs font-bold text-gray-300 hover:text-white hover:bg-white/[0.04] rounded-lg transition-all flex items-center gap-1.5 cursor-pointer group/nav"
                 >
-                  <Icon className="w-3.5 h-3.5 text-gray-400 group-hover:text-[#00a3ff] transition-colors" />
+                  <Icon className="w-3.5 h-3.5 text-gray-400 group-hover/nav:text-[#00a3ff] transition-colors" />
                   <span>{cat.label}</span>
+                  <span className="absolute inset-x-3 bottom-1 h-px bg-[#00a3ff] scale-x-0 group-hover/nav:scale-x-100 transition-transform origin-center" />
                 </button>
               );
             })}
@@ -153,7 +175,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           {/* Search */}
           <div className="hidden xl:flex flex-1 max-w-xs mx-1">
-            <form onSubmit={handleSearchSubmit} className="relative w-full">
+            <form onSubmit={handleSearchSubmit} className="relative w-full group/search">
               <input
                 type="text"
                 placeholder="ابحث عن كيبورد، ماوس، ماوس باد، مايك..."
@@ -162,11 +184,11 @@ export const Header: React.FC<HeaderProps> = ({
                   setSearchQuery(e.target.value);
                   if (onSearchChange) onSearchChange(e.target.value);
                 }}
-                className="w-full bg-[#0b1120] text-xs text-gray-100 placeholder-gray-500 rounded-xl pl-9 pr-4 py-2.5 border border-[#1c2942] focus:outline-none focus:border-[#00a3ff] focus:ring-1 focus:ring-[#00a3ff] transition-all"
+                className="w-full bg-white/[0.03] text-xs text-gray-100 placeholder-gray-500 rounded-xl pl-9 pr-4 py-2.5 border border-white/[0.08] focus:outline-none focus:border-[#00a3ff] focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(0,163,255,0.15)] transition-all"
               />
               <button
                 type="submit"
-                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#00a3ff] transition-colors"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within/search:text-[#00a3ff] hover:text-[#00a3ff] transition-colors"
                 title="بحث"
               >
                 <Search className="w-4 h-4" />
@@ -177,7 +199,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Actions */}
           <div className="flex items-center gap-2 sm:gap-2.5">
             <div
-              className="hidden sm:flex items-center gap-1 px-3 py-2 rounded-xl bg-[#0b1120] border border-[#1c2942] text-xs font-bold text-gray-200"
+              className="hidden sm:flex items-center gap-1 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-xs font-bold text-gray-200"
               title="العملة الرسمية: شيكل فلسطيني (₪ ILS)"
             >
               <span className="text-[#00a3ff] font-black text-sm">₪</span>
@@ -186,7 +208,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="xl:hidden p-2.5 rounded-xl bg-[#0b1120] border border-[#1c2942] text-gray-300 hover:text-[#00a3ff] transition-colors"
+              className="xl:hidden p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-gray-300 hover:text-[#00a3ff] hover:border-[#00a3ff]/40 transition-colors"
               aria-label="البحث"
             >
               <Search className="w-5 h-5" />
@@ -195,7 +217,7 @@ export const Header: React.FC<HeaderProps> = ({
             {onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#0b1120] hover:bg-[#00a3ff] border border-[#1c2942] hover:border-[#00a3ff] text-gray-300 hover:text-black transition-all text-xs font-bold shadow-sm cursor-pointer group"
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.03] hover:bg-[#00a3ff] border border-white/[0.08] hover:border-[#00a3ff] text-gray-300 hover:text-black transition-all text-xs font-bold shadow-sm cursor-pointer group"
                 title="لوحة تحكم المشرف"
               >
                 <Lock className="w-3.5 h-3.5 text-[#00a3ff] group-hover:text-black transition-colors" />
@@ -206,12 +228,12 @@ export const Header: React.FC<HeaderProps> = ({
             <a
               href="#products"
               onClick={() => onCategorySelect?.("all")}
-              className="relative p-2.5 rounded-xl bg-[#0b1120] border border-[#1c2942] text-gray-300 hover:text-[#00e5ff] transition-colors"
+              className="relative p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-gray-300 hover:text-[#00e5ff] hover:border-[#00e5ff]/40 transition-colors"
               title="قائمة المفضلة"
             >
               <Heart className="w-5 h-5" />
               {wishlist.length > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 bg-[#00e5ff] text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-lg animate-bounce">
+                <span className="absolute -top-1.5 -right-1.5 bg-[#00e5ff] text-black text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center shadow-[0_0_10px_rgba(0,229,255,0.6)] animate-bounce">
                   {wishlist.length}
                 </span>
               )}
@@ -219,7 +241,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#0b1120] hover:bg-[#101a2e] border border-[#00a3ff]/40 hover:border-[#00a3ff] text-white hover:shadow-[0_0_20px_rgba(0,163,255,0.3)] transition-all group"
+              className="relative flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-b from-white/[0.05] to-white/[0.02] hover:from-white/[0.08] border border-[#00a3ff]/40 hover:border-[#00a3ff] text-white hover:shadow-[0_0_20px_rgba(0,163,255,0.35)] transition-all group"
             >
               <div className="relative">
                 <ShoppingBag className="w-5 h-5 text-[#00a3ff] group-hover:scale-110 transition-transform" />
@@ -239,7 +261,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2.5 rounded-xl bg-[#0b1120] border border-[#1c2942] text-gray-300 hover:text-[#00a3ff] transition-colors"
+              className="lg:hidden p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-gray-300 hover:text-[#00a3ff] transition-colors"
               aria-label="القائمة"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -249,7 +271,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Mobile search */}
         {searchOpen && (
-          <div className="xl:hidden px-4 pb-3 pt-1 border-t border-[#1c2942] bg-[#070b14]">
+          <div className="xl:hidden px-4 pb-3 pt-1 border-t border-white/[0.06] bg-[#070b14]/95 backdrop-blur-md">
             <form onSubmit={handleSearchSubmit} className="relative w-full">
               <input
                 type="text"
@@ -259,7 +281,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setSearchQuery(e.target.value);
                   if (onSearchChange) onSearchChange(e.target.value);
                 }}
-                className="w-full bg-[#101a2e] text-sm text-gray-100 placeholder-gray-500 rounded-xl pl-10 pr-4 py-2.5 border border-[#1c2942] focus:outline-none focus:border-[#00a3ff]"
+                className="w-full bg-white/[0.04] text-sm text-gray-100 placeholder-gray-500 rounded-xl pl-10 pr-4 py-2.5 border border-white/[0.08] focus:outline-none focus:border-[#00a3ff]"
                 autoFocus
               />
               <button
@@ -274,13 +296,13 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#05070d] border-t border-[#1c2942] px-5 py-6 space-y-4 shadow-2xl">
-            <div className="grid grid-cols-2 gap-2 pb-4 border-b border-[#1c2942]">
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[#0b1120] text-xs text-gray-300">
+          <div className="lg:hidden bg-[#05070d]/98 backdrop-blur-xl border-t border-white/[0.06] px-5 py-6 space-y-4 shadow-2xl">
+            <div className="grid grid-cols-2 gap-2 pb-4 border-b border-white/[0.06]">
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-gray-300">
                 <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />
                 <span>ضمان سنة كاملة ⭐</span>
               </div>
-              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-[#0b1120] text-xs text-gray-300">
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-gray-300">
                 <Truck className="w-4 h-4 text-[#00a3ff]" />
                 <span>شحن سريع 🚚</span>
               </div>
@@ -292,7 +314,7 @@ export const Header: React.FC<HeaderProps> = ({
                   onCategorySelect?.("all");
                   setMobileMenuOpen(false);
                 }}
-                className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-gray-200 hover:text-[#00a3ff] hover:bg-[#0b1120] text-right w-full"
+                className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-gray-200 hover:text-[#00a3ff] hover:bg-white/[0.04] text-right w-full transition-colors"
               >
                 <span>جميع الأقسام</span>
               </button>
@@ -303,10 +325,12 @@ export const Header: React.FC<HeaderProps> = ({
                   <button
                     key={cat.id}
                     onClick={() => handleCategoryClick(cat.id)}
-                    className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-gray-200 hover:text-[#00a3ff] hover:bg-[#0b1120] text-right w-full"
+                    className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-gray-200 hover:text-[#00a3ff] hover:bg-white/[0.04] text-right w-full transition-colors"
                   >
                     <div className="flex items-center gap-2.5">
-                      <Icon className="w-4 h-4 text-[#00a3ff]" />
+                      <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#00a3ff]/10 border border-[#00a3ff]/25">
+                        <Icon className="w-3.5 h-3.5 text-[#00a3ff]" />
+                      </span>
                       <span>{cat.label}</span>
                     </div>
                   </button>
@@ -314,14 +338,14 @@ export const Header: React.FC<HeaderProps> = ({
               })}
             </nav>
 
-            <div className="pt-4 border-t border-[#1c2942] flex flex-col gap-2.5">
+            <div className="pt-4 border-t border-white/[0.06] flex flex-col gap-2.5">
               {onOpenAdmin && (
                 <button
                   onClick={() => {
                     setMobileMenuOpen(false);
                     onOpenAdmin();
                   }}
-                  className="w-full py-2.5 rounded-xl bg-[#0b1120] border border-[#00a3ff]/40 text-[#00a3ff] font-bold flex items-center justify-center gap-2 text-xs cursor-pointer"
+                  className="w-full py-2.5 rounded-xl bg-white/[0.03] border border-[#00a3ff]/40 text-[#00a3ff] font-bold flex items-center justify-center gap-2 text-xs cursor-pointer hover:bg-white/[0.06] transition-colors"
                 >
                   <Lock className="w-4 h-4" />
                   <span>لوحة تحكم المشرف</span>
