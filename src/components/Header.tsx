@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
                 هاد شرط أساسي حتى تكون لفّة animate-marquee (0% → -50%) مثالية
                 بدون أي قطع أو اختفاء. قبل كان في عنصر فريد (التاغلاين وكود
                 الخصم) موجود مرة وحدة بس، فما كانت نص الحركة تطابق النص التاني. */}
-            <div className="animate-marquee flex items-center gap-10 whitespace-nowrap text-xs font-bold text-gray-200">
+            <div className="animate-marquee items-center gap-10 whitespace-nowrap text-xs font-bold text-gray-200">
               {(["a", "b"] as const).map((groupKey) => (
                 <div key={groupKey} className="flex items-center gap-10 shrink-0" aria-hidden={groupKey === "b"}>
                   <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.07]">
