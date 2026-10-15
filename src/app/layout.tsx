@@ -2,14 +2,13 @@ import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
 import "./globals.css";
 
-const SITE_URL = "https://nitro-games-supabase-6.vercel.app";
-
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://nitro-games-supabase-6.vercel.app";
 const STORE_NAME_AR = "نيترو قيمز";
 const STORE_NAME_EN = "NITRO GAMES";
 const WHATSAPP = "972595852044";
 
 const description =
-  "NITRO GAMES (نيترو قيمز) — متجر إلكتروني متخصص في عتاد الجيمينج في فلسطين: كيبورد، ماوس، ماوس باد، مايك، وسماعات.";
+  "NITRO GAMES (نيترو قيمز) — خياركم الأفضل في فلسطين للعتاد الاحترافي: كيبورد، ماوس، ماوس باد، مايك، سماعات. توصيل لكافة مناطق فلسطين والداخل المحتل مع ضمان حقيقي لمدة سنة.";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -21,85 +20,82 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
 
   title: {
-    default: "NITRO GAMES | نيترو قيمز",
-    template: "%s | NITRO GAMES",
+    default: "نيترو قيمز | NITRO GAMES — متجر عتاد الجيمينج في فلسطين",
+    template: "%s | NITRO GAMES فلسطين",
   },
-
   description,
 
   keywords: [
-    "NITRO GAMES",
-    "Nitro Games",
-    "NitroGames",
     "نيترو قيمز",
-    "نيتروقيز",
     "نتيرو قيمز",
-    "متجر نيترو قيمز",
+    "نيتروقيز",
     "متجر قيمنق فلسطين",
     "قيمنق فلسطين",
-    "عتاد قيمنق فلسطين",
+    "عتاد قيمنق",
     "كيبورد قيمنق",
     "ماوس قيمنق",
     "ماوس باد",
     "مايك قيمنق",
     "سماعات قيمنق",
+    "متجر ألعاب فلسطين",
+    "رام الله",
+    "القدس",
+    "Nitro Games",
+    "NitroGames",
+    "NITRO GAMES Palestine",
     "gaming store palestine",
     "gaming peripherals palestine",
+    "esports gear palestine",
     "keyboard palestine",
     "gaming mouse palestine",
     "mousepad",
     "microphone",
     "headset",
+    "Wooting",
+    "Artisan",
+    "Logitech Superlight",
+    "Razer Viper",
   ],
 
-  authors: [
-    {
-      name: STORE_NAME_EN,
-      url: SITE_URL,
-    },
-  ],
-
-  creator: STORE_NAME_EN,
-  publisher: STORE_NAME_EN,
-  applicationName: STORE_NAME_EN,
+  authors: [{ name: "NITRO GAMES", url: SITE_URL }],
+  creator: "NITRO GAMES",
+  publisher: "NITRO GAMES",
 
   openGraph: {
     type: "website",
     locale: "ar_PS",
     alternateLocale: ["ar", "en_US"],
     url: SITE_URL,
-    siteName: STORE_NAME_EN,
-    title: "NITRO GAMES | نيترو قيمز",
+    siteName: "NITRO GAMES — نيترو قيمز",
+    title: "نيترو قيمز | NITRO GAMES — خياركم الأفضل في فلسطين",
     description,
     images: [
       {
         url: "/images/deep-space-nebula.jpg",
         width: 1200,
         height: 630,
-        alt: "NITRO GAMES - نيترو قيمز",
+        alt: "NITRO GAMES — نيترو قيمز متجر عتاد الجيمينج في فلسطين",
       },
     ],
   },
 
   twitter: {
     card: "summary_large_image",
-    title: "NITRO GAMES | نيترو قيمز",
+    title: "نيترو قيمز | NITRO GAMES فلسطين",
     description,
     images: ["/images/deep-space-nebula.jpg"],
   },
 
+  applicationName: "NITRO GAMES",
   appleWebApp: {
     capable: true,
-    title: STORE_NAME_EN,
+    title: "NITRO GAMES",
     statusBarStyle: "black-translucent",
   },
 
-  formatDetection: {
-    telephone: true,
-    address: false,
-    email: true,
-  },
+  formatDetection: { telephone: true, address: true, email: true },
 
+  // ✅ كود التحقق الموحد والصحيح فقط بدون تكرار
   verification: {
     google: "025401ee1a873bc6",
   },
@@ -111,7 +107,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-
     googleBot: {
       index: true,
       follow: true,
@@ -121,107 +116,87 @@ export const metadata: Metadata = {
     },
   },
 
-  icons: {
-    icon: "/favicon.ico",
-  },
+  icons: { icon: "/favicon.ico" },
 };
-
-/*
- * Structured Data
- *
- * يساعد Google على فهم:
- * - اسم الموقع
- * - اسم العلامة
- * - أن الموقع تابع لـ NITRO GAMES
- * - رابط الموقع الرسمي
- */
 
 const jsonLd = {
   "@context": "https://schema.org",
-
   "@graph": [
     {
-      "@type": "Organization",
-
-      "@id": `${SITE_URL}/#organization`,
-
-      name: STORE_NAME_EN,
-
-      alternateName: [
-        STORE_NAME_AR,
-        "NitroGames",
-        "نيترو قيمز",
+      "@type": "Store",
+      "@id": `${SITE_URL}/#store`,
+      name: [
+        { "@language": "ar", "@value": STORE_NAME_AR },
+        { "@language": "en", "@value": STORE_NAME_EN },
       ],
-
+      alternateName: [STORE_NAME_AR, STORE_NAME_EN, "NitroGames", "نيترو قيمز"],
       url: SITE_URL,
-
+      image: `${SITE_URL}/images/deep-space-nebula.jpg`,
       description,
-
       telephone: `+${WHATSAPP}`,
-
-      areaServed: {
-        "@type": "Country",
-        name: "Palestine",
+      priceRange: "₪₪",
+      currenciesAccepted: "ILS",
+      paymentAccepted: "Cash on Delivery, JawwalPay, PalPay",
+      address: {
+        "@type": "PostalAddress",
+        addressCountry: "PS",
+        addressRegion: "فلسطين",
       },
+      areaServed: [
+        { "@type": "Country", name: "فلسطين" },
+        { "@type": "Place", name: "الضفة الغربية" },
+        { "@type": "Place", name: "القدس" },
+        { "@type": "Place", name: "الداخل المحتل 48" },
+      ],
+      openingHoursSpecification: [
+        {
+          "@type": "OpeningHoursSpecification",
+          dayOfWeek: [
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+            "Sunday",
+          ],
+          opens: "10:00",
+          closes: "23:00",
+        },
+      ],
     },
-
     {
       "@type": "WebSite",
-
       "@id": `${SITE_URL}/#website`,
-
       url: SITE_URL,
-
-      name: STORE_NAME_EN,
-
-      alternateName: STORE_NAME_AR,
-
-      inLanguage: ["ar", "en"],
-
-      publisher: {
-        "@id": `${SITE_URL}/#organization`,
+      name: "NITRO GAMES — نيترو قيمز",
+      inLanguage: "ar",
+      publisher: { "@id": `${SITE_URL}/#store` },
+      potentialAction: {
+        "@type": "SearchAction",
+        target: `${SITE_URL}/?q={search_term_string}`,
+        "query-input": "required name=search_term_string",
       },
     },
   ],
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: ReactNode;
-}) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ar" dir="rtl" className="dark">
       <head>
-        <meta
-          name="theme-color"
-          content="#00a3ff"
-        />
-
-        <link
-          rel="preconnect"
-          href="https://fonts.googleapis.com"
-        />
-
-        <link
-          rel="preconnect"
-          href="https://fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
-
+        <meta name="theme-color" content="#00a3ff" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
           href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Michroma&family=Chakra+Petch:wght@600;700&family=Orbitron:wght@600;700;800;900&display=swap"
           rel="stylesheet"
         />
-
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(jsonLd),
-          }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
       </head>
-
       <body className="min-h-screen bg-[#05070d] text-gray-100 antialiased selection:bg-[#00a3ff] selection:text-black font-['Tajawal','Cairo',sans-serif]">
         {children}
       </body>
