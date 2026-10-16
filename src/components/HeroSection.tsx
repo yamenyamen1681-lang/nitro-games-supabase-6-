@@ -119,8 +119,73 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   ];
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-16 pb-24 lg:pt-20 lg:pb-32 bg-[#03060f] border-b border-[#16223a]">
+    <section id="hero" className="relative overflow-hidden pt-4 pb-20 lg:pt-6 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
+        @property --snake-angle-1 {
+          syntax: '<angle>';
+          initial-value: 0deg;
+          inherits: false;
+        }
+
+        @property --snake-angle-2 {
+          syntax: '<angle>';
+          initial-value: 360deg;
+          inherits: false;
+        }
+
+        .collision-snake-border {
+          position: relative;
+          border-radius: 9999px;
+          background: rgba(3, 7, 18, 0.95);
+          z-index: 1;
+        }
+
+        .collision-snake-border::before {
+          content: '';
+          position: absolute;
+          inset: -2px;
+          border-radius: 9999px;
+          background: conic-gradient(
+            from var(--snake-angle-1),
+            transparent 0%,
+            transparent 75%,
+            #00a3ff 88%,
+            #ffffff 96%,
+            #00d2ff 100%
+          );
+          z-index: -1;
+          animation: snakeMoveClockwise 3s ease-in-out infinite alternate;
+          filter: drop-shadow(0 0 10px rgba(0, 163, 255, 0.9));
+        }
+
+        .collision-snake-border::after {
+          content: '';
+          position: absolute;
+          inset: -2px;
+          border-radius: 9999px;
+          background: conic-gradient(
+            from var(--snake-angle-2),
+            transparent 0%,
+            transparent 75%,
+            #00a3ff 88%,
+            #ffffff 96%,
+            #00d2ff 100%
+          );
+          z-index: -1;
+          animation: snakeMoveCounterClockwise 3s ease-in-out infinite alternate;
+          filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.9));
+        }
+
+        @keyframes snakeMoveClockwise {
+          0% { --snake-angle-1: 0deg; }
+          100% { --snake-angle-1: 180deg; }
+        }
+
+        @keyframes snakeMoveCounterClockwise {
+          0% { --snake-angle-2: 360deg; }
+          100% { --snake-angle-2: 180deg; }
+        }
+
         @keyframes marqueeLoop {
           0% { transform: translateX(0%); }
           100% { transform: translateX(50%); }
@@ -154,10 +219,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00a3ff]/10 blur-[130px] rounded-full pointer-events-none" />
       <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/10 blur-[130px] rounded-full pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-12">
-        {/* Top badge — thin outline instead of a solid block, calmer */}
-        <div className="flex justify-center">
-          <div className="inline-flex items-center gap-2.5 px-5 py-2 rounded-full border border-[#00a3ff]/25 bg-transparent">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
+        
+        {/* --- Top Badge with Collision Snake Border --- */}
+        <div className="flex justify-center -mt-2">
+          <div className="collision-snake-border px-5 py-2 flex items-center gap-2.5 shadow-[0_0_20px_rgba(0,163,255,0.25)]">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00a3ff] opacity-60" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
@@ -171,9 +237,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-14 items-start">
-          {/* --- RIGHT: Copy & Store Owner Banner --- */}
-          <div className="lg:col-span-6 space-y-8 text-right">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          
+          {/* --- RIGHT: Copy & Store Owner Banner (Raised Up) --- */}
+          <div className="lg:col-span-6 space-y-6 text-right pt-2">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
                 <div className="brand-mark brand-mark-lg text-white">
@@ -188,27 +255,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     GAMES
                   </span>
                 </div>
-                <div className="brand-sub mt-2">PALESTINE · ESPORTS GEAR</div>
+                <div className="brand-sub mt-1">PALESTINE · ESPORTS GEAR</div>
               </div>
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl grad-frame flex items-center justify-center flex-shrink-0">
-                <Zap className="w-8 h-8 sm:w-9 sm:h-9 text-[#00a3ff] drop-shadow-[0_0_14px_#00a3ff]" />
+              <div className="relative w-14 h-14 sm:w-18 sm:h-18 rounded-2xl grad-frame flex items-center justify-center flex-shrink-0">
+                <Zap className="w-7 h-7 sm:w-8 sm:h-8 text-[#00a3ff] drop-shadow-[0_0_14px_#00a3ff]" />
               </div>
             </div>
 
-            <h1 className="text-3xl sm:text-5xl lg:text-[3.2rem] font-light text-white leading-[1.3] font-['Cairo']">
+            <h1 className="text-3xl sm:text-4xl lg:text-[2.8rem] font-light text-white leading-[1.25] font-['Cairo']">
               <span className="brand-mark brand-mark-md text-white font-normal">NITRO GAMES</span>
-              <span className="block mt-3 font-black">
+              <span className="block mt-2 font-black">
                 <span className="sr-only">نيترو قيمز — </span>خياركم الأفضل في فلسطين
               </span>
-              <span className="block text-2xl sm:text-4xl lg:text-[2.5rem] text-gray-200 mt-2 font-light">
+              <span className="block text-xl sm:text-3xl lg:text-[2.2rem] text-gray-200 mt-1 font-light">
                 للعتاد الاحترافي.. <span className="glow-cyan font-bold">ارفع مستوى لعبك!</span>
               </span>
             </h1>
 
             {/* الأزرار + شارة صاحب المتجر */}
-            <div className="flex flex-wrap items-center justify-end gap-3.5 pt-2">
+            <div className="flex flex-wrap items-center justify-end gap-3 pt-1">
               {/* شارة صاحب المتجر */}
-              <div dir="ltr" className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
+              <div dir="ltr" className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
                 <Crown className="w-4 h-4 text-[#00e5ff] fill-[#00a3ff]/30" />
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">
                   STORE OWNER:
@@ -222,7 +289,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               {/* زر تسوق الآن */}
               <button
                 onClick={() => scrollTo("products")}
-                className="btn-neon text-sm sm:text-base px-6 py-2.5 flex items-center gap-2 cursor-pointer group"
+                className="btn-neon text-sm sm:text-base px-5 py-2 flex items-center gap-2 cursor-pointer group"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>{cfg.ctaLabel || "تسوق الآن"}</span>
@@ -230,15 +297,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* الشريط المتحرك المتصل بدون انقطاع — أبطأ وأهدأ */}
-            <div className="w-full overflow-hidden pt-4 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
+            {/* الشريط المتحرك المتصل بدون انقطاع */}
+            <div className="w-full overflow-hidden pt-2 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
               <div className="animate-marquee-infinite gap-3.5">
                 {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
                   <div
                     key={i}
-                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/60 rounded-xl px-4 py-2.5 text-right flex items-center gap-3 shrink-0 ml-3 transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/60 rounded-xl px-4 py-2 text-right flex items-center gap-3 shrink-0 ml-3 transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
                   >
-                    <div className="text-base font-black text-white font-tech flex items-center gap-2 relative z-10">
+                    <div className="text-sm sm:text-base font-black text-white font-tech flex items-center gap-2 relative z-10">
                       <span className="relative flex h-2 w-2">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-60" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
@@ -255,21 +322,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* --- LEFT: Dynamic Showcase --- */}
-          <div className="lg:col-span-6 space-y-4">
+          <div className="lg:col-span-6 space-y-4 pt-2">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative group">
-                {/* هالة خلفية متوهجة بالأزرق بالكامل */}
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-90 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
 
-                {/* برواز زجاجي فاخر بحدّ متدرّج */}
                 <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/70 via-[#00a3ff]/40 to-[#0a1630]/90 shadow-[0_25px_60px_-15px_rgba(0,163,255,0.4)]">
                   <div className="relative rounded-[22px] bg-[#040814] overflow-hidden">
-
-                    {/* شريط لمعان علوي خفيف (زجاج) */}
                     <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/[0.06] to-transparent z-20" />
 
                     <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
-
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
@@ -321,28 +383,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           }
                           className="absolute inset-0 w-full h-full object-cover rounded-xl"
                         />
-
-                        {/* تظليل سينمائي خفيف على الحواف لعمق أكبر */}
                         <span className="absolute inset-0 pointer-events-none rounded-xl bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.45)_100%)]" />
-
-                        {/* إطار داخلي مزدوج فاخر */}
                         <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/40 rounded-xl pointer-events-none shadow-[inset_0_0_30px_rgba(0,163,255,0.3)]" />
-                        <span className="absolute inset-[6px] ring-1 ring-inset ring-white/[0.06] rounded-lg pointer-events-none" />
-
-                        {/* زوايا ذهبية-زرقاء فاخرة */}
-                        <span className="absolute top-2.5 right-2.5 w-5 h-5 border-t-2 border-r-2 border-[#00e5ff]/80 rounded-tr-md pointer-events-none" />
-                        <span className="absolute bottom-2.5 left-2.5 w-5 h-5 border-b-2 border-l-2 border-[#00a3ff]/80 rounded-bl-md pointer-events-none" />
-
-                        {cfg.videoUrls.length > 1 && (
-                          <span className="absolute top-3 left-3 z-10 text-[10px] font-tech bg-black/80 text-[#00e5ff] px-2.5 py-1 rounded-md border border-[#00e5ff]/40 backdrop-blur-md">
-                            {(showcaseVideoIndex % cfg.videoUrls.length) + 1} / {cfg.videoUrls.length}
-                          </span>
-                        )}
                       </div>
                     </div>
 
-                    <div className="relative z-10 px-5 py-3.5 border-t border-[#142342] bg-[#060c1d]/90 backdrop-blur-md flex items-center justify-between gap-3">
-                      <span className="pointer-events-none absolute inset-x-0 -top-px h-px bg-gradient-to-r from-transparent via-[#00e5ff]/70 to-transparent" />
+                    <div className="relative z-10 px-5 py-3 border-t border-[#142342] bg-[#060c1d]/90 backdrop-blur-md flex items-center justify-between gap-3">
                       <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo'] tracking-wide">
                         {cfg.headline}
                       </h3>
@@ -356,7 +402,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     </div>
                   </div>
                 </div>
-
                 {siteAudioUrl && <audio ref={audioRef} src={siteAudioUrl} loop />}
               </div>
             ) : cfg.enabled && active ? (
@@ -369,9 +414,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                 <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
                   <div className="rounded-[22px] bg-[#040814] overflow-hidden">
-
                     <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
-
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
@@ -431,9 +474,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         />
                       </div>
 
-                      <span className="absolute top-3 right-3 w-6 h-6 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-lg" />
-                      <span className="absolute bottom-3 left-3 w-6 h-6 border-b-2 border-l-2 border-[#00a3ff] rounded-bl-lg" />
-
                       <div className="absolute top-4 left-4 flex flex-col items-start gap-1">
                         {active.originalPrice && (
                           <span className="text-[11px] font-mono text-gray-400 line-through bg-black/70 px-2 py-0.5 rounded-md">
@@ -450,7 +490,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </span>
                     </div>
 
-                    <div className="px-5 py-3.5 border-t border-[#142342] bg-[#060c1d] flex items-center justify-between gap-3">
+                    <div className="px-5 py-3 border-t border-[#142342] bg-[#060c1d] flex items-center justify-between gap-3">
                       <div className="min-w-0 text-right">
                         <div className="text-[10px] font-tech text-[#00a3ff] uppercase tracking-wider">{active.brand}</div>
                         <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
@@ -468,7 +508,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                     </div>
                   </div>
                 </div>
-
                 {siteAudioUrl && <audio ref={audioRef} src={siteAudioUrl} loop />}
               </div>
             ) : (
@@ -478,6 +517,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             )}
           </div>
+
         </div>
       </div>
     </section>
