@@ -119,14 +119,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section id="hero" className="relative overflow-hidden pt-4 pb-20 lg:pt-6 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        @keyframes snakeMove1 {
+        @keyframes snakeSpinFast {
           0% { stroke-dashoffset: 0; }
-          100% { stroke-dashoffset: 400; }
+          100% { stroke-dashoffset: -100; }
         }
 
-        @keyframes snakeMove2 {
+        @keyframes snakeSpinReverse {
           0% { stroke-dashoffset: 0; }
-          100% { stroke-dashoffset: -400; }
+          100% { stroke-dashoffset: 100; }
         }
 
         .border-snake-svg {
@@ -139,13 +139,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }
 
         .snake-line-1 {
-          stroke-dasharray: 80 200;
-          animation: snakeMove1 3s linear infinite;
+          stroke-dasharray: 25 75;
+          animation: snakeSpinFast 2.5s linear infinite;
         }
 
         .snake-line-2 {
-          stroke-dasharray: 80 200;
-          animation: snakeMove2 3s linear infinite;
+          stroke-dasharray: 25 75;
+          animation: snakeSpinReverse 2.5s linear infinite;
         }
 
         @keyframes marqueeLoop {
@@ -183,18 +183,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
         
-        {/* --- البانر العلوي مع الإطار المتحرك الدقيق --- */}
+        {/* --- البانر العلوي مع إطار الدودة النيون المتحرك --- */}
         <div className="flex justify-center -mt-2">
           <div className="relative w-full max-w-xl mx-auto my-1">
             <svg className="border-snake-svg" style={{ overflow: "visible" }}>
               <defs>
                 <linearGradient id="snakeGlow1" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#00f0ff" stopOpacity="1" />
-                  <stop offset="100%" stopColor="#0066ff" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#0066ff" stopOpacity="0.1" />
                 </linearGradient>
                 <linearGradient id="snakeGlow2" x1="100%" y1="0%" x2="0%" y2="0%">
                   <stop offset="0%" stopColor="#00f0ff" stopOpacity="1" />
-                  <stop offset="100%" stopColor="#0066ff" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="#0066ff" stopOpacity="0.1" />
                 </linearGradient>
                 <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
                   <feGaussianBlur stdDeviation="3" result="blur" />
@@ -215,6 +215,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 strokeWidth="3"
                 strokeLinecap="round"
                 filter="url(#neonGlow)"
+                pathLength="100"
                 className="snake-line-1"
               />
               <rect
@@ -228,6 +229,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 strokeWidth="3"
                 strokeLinecap="round"
                 filter="url(#neonGlow)"
+                pathLength="100"
                 className="snake-line-2"
               />
             </svg>
@@ -339,7 +341,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
-                          className={`p-2 rounded-xl transition-all cursor-pointer border flex items-center justify-center ${
+                          className={`p-2.5 rounded-xl transition-all cursor-pointer border flex items-center justify-center ${
                             isPlaying
                               ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.8)] scale-105"
                               : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
@@ -416,7 +418,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
-                          className={`p-2 rounded-xl transition-all cursor-pointer border flex items-center justify-center ${
+                          className={`p-2.5 rounded-xl transition-all cursor-pointer border flex items-center justify-center ${
                             isPlaying
                               ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.8)] scale-105"
                               : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
