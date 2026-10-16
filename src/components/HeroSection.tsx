@@ -185,7 +185,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
         
-        {/* --- Top Banner with Clean Border-Only Snake Animation --- */}
+        {/* --- البانر العلوي مع حركة الإطار فقط --- */}
         <div className="flex justify-center -mt-2">
           <div className="relative w-full max-w-xl mx-auto my-1">
             <svg className="border-snake-svg" style={{ overflow: "visible" }}>
@@ -247,7 +247,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
           
-          {/* --- RIGHT: Copy & Store Owner Banner (Raised Up) --- */}
+          {/* --- اليمين: الشعار والنصوص الرئيسية --- */}
           <div className="lg:col-span-6 space-y-6 text-right pt-2">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -327,7 +327,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* --- LEFT: Dynamic Showcase --- */}
+          {/* --- اليسار: المربع المميز مع زر تشغيل الصوت الأنيق --- */}
           <div className="lg:col-span-6 space-y-4 pt-2">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative group">
@@ -351,11 +351,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           {isPlaying ? (
                             <>
                               <Disc className="w-4 h-4 animate-spin text-black" />
+                              <span className="text-xs font-bold text-black font-['Cairo']">إيقاف الصوت</span>
                               <Volume2 className="w-4 h-4 text-black animate-pulse" />
                             </>
                           ) : (
                             <>
                               <Music className="w-4 h-4 text-[#00e5ff]" />
+                              <span className="text-xs font-bold text-[#00e5ff] font-['Cairo']">تشغيل الصوت</span>
                               <VolumeX className="w-4 h-4 text-[#00e5ff]" />
                             </>
                           )}
@@ -434,11 +436,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           {isPlaying ? (
                             <>
                               <Disc className="w-4 h-4 animate-spin text-black" />
+                              <span className="text-xs font-bold text-black font-['Cairo']">إيقاف الصوت</span>
                               <Volume2 className="w-4 h-4 text-black animate-pulse" />
                             </>
                           ) : (
                             <>
                               <Music className="w-4 h-4 text-[#00e5ff]" />
+                              <span className="text-xs font-bold text-[#00e5ff] font-['Cairo']">تشغيل الصوت</span>
                               <VolumeX className="w-4 h-4 text-[#00e5ff]" />
                             </>
                           )}
