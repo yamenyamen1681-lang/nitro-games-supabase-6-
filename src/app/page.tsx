@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -134,7 +135,7 @@ function NitroGamesApp() {
       />
 
       {/* المحتوى الرئيسي للمتجر */}
-      <main className="flex-1 relative z-10 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 space-y-12 my-6">
+      <main className="flex-1 relative z-10 w-full max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 space-y-8 my-4">
         <HeroSection
           products={products}
           showcase={showcase}
