@@ -185,7 +185,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
         
-        {/* --- البانر العلوي مع حركة الإطار فقط --- */}
+        {/* --- البانر العلوي مع حركة الإطار المحاط بدقة --- */}
         <div className="flex justify-center -mt-2">
           <div className="relative w-full max-w-xl mx-auto my-1">
             <svg className="border-snake-svg" style={{ overflow: "visible" }}>
@@ -327,7 +327,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* --- اليسار: المربع المميز مع زر تشغيل الصوت الأنيق --- */}
+          {/* --- اليسار: المربع المميز مع زر أيقونة الموسيقى فقط --- */}
           <div className="lg:col-span-6 space-y-4 pt-2">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative group">
@@ -341,25 +341,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer border ${
+                          className={`p-2 rounded-xl transition-all cursor-pointer border flex items-center justify-center ${
                             isPlaying
-                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.7)] scale-105"
+                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.8)] scale-105"
                               : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
                           }`}
-                          title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
+                          aria-label={isPlaying ? "Mute sound" : "Play sound"}
                         >
                           {isPlaying ? (
-                            <>
-                              <Disc className="w-4 h-4 animate-spin text-black" />
-                              <span className="text-xs font-bold text-black font-['Cairo']">إيقاف الصوت</span>
-                              <Volume2 className="w-4 h-4 text-black animate-pulse" />
-                            </>
+                            <Disc className="w-5 h-5 animate-spin text-black" />
                           ) : (
-                            <>
-                              <Music className="w-4 h-4 text-[#00e5ff]" />
-                              <span className="text-xs font-bold text-[#00e5ff] font-['Cairo']">تشغيل الصوت</span>
-                              <VolumeX className="w-4 h-4 text-[#00e5ff]" />
-                            </>
+                            <Music className="w-5 h-5 text-[#00e5ff]" />
                           )}
                         </button>
                       ) : (
@@ -426,25 +418,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl transition-all cursor-pointer border ${
+                          className={`p-2 rounded-xl transition-all cursor-pointer border flex items-center justify-center ${
                             isPlaying
-                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.7)] scale-105"
+                              ? "bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black border-[#00e5ff] shadow-[0_0_20px_rgba(0,229,255,0.8)] scale-105"
                               : "bg-[#09152a] border-[#00a3ff]/40 text-[#00e5ff] hover:border-[#00e5ff]"
                           }`}
-                          title={isPlaying ? "إيقاف الموسيقى" : "تشغيل الموسيقى"}
+                          aria-label={isPlaying ? "Mute sound" : "Play sound"}
                         >
                           {isPlaying ? (
-                            <>
-                              <Disc className="w-4 h-4 animate-spin text-black" />
-                              <span className="text-xs font-bold text-black font-['Cairo']">إيقاف الصوت</span>
-                              <Volume2 className="w-4 h-4 text-black animate-pulse" />
-                            </>
+                            <Disc className="w-5 h-5 animate-spin text-black" />
                           ) : (
-                            <>
-                              <Music className="w-4 h-4 text-[#00e5ff]" />
-                              <span className="text-xs font-bold text-[#00e5ff] font-['Cairo']">تشغيل الصوت</span>
-                              <VolumeX className="w-4 h-4 text-[#00e5ff]" />
-                            </>
+                            <Music className="w-5 h-5 text-[#00e5ff]" />
                           )}
                         </button>
                       ) : <div />}
