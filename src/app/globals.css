@@ -1,256 +1,122 @@
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&family=Orbitron:wght@600;700;800;900&family=Michroma&family=Chakra+Petch:wght@600;700&display=swap');
-@import "tailwindcss";
+import React from 'react';
 
-:root {
-  --blue: #00d2ff;       /* primary neon — electric blue */
-  --royal: #0066ff;      /* royal blue */
-  --cyan:  #00f0ff;      /* bright cyan accent */
-  --peri:  #3a86ff;      /* periwinkle third accent */
-  --bg-0: #040812;
-  --bg-1: #070d1a;
-  --bg-2: #0a1224;
-  --bg-3: #101c36;
-  --line: #162c54;
-}
+export default function Home() {
+  return (
+    <main className="min-h-screen relative overflow-hidden text-white pb-20">
+      
+      {/* 1. شريط التنبيهات المتحرك العلوي */}
+      <div className="bg-[#00d2ff]/10 border-b border-[#00d2ff]/30 py-1.5 overflow-hidden whitespace-nowrap">
+        <div className="animate-marquee flex gap-8 text-xs font-bold text-[#00d2ff]">
+          <span>⚡ ضمان حقيقي لمدة سنة على جميع المنتجات</span>
+          <span>🚀 التوصيل لكافة مناطق فلسطين والداخل المحتل</span>
+          <span>🔥 عروض الموسم الجديد! تسوق الآن</span>
+          <span>⚡ ضمان حقيقي لمدة سنة على جميع المنتجات</span>
+        </div>
+      </div>
 
-/* ===== Full Site Dynamic Cyber Elements Background ===== */
-body {
-  font-family: 'Tajawal', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #040812;
-  color: #eaf1ff;
-  direction: rtl;
-  overflow-x: hidden;
-  min-height: 100vh;
-  position: relative;
-  
-  /* دمج دوائر إلكترونية، خطوط نيون، وعناصر تكنولوجية في الخلفية */
-  background-image: 
-    radial-gradient(circle at 15% 20%, rgba(0, 210, 255, 0.08) 0%, transparent 40%),
-    radial-gradient(circle at 85% 65%, rgba(0, 102, 255, 0.1) 0%, transparent 45%),
-    linear-gradient(135deg, rgba(0, 240, 255, 0.03) 25%, transparent 25%),
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 210, 255, 0.15), transparent 70%),
-    linear-gradient(to right, rgba(0, 210, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 60px 60px, 100% 100%, 32px 32px, 32px 32px;
-  background-attachment: fixed;
-}
+      {/* 2. شريط التنقل العلوي (الهيدر والأيقونات) */}
+      <header className="px-4 py-3 flex items-center justify-between">
+        {/* زر القائمة الجانبية */}
+        <button aria-label="القائمة" className="w-10 h-10 rounded-xl bg-[#0a1224] border border-[#162c54] flex items-center justify-center text-[#00d2ff] hover:border-[#00d2ff] transition-all">
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
 
-::selection { background-color: #00d2ff; color: #00102b; }
+        {/* الأيقونات الوسطى (السلة والمفضلة والبحث) */}
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <button aria-label="السلة" className="w-10 h-10 rounded-xl bg-[#0a1224] border border-[#162c54] flex items-center justify-center text-[#00d2ff] hover:border-[#00d2ff] transition-all">
+              🛒
+            </button>
+            <span className="absolute -top-1 -right-1 bg-[#0066ff] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">4</span>
+          </div>
+          <button aria-label="المفضلة" className="w-10 h-10 rounded-xl bg-[#0a1224] border border-[#162c54] flex items-center justify-center text-[#00d2ff]">
+            ❤️
+          </button>
+          <button aria-label="بحث" className="w-10 h-10 rounded-xl bg-[#0a1224] border border-[#162c54] flex items-center justify-center text-[#00d2ff]">
+            🔍
+          </button>
+        </div>
 
-/* ===== Glowing Cyber Orbs & Circuit Floating Background ===== */
-.aurora-stage {
-  position: fixed; 
-  inset: 0; 
-  pointer-events: none; 
-  z-index: 0; 
-  overflow: hidden;
-}
+        {/* شعار المصغر يمين الهيدر */}
+        <div className="text-right">
+          <span className="brand-mark brand-mark-sm brand-mark-games block">NITRO GAMES</span>
+          <span className="text-[9px] text-[#7aa5d8] tracking-widest block">PALESTINE</span>
+        </div>
+      </header>
 
-/* دوائر وتوهجات إلكترونية بالخلفية */
-.aurora-blob-1 {
-  position: absolute; 
-  top: -5%;
-  left: 20%;
-  width: 550px;
-  height: 550px;
-  border-radius: 50%; 
-  background: radial-gradient(circle, rgba(0, 210, 255, 0.18) 0%, rgba(0,210,255,0) 70%);
-  filter: blur(80px); 
-  animation: floatOrb 18s ease-in-out infinite alternate;
-}
+      {/* 3. قسم البانر المرفوع للأعلى مع إطار النيون المتحرك (Cyber Snake) */}
+      <section className="w-full max-w-xl mx-auto px-4 mt-1 mb-3">
+        <div className="cyber-snake-border p-3 px-5 flex items-center justify-between gap-3 shadow-lg">
+          <span className="bg-[#00d2ff]/15 border border-[#00d2ff]/50 text-[#00d2ff] px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase glow-cyan">
+            CYBER ESPORTS
+          </span>
+          <p className="text-gray-200 text-xs sm:text-sm font-medium text-right">
+            المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
+          </p>
+        </div>
+      </section>
 
-.aurora-blob-2 {
-  position: absolute; 
-  top: 45%;
-  right: -5%;
-  width: 480px;
-  height: 480px;
-  border-radius: 50%; 
-  background: radial-gradient(circle, rgba(0, 240, 255, 0.14) 0%, rgba(0,240,255,0) 70%);
-  filter: blur(90px); 
-  animation: floatOrb 15s ease-in-out infinite alternate-reverse;
-}
+      {/* 4. قسم الشعار الرئيسي والنصوص المرفوعة للأعلى */}
+      <section className="flex flex-col items-center text-center px-4 mt-1">
+        
+        {/* اللوجو المضيء */}
+        <div className="flex items-center gap-3 mb-2">
+          <div className="w-12 h-12 rounded-2xl bg-[#00d2ff]/10 border border-[#00d2ff]/40 flex items-center justify-center text-[#00d2ff] text-2xl shadow-[0_0_20px_rgba(0,210,255,0.3)] animate-floaty">
+            ⚡
+          </div>
+          <div className="text-right">
+            <h1 className="brand-mark brand-mark-md brand-mark-games leading-none">
+              NITRO GAMES
+            </h1>
+            <p className="brand-sub">PALESTINE . ESPORTS GEAR</p>
+          </div>
+        </div>
 
-.aurora-blob-3 {
-  position: absolute; 
-  bottom: 5%;
-  left: -5%;
-  width: 520px;
-  height: 520px;
-  border-radius: 50%; 
-  background: radial-gradient(circle, rgba(0, 102, 255, 0.15) 0%, rgba(0,102,255,0) 70%);
-  filter: blur(100px); 
-  animation: floatOrb 22s ease-in-out infinite alternate;
-}
+        {/* النصوص الرئيسية */}
+        <div className="space-y-1 mt-1">
+          <h2 className="text-2xl sm:text-4xl font-black text-white tracking-wide">
+            NITRO GAMES
+          </h2>
+          <p className="text-xl sm:text-3xl font-black text-white">
+            خياركم الأفضل في فلسطين
+          </p>
+          <p className="text-lg sm:text-2xl font-bold text-[#00d2ff] pt-1 glow-cyan">
+            للعتاد الاحترافي.. ارفع مستوى لعبك!
+          </p>
+        </div>
 
-@keyframes floatOrb {
-  0%   { transform: translate(0, 0) scale(1); }
-  50%  { transform: translate(40px, -30px) scale(1.1); }
-  100% { transform: translate(-30px, 20px) scale(0.95); }
-}
+      </section>
 
-/* شبكة التكنولوجيا والعناصر النيون */
-.tech-grid {
-  position: fixed; 
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    linear-gradient(to right, rgba(0, 210, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
-  background-size: 40px 40px;
-  mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.15));
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.15));
-}
+      {/* 5. قسم المنتجات والأقسام (يمكنك إضافة منتجاتك هنا أسفل الصفحة) */}
+      <section className="max-w-4xl mx-auto px-4 mt-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {/* كارد تجريبي لمنتج */}
+          <div className="panel p-4 rounded-2xl flex flex-col items-center text-center">
+            <div className="w-full h-32 bg-[#040812] rounded-xl mb-3 flex items-center justify-center text-3xl">
+              ⌨️
+            </div>
+            <h3 className="font-bold text-sm text-white mb-1">كيبورد احترافي ميكانيكي</h3>
+            <p className="text-[#00d2ff] font-extrabold text-sm mb-3">250 شيكل</p>
+            <button className="w-full py-2 bg-gradient-to-r from-[#00d2ff] to-[#0066ff] text-[#00102b] font-black rounded-xl text-xs shadow-lg">
+              إضافة للسلة
+            </button>
+          </div>
 
-/* ===== Rotating gradient frame ===== */
-@property --ang { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+          <div className="panel p-4 rounded-2xl flex flex-col items-center text-center">
+            <div className="w-full h-32 bg-[#040812] rounded-xl mb-3 flex items-center justify-center text-3xl">
+              🖱️
+            </div>
+            <h3 className="font-bold text-sm text-white mb-1">ماوس جيمينج احترافي</h3>
+            <p className="text-[#00d2ff] font-extrabold text-sm mb-3">180 شيكل</p>
+            <button className="w-full py-2 bg-gradient-to-r from-[#00d2ff] to-[#0066ff] text-[#00102b] font-black rounded-xl text-xs shadow-lg">
+              إضافة للسلة
+            </button>
+          </div>
+        </div>
+      </section>
 
-.grad-frame {
-  position: relative;
-  border-radius: 20px;
-  background: linear-gradient(#0a1224, #0a1224) padding-box,
-              conic-gradient(from var(--ang, 0deg), #00d2ff, #00f0ff, #3a86ff, #00d2ff) border-box;
-  border: 1.5px solid transparent;
-  animation: spinAng 6s linear infinite;
-  transition: box-shadow .3s ease, transform .3s ease;
+    </main>
+  );
 }
-@keyframes spinAng { to { --ang: 360deg; } }
-.grad-frame:hover {
-  box-shadow: 0 18px 45px rgba(0,0,0,.85), 0 0 32px rgba(0,210,255,.3);
-  transform: translateY(-4px);
-}
-
-/* ===== Panels ===== */
-.panel {
-  background: linear-gradient(160deg, rgba(16,28,54,.92), rgba(7,13,26,.96));
-  border: 1px solid var(--line);
-  backdrop-filter: blur(14px);
-  transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
-}
-.panel:hover {
-  border-color: rgba(0,210,255,.55);
-  box-shadow: 0 14px 40px rgba(0,0,0,.8), 0 0 22px rgba(0,210,255,.22);
-  transform: translateY(-3px);
-}
-
-/* ===== Buttons ===== */
-.btn-neon, .btn-cyber-cyan {
-  position: relative; overflow: hidden;
-  background: linear-gradient(135deg, #00d2ff, #0066ff 55%, #00f0ff 145%);
-  color: #00102b; font-weight: 900; border-radius: 14px;
-  box-shadow: 0 0 0 1px rgba(0,210,255,.4), 0 10px 30px rgba(0,210,255,.28);
-  transition: all .25s ease;
-}
-.btn-neon:hover, .btn-cyber-cyan:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 0 1px #00d2ff, 0 14px 42px rgba(0,210,255,.5);
-}
-.btn-neon::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.45) 50%, transparent 70%);
-  transform: translateX(-120%);
-}
-.btn-neon:hover::after { animation: sheen .8s ease; }
-@keyframes sheen { to { transform: translateX(120%); } }
-
-.btn-ghost, .btn-cyber-outline {
-  background: rgba(11,17,32,.75); color: #dcebff;
-  border: 1px solid rgba(0,210,255,.35); border-radius: 14px; transition: all .25s ease;
-}
-.btn-ghost:hover, .btn-cyber-outline:hover {
-  background: rgba(0,210,255,.12); border-color: #00d2ff; color: #fff;
-  box-shadow: 0 0 24px rgba(0,210,255,.3);
-}
-
-.btn-pink, .btn-cyber-magenta {
-  background: linear-gradient(135deg, #00f0ff, #0066ff);
-  color: #00102b; font-weight: 900; border-radius: 14px;
-  box-shadow: 0 10px 30px rgba(0,240,255,.28); transition: all .25s ease;
-}
-.btn-pink:hover, .btn-cyber-magenta:hover {
-  transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,240,255,.5);
-}
-
-/* ===== Cards aliases ===== */
-.cyber-card, .esports-card, .glass-panel {
-  background: linear-gradient(160deg, rgba(16,28,54,.92), rgba(7,13,26,.96));
-  border: 1px solid var(--line); backdrop-filter: blur(14px);
-  transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
-}
-.cyber-card:hover, .esports-card:hover, .glass-panel:hover {
-  border-color: rgba(0,210,255,.55);
-  box-shadow: 0 14px 40px rgba(0,0,0,.8), 0 0 22px rgba(0,210,255,.22);
-  transform: translateY(-3px);
-}
-
-/* ===== Text ===== */
-.glow-cyan, .neon-cyan-text, .neon-text { color: #00d2ff; text-shadow: 0 0 18px rgba(0,210,255,.6); }
-.glow-pink, .neon-magenta-text { color: #00f0ff; text-shadow: 0 0 18px rgba(0,240,255,.55); }
-.grad-text {
-  background: linear-gradient(100deg, #00d2ff, #80e5ff 40%, #00f0ff 85%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-}
-.font-tech { font-family: 'Orbitron', 'Cairo', sans-serif; letter-spacing: .04em; }
-
-/* ===== Brand wordmark ===== */
-.brand-mark {
-  font-family: 'Michroma', 'Chakra Petch', 'Orbitron', sans-serif;
-  font-weight: 400;
-  letter-spacing: 0.18em;
-  line-height: 1;
-  direction: ltr;
-  unicode-bidi: isolate;
-  text-rendering: optimizeLegibility;
-}
-.brand-mark-sm { font-size: 1.05rem; letter-spacing: 0.16em; }
-.brand-mark-md { font-size: 1.35rem; letter-spacing: 0.2em; }
-.brand-mark-lg { font-size: clamp(1.9rem, 6vw, 3.4rem); letter-spacing: 0.22em; }
-.brand-mark-games {
-  background: linear-gradient(100deg, #00d2ff, #80e5ff 40%, #00f0ff 85%);
-  -webkit-background-clip: text; background-clip: text; color: transparent;
-  filter: drop-shadow(0 0 16px rgba(0,210,255,.6));
-}
-.brand-sub {
-  font-family: 'Chakra Petch', 'Orbitron', sans-serif;
-  font-size: .55rem; letter-spacing: .42em; color: #7aa5d8;
-  text-transform: uppercase; direction: ltr;
-}
-
-/* ===== Ticker ===== */
-@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-.animate-marquee { display: inline-flex; white-space: nowrap; animation: marquee 28s linear infinite; }
-.animate-marquee:hover { animation-play-state: paused; }
-
-/* ===== Showcase ===== */
-@keyframes showcaseIn {
-  from { opacity: 0; transform: translateY(14px) scale(.98); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-.showcase-enter { animation: showcaseIn .55s cubic-bezier(.16,1,.3,1); }
-
-@keyframes floaty { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-.animate-floaty { animation: floaty 6s ease-in-out infinite; }
-
-/* Toast / badge entrance */
-@keyframes fadeInDown {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.animate-fade-in-down { animation: fadeInDown .45s cubic-bezier(.16,1,.3,1); }
-
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.animate-fade-in { animation: fadeIn .4s ease; }
-
-/* ===== Accessibility / SEO ===== */
-.sr-only {
-  position: absolute; width: 1px; height: 1px;
-  padding: 0; margin: -1px; overflow: hidden;
-  clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
-}
-
-/* ===== Scrollbar ===== */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: #040812; }
-::-webkit-scrollbar-thumb { background: #162c54; border-radius: 6px; }
-::-webkit-scrollbar-thumb:hover { background: #00d2ff; }
