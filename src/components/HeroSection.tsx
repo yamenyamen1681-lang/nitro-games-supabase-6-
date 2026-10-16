@@ -14,8 +14,6 @@ import {
   CheckCircle2,
   ShoppingBag,
   Flame,
-  Volume2,
-  VolumeX,
   Crown,
   Radio,
   Sparkles,
@@ -121,33 +119,33 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section id="hero" className="relative overflow-hidden pt-4 pb-20 lg:pt-6 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        @keyframes snakeTraceClockwise {
-          0% { stroke-dashoffset: 600; }
-          100% { stroke-dashoffset: 0; }
+        @keyframes snakeMove1 {
+          0% { stroke-dashoffset: 0; }
+          100% { stroke-dashoffset: 400; }
         }
 
-        @keyframes snakeTraceCounter {
-          0% { stroke-dashoffset: -600; }
-          100% { stroke-dashoffset: 0; }
+        @keyframes snakeMove2 {
+          0% { stroke-dashoffset: 0; }
+          100% { stroke-dashoffset: -400; }
         }
 
         .border-snake-svg {
           position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
+          inset: -2px;
+          width: calc(100% + 4px);
+          height: calc(100% + 4px);
           pointer-events: none;
           z-index: 10;
         }
 
         .snake-line-1 {
-          stroke-dasharray: 120 480;
-          animation: snakeTraceClockwise 3s ease-in-out infinite alternate;
+          stroke-dasharray: 80 200;
+          animation: snakeMove1 3s linear infinite;
         }
 
         .snake-line-2 {
-          stroke-dasharray: 120 480;
-          animation: snakeTraceCounter 3s ease-in-out infinite alternate;
+          stroke-dasharray: 80 200;
+          animation: snakeMove2 3s linear infinite;
         }
 
         @keyframes marqueeLoop {
@@ -185,16 +183,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
         
-        {/* --- البانر العلوي مع حركة الإطار المحاط بدقة --- */}
+        {/* --- البانر العلوي مع الإطار المتحرك الدقيق --- */}
         <div className="flex justify-center -mt-2">
           <div className="relative w-full max-w-xl mx-auto my-1">
             <svg className="border-snake-svg" style={{ overflow: "visible" }}>
               <defs>
-                <linearGradient id="snakeGlow1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <linearGradient id="snakeGlow1" x1="0%" y1="0%" x2="100%" y2="0%">
                   <stop offset="0%" stopColor="#00f0ff" stopOpacity="1" />
                   <stop offset="100%" stopColor="#0066ff" stopOpacity="0.2" />
                 </linearGradient>
-                <linearGradient id="snakeGlow2" x1="100%" y1="0%" x2="0%" y2="100%">
+                <linearGradient id="snakeGlow2" x1="100%" y1="0%" x2="0%" y2="0%">
                   <stop offset="0%" stopColor="#00f0ff" stopOpacity="1" />
                   <stop offset="100%" stopColor="#0066ff" stopOpacity="0.2" />
                 </linearGradient>
@@ -207,27 +205,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </filter>
               </defs>
               <rect
-                x="1"
-                y="1"
-                width="calc(100% - 2px)"
-                height="calc(100% - 2px)"
+                x="2"
+                y="2"
+                width="calc(100% - 4px)"
+                height="calc(100% - 4px)"
                 rx="9999"
                 fill="none"
                 stroke="url(#snakeGlow1)"
-                strokeWidth="2.5"
+                strokeWidth="3"
                 strokeLinecap="round"
                 filter="url(#neonGlow)"
                 className="snake-line-1"
               />
               <rect
-                x="1"
-                y="1"
-                width="calc(100% - 2px)"
-                height="calc(100% - 2px)"
+                x="2"
+                y="2"
+                width="calc(100% - 4px)"
+                height="calc(100% - 4px)"
                 rx="9999"
                 fill="none"
                 stroke="url(#snakeGlow2)"
-                strokeWidth="2.5"
+                strokeWidth="3"
                 strokeLinecap="round"
                 filter="url(#neonGlow)"
                 className="snake-line-2"
