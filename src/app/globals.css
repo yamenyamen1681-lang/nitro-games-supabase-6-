@@ -22,20 +22,18 @@ body {
   overflow-x: hidden;
   min-height: 100vh;
   position: relative;
-  /* خلفية شبكة نيون زرقاء تغطي كل الموقع وتتحرك مع التمرير بصورة ثابتة */
-  background-image: 
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 210, 255, 0.15), transparent 70%),
-    radial-gradient(ellipse 60% 40% at 90% 50%, rgba(0, 240, 255, 0.08), transparent 60%),
-    radial-gradient(ellipse 60% 40% at 10% 80%, rgba(58, 134, 255, 0.08), transparent 60%),
-    linear-gradient(to right, rgba(0, 210, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+  
+  /* الصورة الفخمة كخلفية للموقع بالكامل مع إطار شفاف وتثبيت عند التمرير */
+  background-image: linear-gradient(to bottom, rgba(4, 8, 18, 0.45), rgba(4, 8, 18, 0.65)), url('https://i.ibb.co/6c3jKx5/bg-cyber-blue.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
 ::selection { background-color: #00d2ff; color: #00102b; }
 
-/* ===== Blue Aurora Backdrop (Dynamic Background Container) ===== */
+/* ===== Blue Aurora Backdrop ===== */
 .aurora-stage {
   position: fixed; 
   inset: 0; 
@@ -51,7 +49,7 @@ body {
   width: 500px;
   height: 500px;
   border-radius: 9999px; 
-  background: rgba(0, 210, 255, 0.18);
+  background: rgba(0, 210, 255, 0.12);
   filter: blur(120px); 
   animation: blobDrift 22s ease-in-out infinite alternate;
 }
@@ -63,7 +61,7 @@ body {
   width: 450px;
   height: 450px;
   border-radius: 9999px; 
-  background: rgba(0, 240, 255, 0.12);
+  background: rgba(0, 240, 255, 0.08);
   filter: blur(130px); 
   animation: blobDrift 18s ease-in-out infinite alternate-reverse;
 }
@@ -75,7 +73,7 @@ body {
   width: 500px;
   height: 500px;
   border-radius: 9999px; 
-  background: rgba(0, 102, 255, 0.12);
+  background: rgba(0, 102, 255, 0.08);
   filter: blur(140px); 
   animation: blobDrift 25s ease-in-out infinite alternate;
 }
@@ -92,8 +90,8 @@ body {
   pointer-events: none;
   z-index: 0;
   background-image:
-    linear-gradient(to right, rgba(0, 210, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 210, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
   background-size: 40px 40px;
   mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
   -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
@@ -105,7 +103,7 @@ body {
 .grad-frame {
   position: relative;
   border-radius: 20px;
-  background: linear-gradient(#0a1224, #0a1224) padding-box,
+  background: linear-gradient(rgba(10, 18, 36, 0.85), rgba(10, 18, 36, 0.85)) padding-box,
               conic-gradient(from var(--ang, 0deg), #00d2ff, #00f0ff, #3a86ff, #00d2ff) border-box;
   border: 1.5px solid transparent;
   animation: spinAng 6s linear infinite;
@@ -119,7 +117,7 @@ body {
 
 /* ===== Panels ===== */
 .panel {
-  background: linear-gradient(160deg, rgba(16,28,54,.92), rgba(7,13,26,.96));
+  background: linear-gradient(160deg, rgba(16,28,54,.85), rgba(7,13,26,.90));
   border: 1px solid var(--line);
   backdrop-filter: blur(14px);
   transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
@@ -170,7 +168,7 @@ body {
 
 /* ===== Cards aliases ===== */
 .cyber-card, .esports-card, .glass-panel {
-  background: linear-gradient(160deg, rgba(16,28,54,.92), rgba(7,13,26,.96));
+  background: linear-gradient(160deg, rgba(16,28,54,.85), rgba(7,13,26,.90));
   border: 1px solid var(--line); backdrop-filter: blur(14px);
   transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
 }
