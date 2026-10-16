@@ -13,7 +13,7 @@
   --line: #162c54;
 }
 
-/* ===== Full Site Cyber Background Setup ===== */
+/* ===== Full Site Dynamic Cyber Elements Background ===== */
 body {
   font-family: 'Tajawal', 'Cairo', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   background-color: #040812;
@@ -23,17 +23,21 @@ body {
   min-height: 100vh;
   position: relative;
   
-  /* الصورة الفخمة كخلفية للموقع بالكامل مع إطار شفاف وتثبيت عند التمرير */
-  background-image: linear-gradient(to bottom, rgba(4, 8, 18, 0.45), rgba(4, 8, 18, 0.65)), url('https://i.ibb.co/6c3jKx5/bg-cyber-blue.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  /* دمج دوائر إلكترونية، خطوط نيون، وعناصر تكنولوجية في الخلفية */
+  background-image: 
+    radial-gradient(circle at 15% 20%, rgba(0, 210, 255, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 85% 65%, rgba(0, 102, 255, 0.1) 0%, transparent 45%),
+    linear-gradient(135deg, rgba(0, 240, 255, 0.03) 25%, transparent 25%),
+    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(0, 210, 255, 0.15), transparent 70%),
+    linear-gradient(to right, rgba(0, 210, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 60px 60px, 100% 100%, 32px 32px, 32px 32px;
   background-attachment: fixed;
 }
 
 ::selection { background-color: #00d2ff; color: #00102b; }
 
-/* ===== Blue Aurora Backdrop ===== */
+/* ===== Glowing Cyber Orbs & Circuit Floating Background ===== */
 .aurora-stage {
   position: fixed; 
   inset: 0; 
@@ -42,59 +46,61 @@ body {
   overflow: hidden;
 }
 
+/* دوائر وتوهجات إلكترونية بالخلفية */
 .aurora-blob-1 {
   position: absolute; 
-  top: -10%;
-  left: 30%;
-  width: 500px;
-  height: 500px;
-  border-radius: 9999px; 
-  background: rgba(0, 210, 255, 0.12);
-  filter: blur(120px); 
-  animation: blobDrift 22s ease-in-out infinite alternate;
+  top: -5%;
+  left: 20%;
+  width: 550px;
+  height: 550px;
+  border-radius: 50%; 
+  background: radial-gradient(circle, rgba(0, 210, 255, 0.18) 0%, rgba(0,210,255,0) 70%);
+  filter: blur(80px); 
+  animation: floatOrb 18s ease-in-out infinite alternate;
 }
 
 .aurora-blob-2 {
   position: absolute; 
-  top: 40%;
-  right: -10%;
-  width: 450px;
-  height: 450px;
-  border-radius: 9999px; 
-  background: rgba(0, 240, 255, 0.08);
-  filter: blur(130px); 
-  animation: blobDrift 18s ease-in-out infinite alternate-reverse;
+  top: 45%;
+  right: -5%;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%; 
+  background: radial-gradient(circle, rgba(0, 240, 255, 0.14) 0%, rgba(0,240,255,0) 70%);
+  filter: blur(90px); 
+  animation: floatOrb 15s ease-in-out infinite alternate-reverse;
 }
 
 .aurora-blob-3 {
   position: absolute; 
-  bottom: -5%;
+  bottom: 5%;
   left: -5%;
-  width: 500px;
-  height: 500px;
-  border-radius: 9999px; 
-  background: rgba(0, 102, 255, 0.08);
-  filter: blur(140px); 
-  animation: blobDrift 25s ease-in-out infinite alternate;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%; 
+  background: radial-gradient(circle, rgba(0, 102, 255, 0.15) 0%, rgba(0,102,255,0) 70%);
+  filter: blur(100px); 
+  animation: floatOrb 22s ease-in-out infinite alternate;
 }
 
-@keyframes blobDrift {
-  0%   { transform: translate3d(0, 0, 0) scale(1); }
-  50%  { transform: translate3d(50px, -40px, 0) scale(1.15); }
-  100% { transform: translate3d(-40px, 30px, 0) scale(0.95); }
+@keyframes floatOrb {
+  0%   { transform: translate(0, 0) scale(1); }
+  50%  { transform: translate(40px, -30px) scale(1.1); }
+  100% { transform: translate(-30px, 20px) scale(0.95); }
 }
 
+/* شبكة التكنولوجيا والعناصر النيون */
 .tech-grid {
   position: fixed; 
   inset: 0;
   pointer-events: none;
   z-index: 0;
   background-image:
-    linear-gradient(to right, rgba(0, 210, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 240, 255, 0.02) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 210, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 240, 255, 0.04) 1px, transparent 1px);
   background-size: 40px 40px;
-  mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
-  -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.2));
+  mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.15));
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.15));
 }
 
 /* ===== Rotating gradient frame ===== */
@@ -103,7 +109,7 @@ body {
 .grad-frame {
   position: relative;
   border-radius: 20px;
-  background: linear-gradient(rgba(10, 18, 36, 0.85), rgba(10, 18, 36, 0.85)) padding-box,
+  background: linear-gradient(#0a1224, #0a1224) padding-box,
               conic-gradient(from var(--ang, 0deg), #00d2ff, #00f0ff, #3a86ff, #00d2ff) border-box;
   border: 1.5px solid transparent;
   animation: spinAng 6s linear infinite;
@@ -117,7 +123,7 @@ body {
 
 /* ===== Panels ===== */
 .panel {
-  background: linear-gradient(160deg, rgba(16,28,54,.85), rgba(7,13,26,.90));
+  background: linear-gradient(160deg, rgba(16,28,54,.92), rgba(7,13,26,.96));
   border: 1px solid var(--line);
   backdrop-filter: blur(14px);
   transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
@@ -168,7 +174,7 @@ body {
 
 /* ===== Cards aliases ===== */
 .cyber-card, .esports-card, .glass-panel {
-  background: linear-gradient(160deg, rgba(16,28,54,.85), rgba(7,13,26,.90));
+  background: linear-gradient(160deg, rgba(16,28,54,.92), rgba(7,13,26,.96));
   border: 1px solid var(--line); backdrop-filter: blur(14px);
   transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
 }
