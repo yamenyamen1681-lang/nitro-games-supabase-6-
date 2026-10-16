@@ -121,69 +121,33 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   return (
     <section id="hero" className="relative overflow-hidden pt-4 pb-20 lg:pt-6 lg:pb-28 bg-[#03060f] border-b border-[#16223a]">
       <style>{`
-        @property --snake-angle-1 {
-          syntax: '<angle>';
-          initial-value: 0deg;
-          inherits: false;
+        @keyframes snakeTraceClockwise {
+          0% { stroke-dashoffset: 600; }
+          100% { stroke-dashoffset: 0; }
         }
 
-        @property --snake-angle-2 {
-          syntax: '<angle>';
-          initial-value: 360deg;
-          inherits: false;
+        @keyframes snakeTraceCounter {
+          0% { stroke-dashoffset: -600; }
+          100% { stroke-dashoffset: 0; }
         }
 
-        .collision-snake-border {
-          position: relative;
-          border-radius: 9999px;
-          background: rgba(3, 7, 18, 0.95);
-          z-index: 1;
-        }
-
-        .collision-snake-border::before {
-          content: '';
+        .border-snake-svg {
           position: absolute;
-          inset: -2px;
-          border-radius: 9999px;
-          background: conic-gradient(
-            from var(--snake-angle-1),
-            transparent 0%,
-            transparent 75%,
-            #00a3ff 88%,
-            #ffffff 96%,
-            #00d2ff 100%
-          );
-          z-index: -1;
-          animation: snakeMoveClockwise 3s ease-in-out infinite alternate;
-          filter: drop-shadow(0 0 10px rgba(0, 163, 255, 0.9));
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 10;
         }
 
-        .collision-snake-border::after {
-          content: '';
-          position: absolute;
-          inset: -2px;
-          border-radius: 9999px;
-          background: conic-gradient(
-            from var(--snake-angle-2),
-            transparent 0%,
-            transparent 75%,
-            #00a3ff 88%,
-            #ffffff 96%,
-            #00d2ff 100%
-          );
-          z-index: -1;
-          animation: snakeMoveCounterClockwise 3s ease-in-out infinite alternate;
-          filter: drop-shadow(0 0 10px rgba(0, 210, 255, 0.9));
+        .snake-line-1 {
+          stroke-dasharray: 120 480;
+          animation: snakeTraceClockwise 3s ease-in-out infinite alternate;
         }
 
-        @keyframes snakeMoveClockwise {
-          0% { --snake-angle-1: 0deg; }
-          100% { --snake-angle-1: 180deg; }
-        }
-
-        @keyframes snakeMoveCounterClockwise {
-          0% { --snake-angle-2: 360deg; }
-          100% { --snake-angle-2: 180deg; }
+        .snake-line-2 {
+          stroke-dasharray: 120 480;
+          animation: snakeTraceCounter 3s ease-in-out infinite alternate;
         }
 
         @keyframes marqueeLoop {
@@ -221,19 +185,63 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
         
-        {/* --- Top Badge with Collision Snake Border --- */}
+        {/* --- Top Banner with Clean Border-Only Snake Animation --- */}
         <div className="flex justify-center -mt-2">
-          <div className="collision-snake-border px-5 py-2 flex items-center gap-2.5 shadow-[0_0_20px_rgba(0,163,255,0.25)]">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00a3ff] opacity-60" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
-            </span>
-            <span className="text-[11px] sm:text-xs font-medium text-gray-300 tracking-wide">
-              المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
-            </span>
-            <span className="text-[10px] font-bold text-[#00e5ff] border border-[#00e5ff]/40 px-2 py-0.5 rounded-full font-tech">
-              CYBER ESPORTS
-            </span>
+          <div className="relative w-full max-w-xl mx-auto my-1">
+            <svg className="border-snake-svg" style={{ overflow: "visible" }}>
+              <defs>
+                <linearGradient id="snakeGlow1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#00f0ff" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#0066ff" stopOpacity="0.2" />
+                </linearGradient>
+                <linearGradient id="snakeGlow2" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#00f0ff" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#0066ff" stopOpacity="0.2" />
+                </linearGradient>
+                <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="3" result="blur" />
+                  <feMerge>
+                    <feMergeNode in="blur" />
+                    <feMergeNode in="SourceGraphic" />
+                  </feMerge>
+                </filter>
+              </defs>
+              <rect
+                x="1"
+                y="1"
+                width="calc(100% - 2px)"
+                height="calc(100% - 2px)"
+                rx="9999"
+                fill="none"
+                stroke="url(#snakeGlow1)"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                filter="url(#neonGlow)"
+                className="snake-line-1"
+              />
+              <rect
+                x="1"
+                y="1"
+                width="calc(100% - 2px)"
+                height="calc(100% - 2px)"
+                rx="9999"
+                fill="none"
+                stroke="url(#snakeGlow2)"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                filter="url(#neonGlow)"
+                className="snake-line-2"
+              />
+            </svg>
+
+            <div className="relative z-0 bg-[#060c18]/95 border border-[#00a3ff]/20 rounded-full px-5 py-2.5 flex items-center justify-between gap-3 shadow-lg">
+              <span className="bg-[#00a3ff]/15 border border-[#00a3ff]/40 text-[#00f0ff] px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase">
+                CYBER ESPORTS
+              </span>
+              <p className="text-gray-200 text-xs sm:text-sm font-medium">
+                المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
+              </p>
+            </div>
           </div>
         </div>
 
@@ -274,7 +282,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
             {/* الأزرار + شارة صاحب المتجر */}
             <div className="flex flex-wrap items-center justify-end gap-3 pt-1">
-              {/* شارة صاحب المتجر */}
               <div dir="ltr" className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
                 <Crown className="w-4 h-4 text-[#00e5ff] fill-[#00a3ff]/30" />
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">
@@ -286,7 +293,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <Sparkles className="w-3.5 h-3.5 text-[#00a3ff]" />
               </div>
 
-              {/* زر تسوق الآن */}
               <button
                 onClick={() => scrollTo("products")}
                 className="btn-neon text-sm sm:text-base px-5 py-2 flex items-center gap-2 cursor-pointer group"
@@ -297,7 +303,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* الشريط المتحرك المتصل بدون انقطاع */}
+            {/* الشريط المتحرك المتصل */}
             <div className="w-full overflow-hidden pt-2 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
               <div className="animate-marquee-infinite gap-3.5">
                 {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
