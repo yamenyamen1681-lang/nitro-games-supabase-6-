@@ -21,7 +21,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
       icon: Keyboard,
       image: "/images/keyboard-custom-rgb.jpg",
       highlight: "Rapid Trigger 0.1mm",
-      accent: "#d4af37",
+      accent: "#00e5ff",
     },
     {
       id: "mice" as CategoryType,
@@ -32,7 +32,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
       icon: Mouse,
       image: "/images/mouse-pro-8k.jpg",
       highlight: "8000Hz Polling",
-      accent: "#f4d576",
+      accent: "#00a3ff",
     },
     {
       id: "mousepads" as CategoryType,
@@ -43,7 +43,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
       icon: Square,
       image: "/images/mousepad-pro.jpg",
       highlight: "Artisan Poron",
-      accent: "#d4af37",
+      accent: "#00e5ff",
     },
     {
       id: "microphones" as CategoryType,
@@ -54,7 +54,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
       icon: Mic,
       image: "/images/microphone-pro.jpg",
       highlight: "Studio Quality",
-      accent: "#f4d576",
+      accent: "#00a3ff",
     },
     {
       id: "headsets" as CategoryType,
@@ -65,7 +65,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
       icon: Headphones,
       image: "/images/headset-pro.jpg",
       highlight: "ANC & Hi-Res",
-      accent: "#d4af37",
+      accent: "#00e5ff",
     },
   ];
 
@@ -78,20 +78,35 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
   };
 
   return (
-    <section id="categories" className="py-14 relative bg-[#0d0a05]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="categories" className="py-14 relative bg-[#03060f] border-b border-[#16223a]">
+      {/* خلفية تفاعلية برسم تقني */}
+      <div className="absolute inset-0 tech-grid opacity-50 pointer-events-none" />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs font-bold text-[#d4af37] uppercase tracking-wider mb-2">
-              <Zap className="w-4 h-4 text-[#d4af37]" />
+          <div className="text-right">
+            <div className="flex items-center gap-2 justify-end text-xs font-bold text-[#00e5ff] uppercase tracking-wider mb-2">
               <span>أقسام المتجر الخمسة المعتمدة</span>
+              <Zap className="w-4 h-4 text-[#00a3ff]" />
             </div>
             <h2 className="text-2xl sm:text-3xl font-black text-white font-['Cairo']">
-              تصفح العتاد حسب القسم في <span className="brand-mark brand-mark-sm text-white inline-block align-middle">NITRO <span className="brand-mark-games">GAMES</span></span>
+              تصفح العتاد حسب القسم في{" "}
+              <span className="brand-mark brand-mark-sm text-white inline-block align-middle">
+                NITRO{" "}
+                <span
+                  className="brand-mark-games shimmer-blue"
+                  style={{
+                    backgroundImage:
+                      "linear-gradient(100deg, #00a3ff 0%, #00e5ff 25%, #d6f7ff 50%, #00e5ff 75%, #00a3ff 100%)",
+                  }}
+                >
+                  GAMES
+                </span>
+              </span>
             </h2>
           </div>
-          <p className="text-xs sm:text-sm text-gray-400 max-w-md">
+          <p className="text-xs sm:text-sm text-gray-400 max-w-md text-right">
             جميع المنتجات المعروضة في الأقسام أصلية 100% ومشمولة بضمان حقيقي لمدة سنة مع الدفع عند الاستلام.
           </p>
         </div>
@@ -106,21 +121,21 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
               <div
                 key={cat.id}
                 onClick={() => handleCardClick(cat.id)}
-                className={`relative group cursor-pointer rounded-xl overflow-hidden bg-[#120e08] border ${
+                className={`relative group cursor-pointer rounded-xl overflow-hidden bg-[#060c18] border ${
                   isSelected
-                    ? "border-[#d4af37] shadow-[0_0_25px_rgba(212,175,55,0.3)]"
-                    : "border-[#3a2f16] hover:border-[#d4af37]/70"
-                } transition-all duration-250 hover:-translate-y-1.5 flex flex-col justify-between`}
+                    ? "border-[#00e5ff] shadow-[0_0_25px_rgba(0,229,255,0.35)]"
+                    : "border-[#16223a] hover:border-[#00a3ff]/70"
+                } transition-all duration-300 hover:-translate-y-1.5 flex flex-col justify-between`}
               >
                 {/* Background Image */}
-                <div className="relative h-44 w-full overflow-hidden bg-[#1a140a]">
+                <div className="relative h-44 w-full overflow-hidden bg-[#040814]">
                   <Image
                     src={cat.image}
                     alt={cat.name}
                     fill
-                    className="object-cover object-center group-hover:scale-108 transition-transform duration-500 opacity-60 group-hover:opacity-85"
+                    className="object-cover object-center group-hover:scale-108 transition-transform duration-500 opacity-50 group-hover:opacity-80"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#120e08] via-[#120e08]/70 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#060c18] via-[#060c18]/70 to-transparent" />
                 </div>
 
                 {/* Content Overlay */}
@@ -133,24 +148,24 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
                     >
                       {cat.highlight}
                     </span>
-                    <div className="w-8 h-8 rounded-lg bg-[#1a140a] border border-[#4a3a1a] flex items-center justify-center text-gray-300 group-hover:bg-[#d4af37] group-hover:text-black transition-all">
+                    <div className="w-8 h-8 rounded-lg bg-[#0a1428] border border-[#1a2d54] flex items-center justify-center text-gray-300 group-hover:bg-[#00e5ff] group-hover:text-black group-hover:shadow-[0_0_12px_#00e5ff] transition-all">
                       <Icon className="w-4 h-4" />
                     </div>
                   </div>
 
                   {/* Bottom: Name & CTA */}
                   <div>
-                    <h3 className="text-base sm:text-lg font-black text-white group-hover:text-[#d4af37] transition-colors leading-tight font-['Cairo']">
+                    <h3 className="text-base sm:text-lg font-black text-white group-hover:text-[#00e5ff] transition-colors leading-tight font-['Cairo']">
                       {cat.name}
                     </h3>
                     <p className="text-[11px] text-gray-400 mt-1 line-clamp-2 leading-relaxed">
                       {cat.desc}
                     </p>
-                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#3a2f16] text-xs">
-                      <span className="font-mono text-[#d4af37] font-bold">{cat.count}</span>
-                      <span className="flex items-center gap-1 text-white font-bold group-hover:text-[#d4af37] group-hover:translate-x-[-3px] transition-all">
+                    <div className="flex items-center justify-between mt-2 pt-2 border-t border-[#142342] text-xs">
+                      <span className="font-mono text-[#00a3ff] font-bold">{cat.count}</span>
+                      <span className="flex items-center gap-1 text-white font-bold group-hover:text-[#00e5ff] group-hover:translate-x-[-3px] transition-all">
                         <span>تصفح</span>
-                        <ArrowLeft className="w-3.5 h-3.5 text-[#d4af37]" />
+                        <ArrowLeft className="w-3.5 h-3.5 text-[#00e5ff]" />
                       </span>
                     </div>
                   </div>
@@ -158,7 +173,7 @@ export const CategoryGrid: React.FC<CategoryGridProps> = ({ onSelectCategory, se
 
                 {/* Active Indicator Glow Bottom */}
                 {isSelected && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-[#d4af37] shadow-[0_0_10px_#d4af37]" />
+                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_10px_#00e5ff]" />
                 )}
               </div>
             );
