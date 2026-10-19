@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import { useCart } from "@/context/CartContext";
-import { STORE_CONTACT } from "@/lib/data";
 import {
   ShoppingBag,
   Heart,
@@ -11,7 +10,6 @@ import {
   X,
   ShieldCheck,
   Truck,
-  PhoneCall,
   Keyboard,
   Mouse,
   Square,
@@ -73,7 +71,7 @@ export const Header: React.FC<HeaderProps> = ({
         خدمة توصيل سريعة وبضائع أصلية 100%
       </span>
       <span className="text-[#00e5ff]">✦</span>
-      <span className="bg-[#00a3ff]/20 text-[#00a3ff] px-2.5 py-0.5 rounded-full border border-[#00a3ff]/40 font-mono text-[11px]">
+      <span className="bg-[#00a3ff]/20 text-[#00e5ff] px-2.5 py-0.5 rounded-full border border-[#00a3ff]/40 font-mono text-[11px] shadow-[0_0_10px_rgba(0,163,255,0.2)]">
         كود خصم فوري: NITRO10 (وفر 10%)
       </span>
       <span className="text-[#00a3ff]">✦</span>
@@ -98,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
       `}</style>
 
       {/* ===== 1. الشريط العلوي المتحرك ===== */}
-      <div className="relative bg-[#070b14] border-b border-[#00a3ff]/30 text-white text-xs font-semibold py-2 overflow-hidden shadow-[0_4px_25px_rgba(0,163,255,0.2)]">
+      <div className="relative bg-[#03060f] border-b border-[#00a3ff]/30 text-white text-xs font-semibold py-2 overflow-hidden shadow-[0_4px_25px_rgba(0,163,255,0.15)]">
         <div className="flex items-center justify-between max-w-7xl mx-auto px-2">
           <div className="flex-1 overflow-hidden relative">
             <div className="animate-continuous-marquee flex items-center gap-8 whitespace-nowrap text-xs font-bold text-gray-200">
@@ -110,18 +108,18 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       {/* ===== 2. شريط القوائم الرئيسي (اللوجو، الأدوات، السلة، الأدمن) ===== */}
-      <div className="bg-[#05070d]/98 backdrop-blur-xl border-b border-[#1c2942] shadow-[0_10px_35px_rgba(0,0,0,0.85)]">
+      <div className="bg-[#05070d]/95 backdrop-blur-xl border-b border-[#16223a] shadow-[0_10px_35px_rgba(0,0,0,0.85)]">
         <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
           
           {/* 1. اللوجو */}
           <a href="#" className="flex items-center gap-2 shrink-0">
-            <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#0b1120] border border-[#1c2942] flex items-center justify-center shadow-[0_0_15px_rgba(0,163,255,0.2)]">
-              <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-[#00a3ff]" />
+            <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#0b1120] border border-[#00a3ff]/40 flex items-center justify-center shadow-[0_0_15px_rgba(0,163,255,0.3)]">
+              <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-[#00e5ff] drop-shadow-[0_0_8px_#00e5ff]" />
             </div>
-            <div className="flex flex-col">
+            <div className="flex flex-col text-right">
               <div className="flex items-center gap-1">
                 <span className="text-xs sm:text-base text-white font-black tracking-wider">
-                  NITRO <span className="text-[#00a3ff]">GAMES</span>
+                  NITRO <span className="text-[#00e5ff] drop-shadow-[0_0_10px_rgba(0,229,255,0.6)]">GAMES</span>
                 </span>
               </div>
               <span className="text-[8px] text-gray-400 tracking-widest font-mono">PALESTINE</span>
@@ -129,8 +127,8 @@ export const Header: React.FC<HeaderProps> = ({
           </a>
 
           {/* 2. أقسام المتجر للكمبيوتر */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#0b1120] p-1.5 rounded-xl border border-[#1c2942]">
-            <a href="#hero" className="px-3 py-1.5 text-xs font-bold text-gray-200 hover:text-[#00a3ff]">
+          <nav className="hidden lg:flex items-center gap-1 bg-[#060c18] p-1.5 rounded-xl border border-[#16223a]">
+            <a href="#hero" className="px-3 py-1.5 text-xs font-bold text-gray-200 hover:text-[#00e5ff] transition-colors">
               الرئيسية
             </a>
             {categories.map((cat) => {
@@ -139,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <button
                   key={cat.id}
                   onClick={() => handleCategoryClick(cat.id)}
-                  className="px-3 py-1.5 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 cursor-pointer"
+                  className="px-3 py-1.5 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 cursor-pointer transition-colors"
                 >
                   <Icon className="w-3.5 h-3.5 text-[#00a3ff]" />
                   <span>{cat.label}</span>
@@ -154,20 +152,20 @@ export const Header: React.FC<HeaderProps> = ({
             {/* زر البحث */}
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="p-2 rounded-xl bg-[#0b1120] border border-[#1c2942] text-gray-300 hover:text-[#00a3ff]"
+              className="p-2.5 rounded-xl bg-[#060c18] border border-[#16223a] text-gray-300 hover:text-[#00e5ff] hover:border-[#00e5ff]/50 transition-all cursor-pointer"
               title="البحث"
             >
               <Search className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
-            {/* زر لوحة المشرف (ظاهر دائماً على الجوال والكمبيوتر) */}
+            {/* زر لوحة المشرف */}
             {onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
-                className="flex items-center gap-1 px-2 sm:px-3 py-2 rounded-xl bg-[#0b1120] hover:bg-[#00a3ff] border border-[#1c2942] text-gray-300 hover:text-black transition-all text-xs font-bold cursor-pointer"
+                className="flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-xl bg-[#060c18] hover:bg-[#00a3ff] border border-[#16223a] hover:border-[#00a3ff] text-gray-300 hover:text-black transition-all text-xs font-bold cursor-pointer"
                 title="لوحة تحكم المشرف"
               >
-                <Lock className="w-3.5 h-3.5 text-[#00a3ff]" />
+                <Lock className="w-3.5 h-3.5 text-[#00e5ff]" />
                 <span className="hidden sm:inline">لوحة المشرف</span>
               </button>
             )}
@@ -176,35 +174,35 @@ export const Header: React.FC<HeaderProps> = ({
             <a
               href="#products"
               onClick={() => onCategorySelect?.("all")}
-              className="relative p-2 rounded-xl bg-[#0b1120] border border-[#1c2942] text-gray-300 hover:text-[#00e5ff]"
+              className="relative p-2.5 rounded-xl bg-[#060c18] border border-[#16223a] text-gray-300 hover:text-[#00e5ff] hover:border-[#00e5ff]/50 transition-all cursor-pointer"
               title="المفضلة"
             >
               <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
               {wishlist.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#00e5ff] text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-[#00e5ff] text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-[0_0_8px_#00e5ff]">
                   {wishlist.length}
                 </span>
               )}
             </a>
 
-            {/* زر سلة المشتريات (ظاهر دائماً وبوضوح) */}
+            {/* زر سلة المشتريات */}
             <button
               onClick={() => setIsCartOpen(true)}
-              className="relative flex items-center gap-1.5 px-2.5 sm:px-4 py-2 rounded-xl bg-[#0b1120] border border-[#00a3ff]/40 text-white shadow-[0_0_10px_rgba(0,163,255,0.2)]"
+              className="relative flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-[#060c18] border border-[#00a3ff]/50 text-white shadow-[0_0_15px_rgba(0,163,255,0.25)] hover:shadow-[0_0_20px_rgba(0,229,255,0.5)] transition-all cursor-pointer"
             >
-              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-[#00a3ff]" />
+              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-[#00e5ff]" />
               {totalItemsCount > 0 && (
-                <span className="bg-[#00a3ff] text-black font-black text-[10px] px-1.5 py-0.2 rounded-full">
+                <span className="bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black font-black text-[10px] px-1.5 py-0.2 rounded-full shadow-[0_0_8px_#00e5ff]">
                   {totalItemsCount}
                 </span>
               )}
               <span className="hidden md:inline text-xs font-mono font-bold">{total} ₪</span>
             </button>
 
-            {/* زر قائمة الجوال (Hamburger) */}
+            {/* زر قائمة الجوال */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-xl bg-[#0b1120] border border-[#1c2942] text-gray-300 hover:text-[#00a3ff]"
+              className="lg:hidden p-2.5 rounded-xl bg-[#060c18] border border-[#16223a] text-gray-300 hover:text-[#00e5ff] cursor-pointer"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
@@ -213,7 +211,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* خانة البحث المنبثقة للجوال */}
         {searchOpen && (
-          <div className="px-4 pb-3 pt-1 border-t border-[#1c2942] bg-[#070b14]">
+          <div className="px-4 pb-3 pt-1 border-t border-[#16223a] bg-[#03060f]">
             <form onSubmit={handleSearchSubmit} className="relative w-full">
               <input
                 type="text"
@@ -223,7 +221,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setSearchQuery(e.target.value);
                   if (onSearchChange) onSearchChange(e.target.value);
                 }}
-                className="w-full bg-[#101a2e] text-sm text-gray-100 placeholder-gray-500 rounded-xl pl-10 pr-4 py-2 border border-[#1c2942] focus:outline-none focus:border-[#00a3ff]"
+                className="w-full bg-[#060c18] text-sm text-gray-100 placeholder-gray-500 rounded-xl pl-10 pr-4 py-2 border border-[#16223a] focus:outline-none focus:border-[#00e5ff]"
                 autoFocus
               />
               <button type="submit" className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400">
@@ -235,14 +233,14 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* القائمة المنبثقة للجوال */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#05070d] border-t border-[#1c2942] px-5 py-4 space-y-3 shadow-2xl">
+          <div className="lg:hidden bg-[#05070d] border-t border-[#16223a] px-5 py-4 space-y-3 shadow-2xl">
             <nav className="flex flex-col space-y-2">
               <button
                 onClick={() => {
                   onCategorySelect?.("all");
                   setMobileMenuOpen(false);
                 }}
-                className="text-right py-2 text-sm font-bold text-gray-200 border-b border-[#1c2942]"
+                className="text-right py-2 text-sm font-bold text-gray-200 border-b border-[#16223a]"
               >
                 جميع الأقسام
               </button>
@@ -252,7 +250,7 @@ export const Header: React.FC<HeaderProps> = ({
                   <button
                     key={cat.id}
                     onClick={() => handleCategoryClick(cat.id)}
-                    className="flex items-center gap-2 py-2 text-sm font-bold text-gray-300 text-right"
+                    className="flex items-center gap-2 py-2 text-sm font-bold text-gray-300 text-right hover:text-[#00e5ff]"
                   >
                     <Icon className="w-4 h-4 text-[#00a3ff]" />
                     <span>{cat.label}</span>
