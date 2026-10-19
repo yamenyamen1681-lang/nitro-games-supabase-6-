@@ -7,7 +7,7 @@ import { useCart } from "@/context/CartContext";
 import { ShoppingBag, Heart, Eye, Star } from "lucide-react";
 
 interface ProductCardProps {
-  product: Product;
+  product: Product & { isNew?: boolean; discount?: number };
   index?: number;
   onQuickView?: (product: Product) => void;
 }
@@ -15,7 +15,6 @@ interface ProductCardProps {
 export const ProductCard: React.FC<ProductCardProps> = ({ product, index, onQuickView }) => {
   const { addToCart, wishlist, toggleWishlist } = useCart();
   
-  // التحقق مما إذا كان المنتج في المفضلة (معالجة كون العنصر كائن أو معرّف مباشر)
   const isWishlisted = wishlist.some((item: any) => 
     typeof item === "object" && item !== null ? item.id === product.id : item === product.id
   );
