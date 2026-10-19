@@ -36,9 +36,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index, onQuic
         )}
       </div>
 
-      {/* زر المفضلة (Heart) */}
+      {/* زر المفضلة (Heart) - تمرير product.id بدلاً من الكائن كاملاً */}
       <button
-        onClick={() => toggleWishlist(product)}
+        onClick={() => toggleWishlist(product.id as any)}
         className={`absolute top-3 left-3 z-25 p-2 rounded-xl backdrop-blur-md border transition-all cursor-pointer ${
           isWishlisted
             ? "bg-[#00e5ff]/20 border-[#00e5ff] text-[#00e5ff] shadow-[0_0_10px_#00e5ff]"
