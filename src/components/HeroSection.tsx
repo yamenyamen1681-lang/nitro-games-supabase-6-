@@ -161,11 +161,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           animation-play-state: paused;
         }
         @keyframes cyberGlow {
-          0%, 100% { opacity: 0.5; filter: drop-shadow(0 0 15px rgba(0, 163, 255, 0.35)); }
-          50% { opacity: 0.9; filter: drop-shadow(0 0 25px rgba(0, 229, 255, 0.65)); }
+          0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 20px rgba(0, 163, 255, 0.4)); }
+          50% { opacity: 1; filter: drop-shadow(0 0 35px rgba(0, 229, 255, 0.8)); }
         }
         .animate-cyber-glow {
-          animation: cyberGlow 5s infinite ease-in-out;
+          animation: cyberGlow 4s infinite ease-in-out;
+        }
+        @keyframes cyberPulseBg {
+          0%, 100% { transform: scale(1); opacity: 0.3; }
+          50% { transform: scale(1.05); opacity: 0.6; }
+        }
+        .animate-cyber-pulse {
+          animation: cyberPulseBg 6s infinite ease-in-out;
         }
         @keyframes shimmerSweep {
           0% { background-position: -200% 0; }
@@ -177,9 +184,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }
       `}</style>
 
+      {/* خلفية تفاعلية نابضة */}
       <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
-      <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00a3ff]/10 blur-[130px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/10 blur-[130px] rounded-full pointer-events-none" />
+      <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00a3ff]/15 blur-[140px] rounded-full pointer-events-none animate-cyber-pulse" />
+      <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/15 blur-[140px] rounded-full pointer-events-none animate-cyber-pulse" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
         
@@ -235,7 +243,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </svg>
 
             <div className="relative z-0 bg-[#060c18]/95 border border-[#00a3ff]/30 rounded-full px-5 py-2.5 flex items-center justify-between gap-3 shadow-xl">
-              <span className="bg-[#00a3ff]/20 border border-[#00a3ff]/50 text-[#00f0ff] px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase shadow-[0_0_10px_rgba(0,163,255,0.4)]">
+              <span className="bg-[#00a3ff]/20 border border-[#00a3ff]/50 text-[#00f0ff] px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase shadow-[0_0_12px_rgba(0,163,255,0.5)]">
                 CYBER ESPORTS
               </span>
               <p className="text-gray-100 text-xs sm:text-sm font-medium">
@@ -265,7 +273,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </div>
                 <div className="brand-sub mt-1">PALESTINE · ESPORTS GEAR</div>
               </div>
-              <div className="relative w-14 h-14 sm:w-18 sm:h-18 rounded-2xl grad-frame flex items-center justify-center flex-shrink-0">
+              <div className="relative w-14 h-14 sm:w-18 sm:h-18 rounded-2xl grad-frame flex items-center justify-center flex-shrink-0 shadow-[0_0_20px_rgba(0,163,255,0.3)]">
                 <Zap className="w-7 h-7 sm:w-8 sm:h-8 text-[#00a3ff] drop-shadow-[0_0_14px_#00a3ff]" />
               </div>
             </div>
@@ -276,13 +284,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <span className="sr-only">نيترو قيمز — </span>خياركم الأفضل في فلسطين
               </span>
               <span className="block text-xl sm:text-3xl lg:text-[2.2rem] text-gray-200 mt-1 font-light">
-                للعتاد الاحترافي.. <span className="glow-cyan font-bold">ارفع مستوى لعبك!</span>
+                للعتاد الاحترافي.. <span className="glow-cyan font-bold drop-shadow-[0_0_15px_rgba(0,229,255,0.6)]">ارفع مستوى لعبك!</span>
               </span>
             </h1>
 
             {/* الأزرار + شارة صاحب المتجر */}
             <div className="flex flex-wrap items-center justify-end gap-3 pt-1">
-              <div dir="ltr" className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.25)]">
+              <div dir="ltr" className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.3)]">
                 <Crown className="w-4 h-4 text-[#00e5ff] fill-[#00a3ff]/30" />
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">
                   STORE OWNER:
@@ -295,7 +303,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
               <button
                 onClick={() => scrollTo("products")}
-                className="btn-neon text-sm sm:text-base px-5 py-2 flex items-center gap-2 cursor-pointer group"
+                className="relative overflow-hidden text-sm sm:text-base px-6 py-2.5 rounded-xl font-black text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_25px_rgba(0,229,255,0.6)] hover:shadow-[0_0_35px_rgba(0,229,255,0.9)] hover:scale-[1.03] transition-all duration-300 flex items-center gap-2 cursor-pointer group"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>{cfg.ctaLabel || "تسوق الآن"}</span>
@@ -309,7 +317,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
                   <div
                     key={i}
-                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/60 rounded-xl px-4 py-2 text-right flex items-center gap-3 shrink-0 ml-3 transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
+                    className="relative group overflow-hidden bg-[#0a101d]/90 backdrop-blur-md border border-[#1a2c4e] hover:border-[#00e5ff]/80 rounded-xl px-4 py-2 text-right flex items-center gap-3 shrink-0 ml-3 transition-all duration-500 shadow-[0_4px_20px_rgba(0,0,0,0.4)]"
                   >
                     <div className="text-sm sm:text-base font-black text-white font-tech flex items-center gap-2 relative z-10">
                       <span className="relative flex h-2 w-2">
@@ -331,7 +339,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="lg:col-span-6 space-y-4 pt-2">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-90 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-60 group-hover:opacity-95 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
 
                 <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/70 via-[#00a3ff]/40 to-[#0a1630]/90 shadow-[0_25px_60px_-15px_rgba(0,163,255,0.4)]">
                   <div className="relative rounded-[22px] bg-[#040814] overflow-hidden">
@@ -410,7 +418,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 onMouseEnter={() => setPaused(true)}
                 onMouseLeave={() => setPaused(false)}
               >
-                <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-50 group-hover:opacity-90 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
+                <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-60 group-hover:opacity-95 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
 
                 <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
                   <div className="rounded-[22px] bg-[#040814] overflow-hidden">
