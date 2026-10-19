@@ -131,21 +131,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         .border-snake-svg {
           position: absolute;
-          inset: -2px;
-          width: calc(100% + 4px);
-          height: calc(100% + 4px);
+          inset: -3px;
+          width: calc(100% + 6px);
+          height: calc(100% + 6px);
           pointer-events: none;
           z-index: 10;
         }
 
         .snake-line-1 {
-          stroke-dasharray: 25 75;
-          animation: snakeSpinFast 2.5s linear infinite;
+          stroke-dasharray: 30 70;
+          animation: snakeSpinFast 2.2s linear infinite;
         }
 
         .snake-line-2 {
-          stroke-dasharray: 25 75;
-          animation: snakeSpinReverse 2.5s linear infinite;
+          stroke-dasharray: 30 70;
+          animation: snakeSpinReverse 2.2s linear infinite;
         }
 
         @keyframes marqueeLoop {
@@ -183,9 +183,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
         
-        {/* --- البانر العلوي مع إطار الدودة النيون المتحرك --- */}
-        <div className="flex justify-center -mt-2">
-          <div className="relative w-full max-w-xl mx-auto my-1">
+        {/* --- البانر العلوي مع الإطار النيون المتحرك بدقة --- */}
+        <div className="flex justify-center -mt-1 mb-2">
+          <div className="relative w-full max-w-xl mx-auto">
             <svg className="border-snake-svg" style={{ overflow: "visible" }}>
               <defs>
                 <linearGradient id="snakeGlow1" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -196,8 +196,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   <stop offset="0%" stopColor="#00f0ff" stopOpacity="1" />
                   <stop offset="100%" stopColor="#0066ff" stopOpacity="0.1" />
                 </linearGradient>
-                <filter id="neonGlow" x="-20%" y="-20%" width="140%" height="140%">
-                  <feGaussianBlur stdDeviation="3" result="blur" />
+                <filter id="neonGlow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="4" result="blur" />
                   <feMerge>
                     <feMergeNode in="blur" />
                     <feMergeNode in="SourceGraphic" />
@@ -205,28 +205,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </filter>
               </defs>
               <rect
-                x="2"
-                y="2"
-                width="calc(100% - 4px)"
-                height="calc(100% - 4px)"
+                x="3"
+                y="3"
+                width="calc(100% - 6px)"
+                height="calc(100% - 6px)"
                 rx="9999"
                 fill="none"
                 stroke="url(#snakeGlow1)"
-                strokeWidth="3"
+                strokeWidth="3.5"
                 strokeLinecap="round"
                 filter="url(#neonGlow)"
                 pathLength="100"
                 className="snake-line-1"
               />
               <rect
-                x="2"
-                y="2"
-                width="calc(100% - 4px)"
-                height="calc(100% - 4px)"
+                x="3"
+                y="3"
+                width="calc(100% - 6px)"
+                height="calc(100% - 6px)"
                 rx="9999"
                 fill="none"
                 stroke="url(#snakeGlow2)"
-                strokeWidth="3"
+                strokeWidth="3.5"
                 strokeLinecap="round"
                 filter="url(#neonGlow)"
                 pathLength="100"
@@ -234,11 +234,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               />
             </svg>
 
-            <div className="relative z-0 bg-[#060c18]/95 border border-[#00a3ff]/20 rounded-full px-5 py-2.5 flex items-center justify-between gap-3 shadow-lg">
-              <span className="bg-[#00a3ff]/15 border border-[#00a3ff]/40 text-[#00f0ff] px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase">
+            <div className="relative z-0 bg-[#060c18]/95 border border-[#00a3ff]/30 rounded-full px-5 py-2.5 flex items-center justify-between gap-3 shadow-xl">
+              <span className="bg-[#00a3ff]/20 border border-[#00a3ff]/50 text-[#00f0ff] px-3 py-1 rounded-full text-xs font-black tracking-wider uppercase shadow-[0_0_10px_rgba(0,163,255,0.4)]">
                 CYBER ESPORTS
               </span>
-              <p className="text-gray-200 text-xs sm:text-sm font-medium">
+              <p className="text-gray-100 text-xs sm:text-sm font-medium">
                 المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
               </p>
             </div>
@@ -327,7 +327,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* --- اليسار: المربع المميز مع زر أيقونة الموسيقى فقط --- */}
+          {/* --- اليسار: المربع المميز مع زر الموسيقى الأيقوني --- */}
           <div className="lg:col-span-6 space-y-4 pt-2">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative group">
