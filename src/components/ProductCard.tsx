@@ -4,17 +4,21 @@ import React from "react";
 import Image from "next/image";
 import { Product } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
-import { ShoppingBag, Heart, Eye, Star, Zap } from "lucide-react";
+import { ShoppingBag, Heart, Eye, Star } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
-  index?: number; // أضفنا هذه الخاصية هنا لكي يتوافق مع تمريرها من ProductSection بدون أخطاء
+  index?: number;
   onQuickView?: (product: Product) => void;
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, index, onQuickView }) => {
   const { addToCart, wishlist, toggleWishlist } = useCart();
-  const isWishlisted = wishlist.some((item) => item.id === product.id);
+  
+  // التحقق مما إذا كان المنتج في المفضلة (معالجة كون العنصر كائن أو معرّف مباشر)
+  const isWishlisted = wishlist.some((item: any) => 
+    typeof item === "object" && item !== null ? item.id === product.id : item === product.id
+  );
 
   return (
     <div className="group relative bg-[#060c18] border border-[#16223a] hover:border-[#00e5ff] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_25px_rgba(0,229,255,0.25)] flex flex-col justify-between">
