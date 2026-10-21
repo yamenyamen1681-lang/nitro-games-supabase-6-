@@ -1,130 +1,154 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { Product } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
-import { ShoppingBag, Heart, Eye, Star } from "lucide-react";
+import { Heart, ShoppingBag, Eye, Star, ShieldCheck, Zap } from "lucide-react";
 
 interface ProductCardProps {
-  product: Product & { isNew?: boolean; discount?: number };
+  product: Product;
   index?: number;
-  onQuickView?: (product: Product) => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, index, onQuickView }) => {
-  const { addToCart, wishlist, toggleWishlist } = useCart();
-  
-  const isWishlisted = wishlist.some((item: any) => 
-    typeof item === "object" && item !== null ? item.id === product.id : item === product.id
-  );
+export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart, wishlist, toggleWishlist, setQuickViewProduct } = useCart();
+
+  const isWishlisted = wishlist.some((id) => id === product.id);
+
+  // حساب نسبة الخصم
+  const hasDiscount = product.originalPrice && product.originalPrice > product.price;
+  const discountPercent = hasDiscount
+    ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
+    : 0;
 
   return (
-    <div className="group relative bg-[#060c18] border border-[#16223a] hover:border-[#00e5ff] rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-[0_0_25px_rgba(0,229,255,0.25)] flex flex-col justify-between">
+    <div className="group relative bg-[#050914] hover:bg-[#080e1e] border-2 border-[#00a3ff]/40 hover:border-[#00e5ff] rounded-2xl p-4 flex flex-col justify-between transition-all duration-300 shadow-[0_0_20px_rgba(0,163,255,0.2)] hover:shadow-[0_0_35px_rgba(0,229,255,0.45)] hover:-translate-y-1.5 overflow-hidden">
       
-      {/* شريط علوي لخصائص المنتج (سريع / حصري) */}
-      <div className="absolute top-3 right-3 z-20 flex flex-col gap-1.5 items-end">
-        {product.isNew && (
-          <span className="bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black font-black text-[10px] px-2.5 py-0.5 rounded-full shadow-[0_0_10px_#00e5ff] font-mono">
-            NEW
-          </span>
-        )}
-        {product.discount && (
-          <span className="bg-red-500/20 text-red-400 border border-red-500/40 font-black text-[10px] px-2.5 py-0.5 rounded-full font-mono">
-            خصم {product.discount}%
-          </span>
-        )}
-      </div>
+      {/* ===== التأثيرات الضوئية للحواف والإطار الخارجي ===== */}
+      <div className="absolute inset-0 rounded-2xl pointer-events-none border border-[#00a3ff]/20 group-hover:border-[#00e5ff]/60 transition-colors" />
+      <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#00a3ff]/20 rounded-full blur-3xl group-hover:bg-[#00e5ff]/35 transition-all pointer-events-none" />
+      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#0066ff]/20 rounded-full blur-3xl group-hover:bg-[#00a3ff]/30 transition-all pointer-events-none" />
 
-      {/* زر المفضلة (Heart) - تمرير product.id بدلاً من الكائن كاملاً */}
-      <button
-        onClick={() => toggleWishlist(product.id as any)}
-        className={`absolute top-3 left-3 z-25 p-2 rounded-xl backdrop-blur-md border transition-all cursor-pointer ${
-          isWishlisted
-            ? "bg-[#00e5ff]/20 border-[#00e5ff] text-[#00e5ff] shadow-[0_0_10px_#00e5ff]"
-            : "bg-black/60 border-white/10 text-gray-300 hover:text-white hover:border-[#00a3ff]"
-        }`}
-        aria-label="المفضلة"
-      >
-        <Heart className={`w-4 h-4 ${isWishlisted ? "fill-[#00e5ff]" : ""}`} />
-      </button>
-
-      {/* صورة المنتج مع تأثير التكبير */}
-      <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-[#03060f] cursor-pointer" onClick={() => onQuickView?.(product)}>
-        <Image
-          src={product.image || "/images/placeholder.jpg"}
-          alt={product.name}
-          fill
-          className="object-cover object-center group-hover:scale-110 transition-transform duration-500 opacity-90"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#060c18] via-transparent to-transparent opacity-80" />
-      </div>
-
-      {/* تفاصيل المنتج */}
-      <div className="p-4 sm:p-5 flex flex-col flex-grow justify-between text-right">
-        <div>
-          {/* تصنيف المنتج والتقييم */}
-          <div className="flex items-center justify-between text-xs mb-1.5">
-            <span className="text-[#00a3ff] font-mono font-bold tracking-wider uppercase text-[10px]">
-              {product.category || "GAMING GEAR"}
+      {/* ===== 1. الشريط العلوي: تصنيف المنتج، الخصم، والأزرار السريعة ===== */}
+      <div className="relative z-10 flex items-center justify-between gap-2 mb-2">
+        <div className="flex items-center gap-1.5">
+          {product.category && (
+            <span className="px-2.5 py-0.5 rounded-md bg-[#00a3ff]/20 border border-[#00a3ff]/50 text-[10px] font-black text-[#00e5ff] uppercase tracking-wider shadow-[0_0_10px_rgba(0,163,255,0.3)]">
+              {product.category}
             </span>
-            <div className="flex items-center gap-1 text-amber-400">
-              <Star className="w-3.5 h-3.5 fill-amber-400" />
-              <span className="font-mono text-gray-300 text-xs">4.9</span>
-            </div>
-          </div>
-
-          {/* اسم المنتج */}
-          <h3 
-            onClick={() => onQuickView?.(product)}
-            className="text-sm sm:text-base font-black text-white group-hover:text-[#00e5ff] transition-colors line-clamp-1 cursor-pointer font-['Cairo']"
-          >
-            {product.name}
-          </h3>
-
-          {/* وصف قصير */}
-          <p className="text-xs text-gray-400 mt-1 line-clamp-2 leading-relaxed">
-            {product.description || "عتاد احترافي عالي الأداء مصمم خصيصاً للاعبين المحترفين في فلسطين."}
-          </p>
+          )}
+          {hasDiscount && (
+            <span className="px-2 py-0.5 rounded-md bg-red-500/20 border border-red-500/50 text-[10px] font-black text-red-400 animate-pulse">
+              -{discountPercent}%
+            </span>
+          )}
         </div>
 
-        {/* السعر وأزرار الشراء */}
-        <div className="mt-4 pt-3 border-t border-[#16223a] flex items-center justify-between">
+        {/* أزرار التفاعل (نظرة سريعة والمفضلة) */}
+        <div className="flex items-center gap-1.5">
+          <button
+            onClick={() => setQuickViewProduct(product)}
+            className="p-1.5 rounded-lg bg-[#0b1222] border border-[#00a3ff]/30 text-gray-300 hover:text-white hover:border-[#00e5ff] hover:shadow-[0_0_10px_rgba(0,229,255,0.4)] transition-all"
+            title="نظرة سريعة"
+          >
+            <Eye className="w-3.5 h-3.5" />
+          </button>
+          <button
+            onClick={() => toggleWishlist(product.id)}
+            className={`p-1.5 rounded-lg border transition-all ${
+              isWishlisted
+                ? "bg-red-500/20 border-red-500/60 text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.4)]"
+                : "bg-[#0b1222] border-[#00a3ff]/30 text-gray-300 hover:text-red-400"
+            }`}
+            title="المفضلة"
+          >
+            <Heart className={`w-3.5 h-3.5 ${isWishlisted ? "fill-red-500" : ""}`} />
+          </button>
+        </div>
+      </div>
+
+      {/* ===== 2. الماركة واسم المنتج (في المنتصف مع وهج نيون أزرق قوي) ===== */}
+      <div className="relative z-10 text-center my-2 space-y-1">
+        {product.brand && (
+          <span className="text-[11px] font-black tracking-widest text-[#00e5ff] uppercase block drop-shadow-[0_0_10px_rgba(0,229,255,0.7)]">
+            {product.brand}
+          </span>
+        )}
+        <h3
+          onClick={() => setQuickViewProduct(product)}
+          className="text-base font-black text-white hover:text-[#00e5ff] cursor-pointer transition-colors leading-tight line-clamp-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]"
+        >
+          {product.title}
+        </h3>
+      </div>
+
+      {/* ===== 3. منطقة صورة المنتج (مع خلفية نيون وشبكة ثلاثية الأبعاد) ===== */}
+      <div
+        onClick={() => setQuickViewProduct(product)}
+        className="relative z-10 w-full aspect-square rounded-xl bg-gradient-to-b from-[#080d1a] to-[#03060d] border border-[#00a3ff]/40 overflow-hidden flex items-center justify-center p-3 cursor-pointer group-hover:border-[#00e5ff] transition-all my-1 shadow-[inset_0_0_20px_rgba(0,163,255,0.2)]"
+      >
+        {/* خلفية الشبكة المتوهجة خلف الكيبورد */}
+        <div className="absolute inset-0 opacity-25 bg-[radial-gradient(#00a3ff_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
+        
+        {/* بقعة نيون دائرية خادعة للتوهج خلف الكيبورد تماماً */}
+        <div className="absolute w-28 h-28 bg-[#00a3ff]/30 rounded-full blur-2xl group-hover:scale-125 group-hover:bg-[#00e5ff]/45 transition-all duration-500 pointer-events-none" />
+
+        {/* صورة المنتج */}
+        <img
+          src={product.image}
+          alt={product.title}
+          className="relative z-10 w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_12px_25px_rgba(0,0,0,0.9)]"
+          loading="lazy"
+        />
+
+        {/* مؤشر متوفر بالمخزن */}
+        <div className="absolute bottom-2 right-2 z-20 px-2 py-0.5 rounded-md bg-[#050814]/90 border border-[#00a3ff]/40 flex items-center gap-1.5 text-[9px] text-emerald-400 font-black backdrop-blur-md shadow-[0_0_10px_rgba(0,0,0,0.5)]">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+          متوفر
+        </div>
+      </div>
+
+      {/* ===== 4. التفاصيل والضمان والتسعير ===== */}
+      <div className="relative z-10 mt-2 space-y-2">
+        {/* الضمان والتقييم */}
+        <div className="flex items-center justify-between text-[11px] px-1">
+          <div className="flex items-center gap-1 text-[#00e5ff] font-bold drop-shadow-[0_0_5px_rgba(0,229,255,0.4)]">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>ضمان سنة</span>
+          </div>
+          <div className="flex items-center gap-1 text-amber-400 font-bold">
+            <Star className="w-3 h-3 fill-amber-400" />
+            <span>{product.rating || "5.0"}</span>
+          </div>
+        </div>
+
+        {/* السعر وزر الإضافة للسلة */}
+        <div className="pt-2 border-t border-[#00a3ff]/30 flex items-center justify-between gap-2">
+          {/* عرض السعر */}
           <div className="flex flex-col">
-            <span className="text-[10px] text-gray-400">السعر</span>
-            <div className="flex items-baseline gap-1">
-              <span className="text-base sm:text-lg font-black font-mono text-[#00e5ff] drop-shadow-[0_0_8px_rgba(0,229,255,0.4)]">
+            {hasDiscount && (
+              <span className="text-[10px] text-gray-500 line-through font-mono">
+                {product.originalPrice} ₪
+              </span>
+            )}
+            <div className="flex items-baseline gap-0.5">
+              <span className="text-xl font-black text-white font-mono leading-none tracking-tight drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
                 {product.price}
               </span>
-              <span className="text-xs font-bold text-gray-300">₪</span>
+              <span className="text-xs font-bold text-[#00e5ff]">₪</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            {onQuickView && (
-              <button
-                onClick={() => onQuickView(product)}
-                className="p-2 rounded-xl bg-[#03060f] border border-[#16223a] hover:border-[#00a3ff] text-gray-300 hover:text-[#00e5ff] transition-all cursor-pointer"
-                title="معاينة سريعة"
-              >
-                <Eye className="w-4 h-4" />
-              </button>
-            )}
-
-            <button
-              onClick={() => addToCart(product)}
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black font-black text-xs hover:shadow-[0_0_15px_#00e5ff] transition-all cursor-pointer active:scale-95"
-            >
-              <ShoppingBag className="w-4 h-4 fill-black" />
-              <span>إضافة للسلة</span>
-            </button>
-          </div>
+          {/* زر أضف للسلة برسم سايبربانك مستقبلي */}
+          <button
+            onClick={() => addToCart(product)}
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#00a3ff] via-[#0080ff] to-[#00e5ff] hover:from-[#00c3ff] hover:to-[#00a3ff] text-black font-black text-xs flex items-center gap-1.5 shadow-[0_0_20px_rgba(0,163,255,0.5)] active:scale-95 transition-all shrink-0 cursor-pointer"
+          >
+            <ShoppingBag className="w-4 h-4" />
+            <span>أضف للسلة</span>
+          </button>
         </div>
-
       </div>
-
-      {/* خط إضاءة نيون سفلي عند التحويم */}
-      <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] opacity-0 group-hover:opacity-100 transition-opacity shadow-[0_0_10px_#00e5ff]" />
     </div>
   );
 };
