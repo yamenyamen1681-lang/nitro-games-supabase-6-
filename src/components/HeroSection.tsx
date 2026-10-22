@@ -191,7 +191,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
         
-        {/* --- البانر العلوي مع الإطار النيون المتحرك بدقة --- */}
+        {/* --- البانر العلوي مع الإطار النيون المزدوج المتحرك والمتصادم --- */}
         <div className="flex justify-center -mt-1 mb-2">
           <div className="relative w-full max-w-xl mx-auto">
             <svg className="border-snake-svg" style={{ overflow: "visible" }}>
@@ -247,7 +247,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 CYBER ESPORTS
               </span>
               <p className="text-gray-100 text-xs sm:text-sm font-medium">
-                المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
+                أفضل الأسعار في فلسطين
               </p>
             </div>
           </div>
