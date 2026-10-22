@@ -43,16 +43,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const [siteAudioUrl, setSiteAudioUrl] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
   const [showcaseVideoIndex, setShowcaseVideoIndex] = useState(0);
   const showcaseVideoRef = useRef<HTMLVideoElement | null>(null);
+  const [slide, setSlide] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
     const vid = showcaseVideoRef.current;
     if (!vid) return;
 
     const playPromise = vid.play();
-
     if (playPromise && typeof playPromise.catch === "function") {
       playPromise.catch(() => {});
     }
@@ -64,7 +64,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         const res = await fetch("/api/settings?key=site_audio", {
           cache: "no-store",
         });
-
         const data = await res.json();
 
         if (data.success && data.value?.url) {
@@ -106,17 +105,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
     return products.slice(0, 6);
   }, [cfg.productIds, products]);
 
-  const [slide, setSlide] = useState(0);
-  const [paused, setPaused] = useState(false);
-
   const go = useCallback(
     (dir: number) => {
       if (showcaseItems.length === 0) return;
-
-      setSlide(
-        (s) =>
-          (s + dir + showcaseItems.length) % showcaseItems.length
-      );
+      setSlide((s) => (s + dir + showcaseItems.length) % showcaseItems.length);
     },
     [showcaseItems.length]
   );
@@ -133,9 +125,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   }, [cfg.autoPlay, cfg.intervalMs, paused, go, showcaseItems.length]);
 
   useEffect(() => {
-    if (slide >= showcaseItems.length) {
-      setSlide(0);
-    }
+    if (slide >= showcaseItems.length) setSlide(0);
   }, [showcaseItems.length, slide]);
 
   const active = showcaseItems[slide];
@@ -169,23 +159,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
       className="relative overflow-hidden pt-4 pb-20 lg:pt-6 lg:pb-28 bg-[#03060f] border-b border-[#16223a]"
     >
       <style>{`
-        /* الخطان الأزرقان المتحركان */
         @keyframes snakeSpinFast {
-          0% {
-            stroke-dashoffset: 0;
-          }
-          100% {
-            stroke-dashoffset: -100;
-          }
+          0% { stroke-dashoffset: 0; }
+          100% { stroke-dashoffset: -100; }
         }
 
         @keyframes snakeSpinReverse {
-          0% {
-            stroke-dashoffset: 0;
-          }
-          100% {
-            stroke-dashoffset: 100;
-          }
+          0% { stroke-dashoffset: 0; }
+          100% { stroke-dashoffset: 100; }
         }
 
         .border-snake-svg {
@@ -207,14 +188,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           animation: snakeSpinReverse 2.2s linear infinite;
         }
 
-        /* حركة الشريط */
         @keyframes marqueeLoop {
-          0% {
-            transform: translateX(0%);
-          }
-          100% {
-            transform: translateX(50%);
-          }
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(50%); }
         }
 
         .animate-marquee-infinite {
@@ -227,19 +203,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           animation-play-state: paused;
         }
 
-        /* توهج أزرق */
         @keyframes cyberGlow {
           0%, 100% {
             opacity: 0.6;
-            filter: drop-shadow(
-              0 0 20px rgba(0, 163, 255, 0.4)
-            );
+            filter: drop-shadow(0 0 20px rgba(0, 163, 255, 0.4));
           }
           50% {
             opacity: 1;
-            filter: drop-shadow(
-              0 0 35px rgba(0, 229, 255, 0.8)
-            );
+            filter: drop-shadow(0 0 35px rgba(0, 229, 255, 0.8));
           }
         }
 
@@ -248,14 +219,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }
 
         @keyframes cyberPulseBg {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.3;
-          }
-          50% {
-            transform: scale(1.05);
-            opacity: 0.6;
-          }
+          0%, 100% { transform: scale(1); opacity: 0.3; }
+          50% { transform: scale(1.05); opacity: 0.6; }
         }
 
         .animate-cyber-pulse {
@@ -263,12 +228,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }
 
         @keyframes shimmerSweep {
-          0% {
-            background-position: -200% 0;
-          }
-          100% {
-            background-position: 200% 0;
-          }
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
         }
 
         .shimmer-blue {
@@ -276,7 +237,133 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           animation: shimmerSweep 4.5s linear infinite;
         }
 
-        /* احترام إعداد تقليل الحركة */
+        /* العنوان العربي الكبير */
+        .nitro-main-heading {
+          display: block;
+          margin-top: 12px;
+          font-family: "Cairo", sans-serif;
+          font-size: clamp(2.8rem, 6.5vw, 4.5rem);
+          font-weight: 1000;
+          line-height: 1.35;
+          letter-spacing: -1.5px;
+          color: #fff;
+        }
+
+        .nitro-heading-line {
+          position: relative;
+          display: table;
+          width: fit-content;
+          max-width: 100%;
+          margin-top: 4px;
+          padding-bottom: 9px;
+          background: linear-gradient(
+            100deg,
+            #ffffff 0%,
+            #e8f8ff 40%,
+            #58d9ff 75%,
+            #00a3ff 100%
+          );
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        /* كل سطر له خط أزرق مستقل تحته */
+        .nitro-heading-line::after {
+          content: "";
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          width: 100%;
+          height: 3px;
+          border-radius: 3px;
+          background: linear-gradient(
+            90deg,
+            #00a3ff 0%,
+            #00e5ff 65%,
+            rgba(0, 229, 255, 0.12) 100%
+          );
+          box-shadow: 0 0 10px rgba(0, 163, 255, 0.4);
+        }
+
+        .nitro-feature-card {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 9px;
+          min-height: 58px;
+          padding: 10px 8px;
+          border: 1px solid rgba(0, 163, 255, 0.25);
+          border-radius: 13px;
+          background: linear-gradient(
+            145deg,
+            rgba(9, 25, 48, 0.96),
+            rgba(4, 11, 25, 0.98)
+          );
+          transition: 0.25s ease;
+        }
+
+        .nitro-feature-card:hover {
+          transform: translateY(-2px);
+          border-color: rgba(0, 229, 255, 0.7);
+          box-shadow: 0 5px 18px rgba(0, 163, 255, 0.1);
+        }
+
+        .nitro-feature-icon {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          width: 32px;
+          height: 32px;
+          border: 1px solid rgba(0, 163, 255, 0.3);
+          border-radius: 10px;
+          color: #00e5ff;
+          background: rgba(0, 110, 255, 0.12);
+        }
+
+        .nitro-feature-text {
+          color: #eaf7ff;
+          font-family: "Cairo", sans-serif;
+          font-size: 12px;
+          font-weight: 800;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 640px) {
+          .nitro-main-heading {
+            font-size: clamp(2.5rem, 9vw, 3.5rem);
+            line-height: 1.3;
+            letter-spacing: -1px;
+          }
+
+          .nitro-heading-line {
+            padding-bottom: 8px;
+          }
+
+          .nitro-heading-line::after {
+            height: 2px;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .nitro-feature-card {
+            gap: 6px;
+            padding: 8px 5px;
+            min-height: 52px;
+          }
+
+          .nitro-feature-icon {
+            width: 27px;
+            height: 27px;
+          }
+
+          .nitro-feature-text {
+            font-size: 10px;
+          }
+        }
+
         @media (prefers-reduced-motion: reduce) {
           .snake-line-1,
           .snake-line-2,
@@ -292,82 +379,33 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       {/* الخلفية */}
       <div className="absolute inset-0 tech-grid opacity-80 pointer-events-none" />
-
       <div className="absolute -top-24 right-1/4 w-[520px] h-[380px] bg-[#00a3ff]/15 blur-[140px] rounded-full pointer-events-none animate-cyber-pulse" />
-
       <div className="absolute bottom-0 -left-24 w-[520px] h-[380px] bg-[#00e5ff]/15 blur-[140px] rounded-full pointer-events-none animate-cyber-pulse" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-8">
-
-        {/* البانر العلوي: مستطيل وخطان أزرقان متحركان */}
+        {/* البانر العلوي */}
         <div className="flex justify-center -mt-1 mb-2">
           <div className="relative w-full max-w-xl mx-auto">
-
             <svg
               className="border-snake-svg"
               style={{ overflow: "visible" }}
               aria-hidden="true"
             >
               <defs>
-                <linearGradient
-                  id="priceBlue1"
-                  x1="0%"
-                  y1="0%"
-                  x2="100%"
-                  y2="0%"
-                >
-                  <stop
-                    offset="0%"
-                    stopColor="#00e5ff"
-                    stopOpacity="1"
-                  />
-                  <stop
-                    offset="50%"
-                    stopColor="#008cff"
-                    stopOpacity="1"
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor="#00e5ff"
-                    stopOpacity="0.15"
-                  />
+                <linearGradient id="priceBlue1" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <stop offset="0%" stopColor="#00e5ff" stopOpacity="1" />
+                  <stop offset="50%" stopColor="#008cff" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#00e5ff" stopOpacity="0.15" />
                 </linearGradient>
 
-                <linearGradient
-                  id="priceBlue2"
-                  x1="100%"
-                  y1="0%"
-                  x2="0%"
-                  y2="0%"
-                >
-                  <stop
-                    offset="0%"
-                    stopColor="#0066ff"
-                    stopOpacity="0.15"
-                  />
-                  <stop
-                    offset="50%"
-                    stopColor="#00c8ff"
-                    stopOpacity="1"
-                  />
-                  <stop
-                    offset="100%"
-                    stopColor="#00e5ff"
-                    stopOpacity="1"
-                  />
+                <linearGradient id="priceBlue2" x1="100%" y1="0%" x2="0%" y2="0%">
+                  <stop offset="0%" stopColor="#0066ff" stopOpacity="0.15" />
+                  <stop offset="50%" stopColor="#00c8ff" stopOpacity="1" />
+                  <stop offset="100%" stopColor="#00e5ff" stopOpacity="1" />
                 </linearGradient>
 
-                <filter
-                  id="priceGlow"
-                  x="-30%"
-                  y="-30%"
-                  width="160%"
-                  height="160%"
-                >
-                  <feGaussianBlur
-                    stdDeviation="2.5"
-                    result="blur"
-                  />
+                <filter id="priceGlow" x="-30%" y="-30%" width="160%" height="160%">
+                  <feGaussianBlur stdDeviation="2.5" result="blur" />
                   <feMerge>
                     <feMergeNode in="blur" />
                     <feMergeNode in="SourceGraphic" />
@@ -375,7 +413,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 </filter>
               </defs>
 
-              {/* الخط الأول */}
               <rect
                 x="2"
                 y="2"
@@ -391,7 +428,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 className="snake-line-1"
               />
 
-              {/* الخط الثاني: يتحرك بالاتجاه المعاكس */}
               <rect
                 x="2"
                 y="2"
@@ -408,11 +444,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               />
             </svg>
 
-            {/* المستطيل والنص */}
             <div className="relative z-0 min-h-[58px] bg-[#060c18]/95 border border-[#087cff]/35 rounded-xl px-4 py-3 flex items-center justify-center text-center shadow-[0_0_18px_rgba(0,140,255,0.12)]">
               <p
                 dir="rtl"
-                className="text-white text-sm sm:text-base font-extrabold tracking-normal font-['Cairo']"
+                className="text-white text-sm sm:text-base font-extrabold font-['Cairo']"
               >
                 أفضل الأسعار في فلسطين
               </p>
@@ -422,10 +457,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         {/* القسم الرئيسي */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-
-          {/* اليمين: الشعار والنصوص */}
+          {/* الشعار والنصوص */}
           <div className="lg:col-span-6 space-y-6 text-right pt-2">
-
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
                 <div className="brand-mark brand-mark-lg text-white">
@@ -451,17 +484,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </div>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-[2.8rem] font-light text-white leading-[1.25] font-['Cairo']">
+            {/* العنوان الجديد */}
+            <h1 className="text-right text-white font-['Cairo']">
               <span className="brand-mark brand-mark-md text-white font-normal">
                 NITRO GAMES
               </span>
 
-              <span className="block mt-2 font-black">
-                <span className="sr-only">نيترو قيمز — </span>
-                خياركم الأفضل في فلسطين
+              <span className="nitro-main-heading">
+                <span className="nitro-heading-line">
+                  خياركم الأفضل في
+                </span>
+                <span className="nitro-heading-line">
+                  فلسطين
+                </span>
               </span>
 
-              <span className="block text-xl sm:text-3xl lg:text-[2.2rem] text-gray-200 mt-1 font-light">
+              <span className="block text-xl sm:text-3xl lg:text-[2.2rem] text-gray-200 mt-4 font-light leading-relaxed">
                 للعتاد الاحترافي..{" "}
                 <span className="glow-cyan font-bold drop-shadow-[0_0_15px_rgba(0,229,255,0.6)]">
                   ارفع مستوى لعبك!
@@ -469,23 +507,53 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </span>
             </h1>
 
+            {/* مميزات المتجر */}
+            <div
+              dir="rtl"
+              className="grid grid-cols-2 sm:grid-cols-4 gap-2 border-y border-[#17345a] py-4"
+            >
+              <div className="nitro-feature-card">
+                <div className="nitro-feature-icon">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+                <span className="nitro-feature-text">منتجات أصلية</span>
+              </div>
+
+              <div className="nitro-feature-card">
+                <div className="nitro-feature-icon">
+                  <Truck className="w-4 h-4" />
+                </div>
+                <span className="nitro-feature-text">شحن سريع</span>
+              </div>
+
+              <div className="nitro-feature-card">
+                <div className="nitro-feature-icon">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <span className="nitro-feature-text">ضمان حقيقي</span>
+              </div>
+
+              <div className="nitro-feature-card">
+                <div className="nitro-feature-icon">
+                  <ShoppingBag className="w-4 h-4" />
+                </div>
+                <span className="nitro-feature-text">أفضل المنتجات</span>
+              </div>
+            </div>
+
             {/* شارة صاحب المتجر وزر التسوق */}
             <div className="flex flex-wrap items-center justify-end gap-3 pt-1">
-
               <div
                 dir="ltr"
                 className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/60 shadow-[0_0_25px_rgba(0,163,255,0.3)]"
               >
                 <Crown className="w-4 h-4 text-[#00e5ff] fill-[#00a3ff]/30" />
-
                 <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">
                   STORE OWNER:
                 </span>
-
                 <span className="text-sm font-black text-[#00e5ff] tracking-widest drop-shadow-[0_0_12px_rgba(0,229,255,0.7)] font-mono">
                   YamEn
                 </span>
-
                 <Sparkles className="w-3.5 h-3.5 text-[#00a3ff]" />
               </div>
 
@@ -495,7 +563,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>{cfg.ctaLabel || "تسوق الآن"}</span>
-
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               </button>
             </div>
@@ -513,7 +580,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-60" />
                         <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]" />
                       </span>
-
                       {s.big} {s.icon}
                     </div>
 
@@ -526,24 +592,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             </div>
           </div>
 
-          {/* اليسار: العرض المميز */}
+          {/* العرض المميز */}
           <div className="lg:col-span-6 space-y-4 pt-2">
-
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
-
-              /* عرض الفيديو */
               <div className="relative group">
-
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-60 group-hover:opacity-95 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
 
                 <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/70 via-[#00a3ff]/40 to-[#0a1630]/90 shadow-[0_25px_60px_-15px_rgba(0,163,255,0.4)]">
-
                   <div className="relative rounded-[22px] bg-[#040814] overflow-hidden">
-
                     <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-white/[0.06] to-transparent z-20" />
 
                     <div className="relative z-10 flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
-
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
@@ -576,7 +635,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
                     <div className="relative h-60 sm:h-72 w-full bg-black p-2.5">
                       <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#122347] shadow-[inset_0_0_0_1px_rgba(0,163,255,0.08)]">
-
                         <video
                           ref={showcaseVideoRef}
                           key={cfg.videoUrls[showcaseVideoIndex % cfg.videoUrls.length]}
@@ -595,13 +653,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         />
 
                         <span className="absolute inset-0 pointer-events-none rounded-xl bg-[radial-gradient(ellipse_at_center,transparent_55%,rgba(0,0,0,0.45)_100%)]" />
-
                         <span className="absolute inset-0 ring-1 ring-inset ring-[#00a3ff]/40 rounded-xl pointer-events-none shadow-[inset_0_0_30px_rgba(0,163,255,0.3)]" />
                       </div>
                     </div>
 
                     <div className="relative z-10 px-5 py-3 border-t border-[#142342] bg-[#060c1d]/90 backdrop-blur-md flex items-center justify-between gap-3">
-
                       <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo'] tracking-wide">
                         {cfg.headline}
                       </h3>
@@ -617,14 +673,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                   </div>
                 </div>
 
-                {siteAudioUrl && (
-                  <audio ref={audioRef} src={siteAudioUrl} loop />
-                )}
+                {siteAudioUrl && <audio ref={audioRef} src={siteAudioUrl} loop />}
               </div>
-
             ) : cfg.enabled && active ? (
-
-              /* عرض المنتجات */
               <div
                 className="relative group"
                 onMouseEnter={() => setPaused(true)}
@@ -633,11 +684,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                 <div className="absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-xl opacity-60 group-hover:opacity-95 transition duration-1000 group-hover:duration-300 animate-cyber-glow" />
 
                 <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/60 via-[#00a3ff]/30 to-[#101c38]/80 shadow-[0_0_40px_rgba(0,163,255,0.25)]">
-
                   <div className="rounded-[22px] bg-[#040814] overflow-hidden">
-
                     <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
-
                       {siteAudioUrl ? (
                         <button
                           onClick={toggleAudio}
@@ -659,14 +707,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       )}
 
                       <div className="flex items-center gap-2">
-
                         <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30 shadow-[inset_0_0_10px_rgba(0,229,255,0.18)]">
                           <Flame className="w-3.5 h-3.5 text-[#00e5ff] fill-[#00a3ff]/40 animate-pulse" />
                           {cfg.badgeText}
                         </span>
 
                         <div className="flex items-center gap-1.5 mr-2">
-
                           <button
                             onClick={() => go(-1)}
                             className="p-1.5 rounded-lg bg-[#0e1d3a] hover:bg-[#00a3ff] hover:text-black text-gray-200 transition-colors cursor-pointer border border-[#1d3461]"
@@ -682,13 +728,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                           >
                             <ChevronLeft className="w-4 h-4" />
                           </button>
-
                         </div>
                       </div>
                     </div>
 
                     <div className="relative h-60 sm:h-72 w-full bg-gradient-to-b from-[#081226] via-[#040814] to-[#02050c]">
-
                       <div key={active.id} className="absolute inset-0 showcase-enter">
                         <Image
                           src={active.image}
@@ -700,7 +744,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </div>
 
                       <div className="absolute top-4 left-4 flex flex-col items-start gap-1">
-
                         {active.originalPrice && (
                           <span className="text-[11px] font-mono text-gray-400 line-through bg-black/70 px-2 py-0.5 rounded-md">
                             {active.originalPrice.toLocaleString()} ₪
@@ -713,20 +756,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                       </div>
 
                       <span className="absolute bottom-4 right-4 text-[10px] font-bold font-tech text-[#00e5ff] bg-[#061124]/90 border border-[#00e5ff]/50 px-3 py-1 rounded-full shadow-[0_0_10px_rgba(0,229,255,0.3)]">
-                        {CATEGORIES_META.find(
-                          (c) => c.id === active.category
-                        )?.name ?? active.category}
+                        {CATEGORIES_META.find((c) => c.id === active.category)?.name ?? active.category}
                       </span>
                     </div>
 
                     <div className="px-5 py-3 border-t border-[#142342] bg-[#060c1d] flex items-center justify-between gap-3">
-
                       <div className="min-w-0 text-right">
-
                         <div className="text-[10px] font-tech text-[#00a3ff] uppercase tracking-wider">
                           {active.brand}
                         </div>
-
                         <h3 className="text-xs sm:text-sm font-bold text-white truncate font-['Cairo']">
                           {active.title}
                         </h3>
@@ -739,26 +777,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>أضف للسلة</span>
                       </button>
-
                     </div>
                   </div>
                 </div>
 
-                {siteAudioUrl && (
-                  <audio ref={audioRef} src={siteAudioUrl} loop />
-                )}
+                {siteAudioUrl && <audio ref={audioRef} src={siteAudioUrl} loop />}
               </div>
-
             ) : (
-
-              /* حالة تعطيل العرض */
               <div className="panel rounded-2xl h-56 flex flex-col items-center justify-center gap-3 text-center border border-[#16223a]">
                 <Zap className="w-10 h-10 text-[#00a3ff]/40" />
                 <p className="text-xs text-gray-400">
                   المربع المميز معطّل حالياً من لوحة التحكم
                 </p>
               </div>
-
             )}
           </div>
         </div>
