@@ -1,4 +1,3 @@
-
 "use client";
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
@@ -27,6 +26,7 @@ import {
   Disc,
   Headphones,
   BadgeCheck,
+  Trophy,
 } from "lucide-react";
 
 interface HeroSectionProps {
@@ -119,7 +119,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
   const go = useCallback(
     (dir: number) => {
       if (showcaseItems.length === 0) return;
-      setSlide((s) => (s + dir + showcaseItems.length) % showcaseItems.length);
+
+      setSlide(
+        (s) => (s + dir + showcaseItems.length) % showcaseItems.length
+      );
     },
     [showcaseItems.length]
   );
@@ -306,23 +309,34 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         }
 
         .nitro-corner.tl {
-          top: 8px; left: 8px;
-          border-top: 1px solid; border-left: 1px solid;
+          top: 8px;
+          left: 8px;
+          border-top: 1px solid;
+          border-left: 1px solid;
           border-top-left-radius: 5px;
         }
+
         .nitro-corner.tr {
-          top: 8px; right: 8px;
-          border-top: 1px solid; border-right: 1px solid;
+          top: 8px;
+          right: 8px;
+          border-top: 1px solid;
+          border-right: 1px solid;
           border-top-right-radius: 5px;
         }
+
         .nitro-corner.bl {
-          bottom: 8px; left: 8px;
-          border-bottom: 1px solid; border-left: 1px solid;
+          bottom: 8px;
+          left: 8px;
+          border-bottom: 1px solid;
+          border-left: 1px solid;
           border-bottom-left-radius: 5px;
         }
+
         .nitro-corner.br {
-          bottom: 8px; right: 8px;
-          border-bottom: 1px solid; border-right: 1px solid;
+          bottom: 8px;
+          right: 8px;
+          border-bottom: 1px solid;
+          border-right: 1px solid;
           border-bottom-right-radius: 5px;
         }
 
@@ -382,28 +396,59 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           outline-offset: 4px;
         }
 
-        .nitro-benefit {
+        /* بطاقات المزايا الجديدة */
+        .nitro-feature-card {
+          position: relative;
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 7px;
-          color: #dceeff;
+          gap: 8px;
+          min-width: 0;
+          min-height: 62px;
+          padding: 10px 7px;
+          overflow: hidden;
+          border: 1px solid rgba(44, 142, 255, .24);
+          border-radius: 13px;
+          background: linear-gradient(145deg, rgba(10, 30, 59, .88), rgba(4, 12, 27, .96));
+          color: #e5f3ff;
           font-family: "Cairo", Arial, sans-serif;
-          font-size: 11px;
-          white-space: nowrap;
+          transition: border-color .25s ease, background .25s ease, transform .25s ease, box-shadow .25s ease;
         }
 
-        .nitro-benefit-icon {
+        .nitro-feature-card::before {
+          content: "";
+          position: absolute;
+          top: 0;
+          right: 15%;
+          left: 15%;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(44, 190, 255, .7), transparent);
+        }
+
+        .nitro-feature-card:hover {
+          transform: translateY(-2px);
+          border-color: rgba(44, 210, 255, .58);
+          background: linear-gradient(145deg, rgba(12, 44, 83, .95), rgba(4, 15, 34, .98));
+          box-shadow: 0 6px 20px rgba(0, 115, 255, .12);
+        }
+
+        .nitro-feature-icon {
           display: flex;
+          flex-shrink: 0;
           align-items: center;
           justify-content: center;
-          width: 28px;
-          height: 28px;
-          border: 1px solid rgba(0, 188, 255, .42);
-          border-radius: 9px;
-          color: #4ceaff;
-          background: rgba(0, 111, 255, .1);
-          box-shadow: inset 0 0 12px rgba(0, 132, 255, .08);
+          width: 34px;
+          height: 34px;
+          border: 1px solid rgba(0, 174, 255, .3);
+          border-radius: 10px;
+          color: #43dfff;
+          background: rgba(0, 117, 255, .11);
+        }
+
+        .nitro-feature-text {
+          font-size: 11px;
+          font-weight: 800;
+          white-space: nowrap;
         }
 
         @keyframes marqueeLoop {
@@ -417,21 +462,33 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           animation: marqueeLoop 32s linear infinite;
         }
 
-        .animate-marquee-infinite:hover { animation-play-state: paused; }
-
-        @keyframes cyberGlow {
-          0%, 100% { opacity: .6; filter: drop-shadow(0 0 20px rgba(0,163,255,.4)); }
-          50% { opacity: 1; filter: drop-shadow(0 0 35px rgba(0,229,255,.8)); }
+        .animate-marquee-infinite:hover {
+          animation-play-state: paused;
         }
 
-        .animate-cyber-glow { animation: cyberGlow 4s infinite ease-in-out; }
+        @keyframes cyberGlow {
+          0%, 100% {
+            opacity: .6;
+            filter: drop-shadow(0 0 20px rgba(0, 163, 255, .4));
+          }
+          50% {
+            opacity: 1;
+            filter: drop-shadow(0 0 35px rgba(0, 229, 255, .8));
+          }
+        }
+
+        .animate-cyber-glow {
+          animation: cyberGlow 4s infinite ease-in-out;
+        }
 
         @keyframes cyberPulseBg {
           0%, 100% { transform: scale(1); opacity: .3; }
           50% { transform: scale(1.05); opacity: .6; }
         }
 
-        .animate-cyber-pulse { animation: cyberPulseBg 6s infinite ease-in-out; }
+        .animate-cyber-pulse {
+          animation: cyberPulseBg 6s infinite ease-in-out;
+        }
 
         @keyframes shimmerSweep {
           0% { background-position: -200% 0; }
@@ -443,11 +500,37 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           animation: shimmerSweep 4.5s linear infinite;
         }
 
-        @media (max-width: 380px) {
-          .nitro-banner-heading { font-size: 18px; }
-          .nitro-shop-button { padding: 11px 17px; min-height: 48px; }
-          .nitro-benefit { font-size: 10px; gap: 5px; }
-          .nitro-benefit-icon { width: 25px; height: 25px; }
+        @media (max-width: 420px) {
+          .nitro-feature-card {
+            gap: 5px;
+            min-height: 56px;
+            padding: 8px 4px;
+          }
+
+          .nitro-feature-icon {
+            width: 28px;
+            height: 28px;
+          }
+
+          .nitro-feature-icon svg {
+            width: 16px;
+            height: 16px;
+          }
+
+          .nitro-feature-text {
+            font-size: 10px;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .nitro-feature-card {
+            flex-direction: column;
+            gap: 5px;
+          }
+
+          .nitro-feature-text {
+            font-size: 10px;
+          }
         }
 
         @media (prefers-reduced-motion: reduce) {
@@ -462,7 +545,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             transition: none !important;
           }
 
-          .nitro-shop-button:hover { transform: none; }
+          .nitro-shop-button:hover,
+          .nitro-feature-card:hover {
+            transform: none;
+          }
         }
       `}</style>
 
@@ -473,7 +559,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-7">
 
-        {/* البنر العلوي الفخم */}
+        {/* البنر العلوي */}
         <div className="flex justify-center -mt-1 mb-2 px-0.5">
           <div className="nitro-premium-banner w-full max-w-xl">
             <div className="relative flex flex-col items-center justify-center px-4 py-6 sm:px-6 sm:py-7">
@@ -523,7 +609,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-7 lg:gap-10 items-start">
 
-          {/* العنوان الرئيسي — بدون NITRO GAMES المكررة */}
+          {/* القسم الرئيسي */}
           <div className="lg:col-span-6 space-y-5 text-right pt-0">
             <div className="flex items-center gap-4 justify-end">
               <div className="text-right">
@@ -568,34 +654,46 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </span>
             </h1>
 
-            {/* مزايا المتجر */}
+            {/* المزايا الأربع — تصميم جديد */}
             <div
               dir="rtl"
-              className="grid grid-cols-3 gap-2 border-y border-[#17345a] py-3"
+              className="grid grid-cols-2 sm:grid-cols-4 gap-2.5"
             >
-              <div className="nitro-benefit">
-                <span className="nitro-benefit-icon">
-                  <BadgeCheck className="w-4 h-4" />
+              <div className="nitro-feature-card">
+                <span className="nitro-feature-icon">
+                  <BadgeCheck className="w-5 h-5" />
                 </span>
-                <span>منتجات أصلية</span>
+                <span className="nitro-feature-text">منتجات أصلية</span>
               </div>
 
-              <div className="nitro-benefit border-x border-[#17345a]">
-                <span className="nitro-benefit-icon">
-                  <Truck className="w-4 h-4" />
+              <div className="nitro-feature-card">
+                <span className="nitro-feature-icon">
+                  <Truck className="w-5 h-5" />
                 </span>
-                <span>شحن سريع</span>
+                <span className="nitro-feature-text">شحن سريع</span>
               </div>
 
-              <div className="nitro-benefit">
-                <span className="nitro-benefit-icon">
-                  <ShieldCheck className="w-4 h-4" />
+              <div className="nitro-feature-card">
+                <span className="nitro-feature-icon">
+                  <ShieldCheck className="w-5 h-5" />
                 </span>
-                <span>ضمان حقيقي</span>
+                <span className="nitro-feature-text">ضمان حقيقي</span>
               </div>
+
+              <button
+                type="button"
+                onClick={() => scrollTo("products")}
+                className="nitro-feature-card cursor-pointer"
+                aria-label="استعرض أفضل المنتجات"
+              >
+                <span className="nitro-feature-icon">
+                  <Trophy className="w-5 h-5" />
+                </span>
+                <span className="nitro-feature-text">أفضل المنتجات</span>
+              </button>
             </div>
 
-            {/* اسم صاحب المتجر وزر التسوق */}
+            {/* صاحب المتجر وزر التسوق */}
             <div className="flex flex-wrap items-center justify-end gap-3 pt-1">
               <div
                 dir="ltr"
@@ -622,7 +720,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
               </button>
             </div>
 
-            {/* شريط الإحصائيات */}
+            {/* الإحصائيات المتحركة */}
             <div className="w-full overflow-hidden pt-2 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
               <div className="animate-marquee-infinite gap-3.5">
                 {[...stats, ...stats, ...stats, ...stats].map((s, i) => (
