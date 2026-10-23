@@ -11,7 +11,6 @@ import {
   ShieldCheck,
   Truck,
   Zap,
-  CheckCircle2,
   ShoppingBag,
   Flame,
   Crown,
@@ -106,44 +105,29 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
 
   const active = showcaseItems[slide];
 
-  const stats = [
-    { icon: <span>⭐</span>, big: "+5,400", small: "لاعب يثق بنا", accent: "#00e5ff" },
-    { icon: <ShieldCheck className="w-4 h-4" />, big: "1 سنة", small: "ضمان حقيقي", accent: "#00a3ff" },
-    { icon: <CheckCircle2 className="w-4 h-4" />, big: "100%", small: "أصلي معتمد", accent: "#00e5ff" },
-    { icon: <Truck className="w-4 h-4" />, big: "24-48h", small: "شحن سريع", accent: "#00a3ff" },
+  // شريطان متقاطعان على شكل X: كل شريط نصفين متطابقين (حلقة بدون فراغ)
+  const ribbonA = [
+    { icon: <ShieldCheck className="w-4 h-4" />, text: "ضمان حقيقي لمدة سنة" },
+    { icon: <span>⭐</span>, text: "+5,400 لاعب يثق بنا" },
   ];
-
-  const renderStatCard = (s: (typeof stats)[number], key: string) => (
-    <div
-      key={key}
-      className="relative inline-flex items-center gap-3 shrink-0 rounded-2xl px-4 py-2.5
-                 bg-gradient-to-b from-white/[0.05] to-white/[0.015]
-                 border border-white/[0.08] shadow-[0_8px_24px_-8px_rgba(0,0,0,0.6)]"
-    >
-      <span
-        className="pointer-events-none absolute inset-x-3 -top-px h-px opacity-70"
-        style={{ background: `linear-gradient(90deg, transparent, ${s.accent}, transparent)` }}
-      />
-      <span
-        className="flex items-center justify-center w-8 h-8 rounded-full shrink-0 border"
-        style={{
-          background: `radial-gradient(circle at 35% 30%, ${s.accent}33, transparent 70%)`,
-          borderColor: `${s.accent}55`,
-          color: s.accent,
-          boxShadow: `0 0 12px ${s.accent}40`,
-        }}
-      >
-        {s.icon}
-      </span>
-      <div className="flex flex-col items-start leading-tight">
-        <span
-          className="text-sm font-black font-tech tracking-wide bg-clip-text text-transparent"
-          style={{ backgroundImage: `linear-gradient(95deg, #ffffff, ${s.accent})` }}
-        >
-          {s.big}
-        </span>
-        <span className="text-[11px] text-gray-400 font-semibold font-['Cairo']">{s.small}</span>
-      </div>
+  const ribbonB = [
+    { icon: <Crown className="w-4 h-4" />, text: "الأفضل في فلسطين" },
+    { icon: <Truck className="w-4 h-4" />, text: "توصيل لكل المناطق" },
+  ];
+  const renderRibbonHalf = (items: typeof ribbonA, key: string, hidden: boolean) => (
+    <div key={key} className="flex items-center shrink-0" aria-hidden={hidden}>
+      {[0, 1, 2].flatMap((r) =>
+        items.map((it, i) => (
+          <span
+            key={`${key}-${r}-${i}`}
+            className="flex items-center gap-2 px-5 text-[13px] sm:text-sm font-black font-['Cairo'] whitespace-nowrap"
+          >
+            {it.icon}
+            {it.text}
+            <span className="mx-2 opacity-60">✦</span>
+          </span>
+        ))
+      )}
     </div>
   );
 
@@ -210,6 +194,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
         .hero-rise { opacity: 0; animation: heroRise 0.8s cubic-bezier(.2,.7,.2,1) forwards; }
         .d1 { animation-delay: .05s; } .d2 { animation-delay: .18s; } .d3 { animation-delay: .3s; }
         .d4 { animation-delay: .42s; } .d5 { animation-delay: .54s; } .d6 { animation-delay: .66s; }
+        .xr-track { display: inline-flex; width: max-content; animation: xrMove 30s linear infinite; }
+        .xr-rev { animation-direction: reverse; }
+        @keyframes xrMove { from { transform: translateX(0); } to { transform: translateX(-50%); } }
         .btn-sheen { position: relative; overflow: hidden; }
         .btn-sheen::after {
           content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%;
@@ -227,7 +214,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
           color: transparent;
         }
         @media (prefers-reduced-motion: reduce) {
-          .hero-glow, .hero-shimmer, .pill-sweep, .lux-frame, .btn-sheen::after { animation: none !important; }
+          .hero-glow, .hero-shimmer, .pill-sweep, .lux-frame, .xr-track, .btn-sheen::after { animation: none !important; }
           .hero-rise { opacity: 1; animation: none !important; }
         }
       `}</style>
@@ -252,16 +239,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-7">
-        {/* الشارة العلوية: إطار متدرج ثابت + لمعة خفيفة تعبر */}
+        {/* البنر العلوي: خط ضوئي يدور حواليه */}
         <div className="flex justify-center hero-rise d1">
-          <div className="p-[1px] rounded-full bg-gradient-to-r from-[#00e5ff]/70 via-[#00a3ff]/25 to-[#00e5ff]/70 max-w-full">
+          <div className="lux-frame p-[2px] rounded-full max-w-full shadow-[0_0_28px_rgba(0,163,255,0.3)]">
             <div className="relative overflow-hidden flex items-center gap-3 rounded-full bg-[#060c18] px-3 py-2 sm:px-4">
-              <span className="pill-sweep pointer-events-none absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-[#00e5ff]/10 to-transparent" />
               <span className="relative shrink-0 bg-[#00a3ff]/15 border border-[#00a3ff]/50 text-[#00e5ff] px-3 py-1 rounded-full text-[10px] sm:text-xs font-black tracking-wider uppercase font-tech whitespace-nowrap">
                 CYBER ESPORTS
               </span>
-              <p className="relative text-gray-100 text-[11px] sm:text-sm font-medium leading-snug">
-                المتجر الأول لطرفيات الجيمينج الاحترافية في فلسطين
+              <p className="relative text-white text-[12px] sm:text-sm font-bold leading-snug">
+                أفضل سعر في فلسطين
               </p>
             </div>
           </div>
@@ -325,21 +311,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
               </div>
             </div>
 
-            {/* شريط الإحصائيات: نصفان متطابقان + animate-marquee (بدون flex عليه) */}
-            <div className="w-full pt-2 hero-rise d5">
+            {/* شريطان متقاطعان (X) متحركان بعكس بعض */}
+            <div className="relative w-full h-[132px] sm:h-[150px] overflow-hidden rounded-2xl hero-rise d5 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]" dir="ltr">
               <div
-                dir="ltr"
-                className="relative w-full overflow-hidden rounded-2xl py-3 px-1
-                           bg-gradient-to-b from-white/[0.03] to-transparent border border-white/[0.06]
-                           [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
+                className="absolute left-[-15%] w-[130%] top-1/2 -mt-[24px] z-0 origin-center"
+                style={{ transform: "rotate(6deg)" }}
               >
-                <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#00a3ff]/50 to-transparent" />
-                <div className="animate-marquee items-center gap-4">
-                  <div className="flex items-center gap-4 shrink-0 pr-4">
-                    {stats.map((s, i) => renderStatCard(s, `s1-${i}`))}
+                <div className="overflow-hidden border-y border-[#00e5ff]/40 bg-[#07122a]/90 text-[#9fe9ff] shadow-[0_0_24px_rgba(0,163,255,0.25)] py-3">
+                  <div className="xr-track xr-rev">
+                    {renderRibbonHalf(ribbonB, "b1", false)}
+                    {renderRibbonHalf(ribbonB, "b2", true)}
                   </div>
-                  <div className="flex items-center gap-4 shrink-0 pr-4" aria-hidden="true">
-                    {stats.map((s, i) => renderStatCard(s, `s2-${i}`))}
+                </div>
+              </div>
+              <div
+                className="absolute left-[-15%] w-[130%] top-1/2 -mt-[24px] z-10 origin-center"
+                style={{ transform: "rotate(-6deg)" }}
+              >
+                <div className="overflow-hidden bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] text-[#02121f] shadow-[0_0_30px_rgba(0,163,255,0.55)] py-3">
+                  <div className="xr-track">
+                    {renderRibbonHalf(ribbonA, "a1", false)}
+                    {renderRibbonHalf(ribbonA, "a2", true)}
                   </div>
                 </div>
               </div>
