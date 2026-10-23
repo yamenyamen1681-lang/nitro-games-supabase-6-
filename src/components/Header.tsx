@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { useCart } from "@/context/CartContext";
+import { STORE_CONTACT } from "@/lib/data";
 import {
   ShoppingBag,
   Heart,
@@ -10,6 +12,7 @@ import {
   X,
   ShieldCheck,
   Truck,
+  PhoneCall,
   Keyboard,
   Mouse,
   Square,
@@ -55,81 +58,116 @@ export const Header: React.FC<HeaderProps> = ({
     { id: "headsets", label: "سماعات", icon: Headphones },
   ];
 
-  const marqueeContent = (
-    <div className="flex items-center gap-8 shrink-0">
-      <span className="flex items-center gap-2">
-        <Truck className="w-4 h-4 text-[#00a3ff]" />
-        توصيل لكافة مناطق فلسطين والداخل المحتل 🚚 | ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
-      </span>
-      <span className="text-[#00e5ff]">✦</span>
-      <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] font-extrabold">
-        NITRO GAMES: خياركم الأفضل في فلسطين للعتاد الاحترافي.. ارفع مستوى لعبك!
-      </span>
-      <span className="text-[#00a3ff]">✦</span>
-      <span className="flex items-center gap-2">
-        <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />
-        خدمة توصيل سريعة وبضائع أصلية 100%
-      </span>
-      <span className="text-[#00e5ff]">✦</span>
-      <span className="bg-[#00a3ff]/20 text-[#00e5ff] px-2.5 py-0.5 rounded-full border border-[#00a3ff]/40 font-mono text-[11px] shadow-[0_0_10px_rgba(0,163,255,0.2)]">
-        كود خصم فوري: NITRO10 (وفر 10%)
-      </span>
-      <span className="text-[#00a3ff]">✦</span>
-    </div>
-  );
-
   return (
-    <header className="sticky top-0 z-50 w-full transition-all duration-300">
-      <style jsx global>{`
-        @keyframes customMarquee {
-          0% { transform: translateX(0%); }
-          100% { transform: translateX(50%); }
+    <header className="sticky top-0 z-40 w-full transition-all duration-300">
+      <style>{`
+        @keyframes shimmerSweep {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
         }
-        .animate-continuous-marquee {
-          display: flex;
-          width: max-content;
-          animation: customMarquee 25s linear infinite;
-        }
-        .animate-continuous-marquee:hover {
-          animation-play-state: paused;
+        .shimmer-badge {
+          background-size: 220% auto;
+          animation: shimmerSweep 3.2s linear infinite;
         }
       `}</style>
 
-      {/* ===== 1. الشريط العلوي المتحرك ===== */}
-      <div className="relative bg-[#03060f] border-b border-[#00a3ff]/30 text-white text-xs font-semibold py-2 overflow-hidden shadow-[0_4px_25px_rgba(0,163,255,0.15)]">
-        <div className="flex items-center justify-between max-w-7xl mx-auto px-2">
-          <div className="flex-1 overflow-hidden relative">
-            <div className="animate-continuous-marquee flex items-center gap-8 whitespace-nowrap text-xs font-bold text-gray-200">
-              {marqueeContent}
-              {marqueeContent}
+      {/* ===== 1. Announcement Bar — زجاجي فاخر بدل الخلفية الداكنة الصلبة ===== */}
+      <div className="relative bg-gradient-to-r from-[#070b14]/95 via-[#0b1120]/95 to-[#070b14]/95 backdrop-blur-md border-b border-white/[0.06] text-white text-xs font-semibold py-2.5 px-4 overflow-hidden shadow-[0_4px_25px_rgba(0,163,255,0.15)]">
+        <span className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-[#00e5ff]/70 to-transparent" />
+        <span className="absolute -top-10 right-1/3 w-64 h-24 bg-[#00a3ff]/10 blur-3xl rounded-full pointer-events-none" />
+
+        <div className="relative flex items-center justify-between max-w-7xl mx-auto">
+          <div className="flex-1 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
+            {/* مهم: نفس المحتوى بالضبط مكرر مرتين (مجموعة أ + مجموعة ب) —
+                هاد شرط أساسي حتى تكون لفّة animate-marquee (0% → -50%) مثالية
+                بدون أي قطع أو اختفاء. قبل كان في عنصر فريد (التاغلاين وكود
+                الخصم) موجود مرة وحدة بس، فما كانت نص الحركة تطابق النص التاني. */}
+            <div className="animate-marquee items-center gap-10 whitespace-nowrap text-xs font-bold text-gray-200">
+              {(["a", "b"] as const).map((groupKey) => (
+                <div key={groupKey} className="flex items-center gap-10 shrink-0" aria-hidden={groupKey === "b"}>
+                  <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.07]">
+                    <Truck className="w-3.5 h-3.5 text-[#00a3ff]" />
+                    توصيل لكافة مناطق فلسطين والداخل المحتل 🚚
+                  </span>
+                  <span className="text-[#00e5ff]/60">✦</span>
+
+                  <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.07]">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#00e5ff]" />
+                    ضمان حقيقي لمدة سنة على جميع المنتجات ⭐
+                  </span>
+                  <span className="text-[#00a3ff]/60">✦</span>
+
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] font-extrabold">
+                    NITRO GAMES: خياركم الأفضل في فلسطين للعتاد الاحترافي.. ارفع مستوى لعبك!
+                  </span>
+                  <span className="text-[#00e5ff]/60">✦</span>
+
+                  <span
+                    className="shimmer-badge bg-[length:220%_auto] text-[#02121f] px-3 py-1.5 rounded-full border border-[#00e5ff]/40 font-mono font-black shadow-[0_0_14px_rgba(0,229,255,0.35)]"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(100deg, #00a3ff 0%, #00e5ff 25%, #d6f7ff 50%, #00e5ff 75%, #00a3ff 100%)",
+                    }}
+                  >
+                    كود خصم فوري: NITRO10 (وفر 10%)
+                  </span>
+                  <span className="text-[#00a3ff]/60">✦</span>
+                </div>
+              ))}
             </div>
+          </div>
+
+          {/* Customer service — single source of truth */}
+          <div className="hidden md:flex items-center gap-2 text-xs text-gray-300 flex-shrink-0 mr-4">
+            <span className="text-gray-400">خدمة العملاء:</span>
+            <a
+              href={`https://wa.me/${STORE_CONTACT.whatsapp}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-[#00a3ff] hover:text-white flex items-center gap-1 font-mono direction-ltr font-bold transition-colors"
+            >
+              <PhoneCall className="w-3.5 h-3.5" /> {STORE_CONTACT.display}
+            </a>
           </div>
         </div>
       </div>
 
-      {/* ===== 2. شريط القوائم الرئيسي (اللوجو، الأدوات، السلة، الأدمن) ===== */}
-      <div className="bg-[#05070d]/95 backdrop-blur-xl border-b border-[#16223a] shadow-[0_10px_35px_rgba(0,0,0,0.85)]">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2">
-          
-          {/* 1. اللوجو */}
-          <a href="#" className="flex items-center gap-2 shrink-0">
-            <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-xl bg-[#0b1120] border border-[#00a3ff]/40 flex items-center justify-center shadow-[0_0_15px_rgba(0,163,255,0.3)]">
-              <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-[#00e5ff] drop-shadow-[0_0_8px_#00e5ff]" />
+      {/* ===== 2. Main Navbar ===== */}
+      <div className="relative bg-[#05070d]/90 backdrop-blur-xl border-b border-white/[0.06] shadow-[0_10px_35px_rgba(0,0,0,0.85)]">
+        <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#00a3ff]/40 to-transparent" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
+          {/* Logo */}
+          <a href="#" className="flex items-center gap-3 group">
+            <div className="relative w-11 h-11 rounded-xl grad-frame flex items-center justify-center transition-all duration-300">
+              <Zap className="w-6 h-6 text-[#00a3ff] group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_#00a3ff]" />
+              <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00e5ff]"></span>
+              </span>
             </div>
-            <div className="flex flex-col text-right">
-              <div className="flex items-center gap-1">
-                <span className="text-xs sm:text-base text-white font-black tracking-wider">
-                  NITRO <span className="text-[#00e5ff] drop-shadow-[0_0_10px_rgba(0,229,255,0.6)]">GAMES</span>
+
+            <div className="flex flex-col items-end">
+              <div className="flex items-center gap-2">
+                <span className="brand-mark brand-mark-sm text-white">
+                  NITRO <span className="brand-mark-games">GAMES</span>
+                </span>
+                <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-[#00a3ff]/20 to-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/30 font-tech shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+                  PRO
                 </span>
               </div>
-              <span className="text-[8px] text-gray-400 tracking-widest font-mono">PALESTINE</span>
+              <span className="brand-sub mt-1">PALESTINE</span>
             </div>
           </a>
 
-          {/* 2. أقسام المتجر للكمبيوتر */}
-          <nav className="hidden lg:flex items-center gap-1 bg-[#060c18] p-1.5 rounded-xl border border-[#16223a]">
-            <a href="#hero" className="px-3 py-1.5 text-xs font-bold text-gray-200 hover:text-[#00e5ff] transition-colors">
+          {/* Desktop nav */}
+          <nav className="hidden lg:flex items-center gap-1 bg-white/[0.03] backdrop-blur-sm p-1.5 rounded-xl border border-white/[0.06]">
+            <a
+              href="#hero"
+              className="relative px-3.5 py-2 text-xs font-bold text-gray-200 hover:text-[#00a3ff] transition-colors rounded-lg hover:bg-white/[0.04] group/nav"
+            >
               الرئيسية
+              <span className="absolute inset-x-3 bottom-1 h-px bg-[#00a3ff] scale-x-0 group-hover/nav:scale-x-100 transition-transform origin-center" />
             </a>
             {categories.map((cat) => {
               const Icon = cat.icon;
@@ -137,127 +175,217 @@ export const Header: React.FC<HeaderProps> = ({
                 <button
                   key={cat.id}
                   onClick={() => handleCategoryClick(cat.id)}
-                  className="px-3 py-1.5 text-xs font-bold text-gray-300 hover:text-white flex items-center gap-1.5 cursor-pointer transition-colors"
+                  className="relative px-3.5 py-2 text-xs font-bold text-gray-300 hover:text-white hover:bg-white/[0.04] rounded-lg transition-all flex items-center gap-1.5 cursor-pointer group/nav"
                 >
-                  <Icon className="w-3.5 h-3.5 text-[#00a3ff]" />
+                  <Icon className="w-3.5 h-3.5 text-gray-400 group-hover/nav:text-[#00a3ff] transition-colors" />
                   <span>{cat.label}</span>
+                  <span className="absolute inset-x-3 bottom-1 h-px bg-[#00a3ff] scale-x-0 group-hover/nav:scale-x-100 transition-transform origin-center" />
                 </button>
               );
             })}
           </nav>
 
-          {/* 3. خيارات اليمين (الأدوات على الجوال والكمبيوتر) */}
-          <div className="flex items-center gap-1.5 sm:gap-2">
-            
-            {/* زر البحث */}
-            <button
-              onClick={() => setSearchOpen(!searchOpen)}
-              className="p-2.5 rounded-xl bg-[#060c18] border border-[#16223a] text-gray-300 hover:text-[#00e5ff] hover:border-[#00e5ff]/50 transition-all cursor-pointer"
-              title="البحث"
-            >
-              <Search className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-
-            {/* زر لوحة المشرف */}
-            {onOpenAdmin && (
-              <button
-                onClick={onOpenAdmin}
-                className="flex items-center gap-1 px-2.5 sm:px-3 py-2 rounded-xl bg-[#060c18] hover:bg-[#00a3ff] border border-[#16223a] hover:border-[#00a3ff] text-gray-300 hover:text-black transition-all text-xs font-bold cursor-pointer"
-                title="لوحة تحكم المشرف"
-              >
-                <Lock className="w-3.5 h-3.5 text-[#00e5ff]" />
-                <span className="hidden sm:inline">لوحة المشرف</span>
-              </button>
-            )}
-
-            {/* زر المفضلة */}
-            <a
-              href="#products"
-              onClick={() => onCategorySelect?.("all")}
-              className="relative p-2.5 rounded-xl bg-[#060c18] border border-[#16223a] text-gray-300 hover:text-[#00e5ff] hover:border-[#00e5ff]/50 transition-all cursor-pointer"
-              title="المفضلة"
-            >
-              <Heart className="w-4 h-4 sm:w-5 sm:h-5" />
-              {wishlist.length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-[#00e5ff] text-black text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-[0_0_8px_#00e5ff]">
-                  {wishlist.length}
-                </span>
-              )}
-            </a>
-
-            {/* زر سلة المشتريات */}
-            <button
-              onClick={() => setIsCartOpen(true)}
-              className="relative flex items-center gap-1.5 px-3 sm:px-4 py-2 rounded-xl bg-[#060c18] border border-[#00a3ff]/50 text-white shadow-[0_0_15px_rgba(0,163,255,0.25)] hover:shadow-[0_0_20px_rgba(0,229,255,0.5)] transition-all cursor-pointer"
-            >
-              <ShoppingBag className="w-4 h-4 sm:w-5 sm:h-5 text-[#00e5ff]" />
-              {totalItemsCount > 0 && (
-                <span className="bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] text-black font-black text-[10px] px-1.5 py-0.2 rounded-full shadow-[0_0_8px_#00e5ff]">
-                  {totalItemsCount}
-                </span>
-              )}
-              <span className="hidden md:inline text-xs font-mono font-bold">{total} ₪</span>
-            </button>
-
-            {/* زر قائمة الجوال */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2.5 rounded-xl bg-[#060c18] border border-[#16223a] text-gray-300 hover:text-[#00e5ff] cursor-pointer"
-            >
-              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-            </button>
-          </div>
-        </div>
-
-        {/* خانة البحث المنبثقة للجوال */}
-        {searchOpen && (
-          <div className="px-4 pb-3 pt-1 border-t border-[#16223a] bg-[#03060f]">
-            <form onSubmit={handleSearchSubmit} className="relative w-full">
+          {/* Search */}
+          <div className="hidden xl:flex flex-1 max-w-xs mx-1">
+            <form onSubmit={handleSearchSubmit} className="relative w-full group/search">
               <input
                 type="text"
-                placeholder="ابحث عن كيبورد، ماوس، ماوس باد..."
+                placeholder="ابحث عن كيبورد، ماوس، ماوس باد، مايك..."
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
                   if (onSearchChange) onSearchChange(e.target.value);
                 }}
-                className="w-full bg-[#060c18] text-sm text-gray-100 placeholder-gray-500 rounded-xl pl-10 pr-4 py-2 border border-[#16223a] focus:outline-none focus:border-[#00e5ff]"
+                className="w-full bg-white/[0.03] text-xs text-gray-100 placeholder-gray-500 rounded-xl pl-9 pr-4 py-2.5 border border-white/[0.08] focus:outline-none focus:border-[#00a3ff] focus:bg-white/[0.05] focus:shadow-[0_0_0_3px_rgba(0,163,255,0.15)] transition-all"
+              />
+              <button
+                type="submit"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within/search:text-[#00a3ff] hover:text-[#00a3ff] transition-colors"
+                title="بحث"
+              >
+                <Search className="w-4 h-4" />
+              </button>
+            </form>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center gap-2 sm:gap-2.5">
+            <div
+              className="hidden sm:flex items-center gap-1 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-xs font-bold text-gray-200"
+              title="العملة الرسمية: شيكل فلسطيني (₪ ILS)"
+            >
+              <span className="text-[#00a3ff] font-black text-sm">₪</span>
+              <span className="font-mono">ILS</span>
+            </div>
+
+            <button
+              onClick={() => setSearchOpen(!searchOpen)}
+              className="xl:hidden p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-gray-300 hover:text-[#00a3ff] hover:border-[#00a3ff]/40 transition-colors"
+              aria-label="البحث"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+
+            {onOpenAdmin && (
+              <button
+                onClick={onOpenAdmin}
+                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.03] hover:bg-[#00a3ff] border border-white/[0.08] hover:border-[#00a3ff] text-gray-300 hover:text-black transition-all text-xs font-bold shadow-sm cursor-pointer group"
+                title="لوحة تحكم المشرف"
+              >
+                <Lock className="w-3.5 h-3.5 text-[#00a3ff] group-hover:text-black transition-colors" />
+                <span className="hidden sm:inline">لوحة المشرف</span>
+              </button>
+            )}
+
+            {/* المفضلة */}
+            <a
+              href="#products"
+              onClick={() => onCategorySelect?.("all")}
+              title="قائمة المفضلة"
+              aria-label="المفضلة"
+              className="group relative flex h-11 w-11 items-center justify-center rounded-2xl p-[1px] bg-gradient-to-b from-[#00e5ff]/50 to-[#0047ff]/20 transition-all duration-300 hover:from-[#00e5ff] hover:to-[#0047ff]/60 hover:shadow-[0_0_18px_rgba(0,229,255,0.45)] active:scale-95"
+            >
+              <span className="flex h-full w-full items-center justify-center rounded-[15px] bg-gradient-to-b from-[#0a1a38] to-[#050c1e]">
+                <Heart
+                  className={`h-5 w-5 transition-all duration-300 group-hover:scale-110 ${
+                    wishlist.length > 0
+                      ? "fill-[#00e5ff] text-[#00e5ff] drop-shadow-[0_0_8px_#00e5ff]"
+                      : "text-gray-300 group-hover:text-[#00e5ff]"
+                  }`}
+                />
+              </span>
+              {wishlist.length > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 flex h-5 min-w-[20px] items-center justify-center rounded-full border-2 border-[#030712] bg-gradient-to-br from-[#00e5ff] to-[#0066ff] px-1 text-[10px] font-black text-[#02121f] shadow-[0_0_10px_rgba(0,229,255,0.7)]">
+                  {wishlist.length}
+                </span>
+              )}
+            </a>
+
+            {/* السلة */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              aria-label="سلة المشتريات"
+              className="group relative flex h-11 items-center rounded-2xl p-[1px] bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,163,255,0.35)] transition-all duration-300 hover:shadow-[0_0_28px_rgba(0,229,255,0.65)] active:scale-95 cursor-pointer"
+            >
+              <span className="flex h-full items-center gap-2.5 rounded-[15px] bg-gradient-to-b from-[#0a1a38] to-[#050c1e] px-3 md:px-4">
+                <span className="relative flex items-center">
+                  <ShoppingBag className="h-5 w-5 text-[#00e5ff] transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_6px_rgba(0,229,255,0.6)]" />
+                  {totalItemsCount > 0 && (
+                    <span className="absolute -top-2.5 -right-3 flex h-5 min-w-[20px] items-center justify-center rounded-full border-2 border-[#030712] bg-gradient-to-br from-[#00e5ff] to-[#0066ff] px-1 text-[10px] font-black text-[#02121f] shadow-[0_0_10px_rgba(0,229,255,0.7)]">
+                      {totalItemsCount}
+                    </span>
+                  )}
+                </span>
+                <span className="hidden md:flex flex-col text-right leading-tight">
+                  <span className="text-[10px] font-medium text-gray-400">سلة المشتريات</span>
+                  <span className="font-mono text-xs font-black text-white">
+                    {total.toLocaleString()} <span className="text-[#00e5ff]">₪</span>
+                  </span>
+                </span>
+              </span>
+            </button>
+
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="lg:hidden p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-gray-300 hover:text-[#00a3ff] transition-colors"
+              aria-label="القائمة"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile search */}
+        {searchOpen && (
+          <div className="xl:hidden px-4 pb-3 pt-1 border-t border-white/[0.06] bg-[#070b14]/95 backdrop-blur-md">
+            <form onSubmit={handleSearchSubmit} className="relative w-full">
+              <input
+                type="text"
+                placeholder="ابحث عن كيبورد، ماوس، ماوس باد، مايك، سماعات..."
+                value={searchQuery}
+                onChange={(e) => {
+                  setSearchQuery(e.target.value);
+                  if (onSearchChange) onSearchChange(e.target.value);
+                }}
+                className="w-full bg-white/[0.04] text-sm text-gray-100 placeholder-gray-500 rounded-xl pl-10 pr-4 py-2.5 border border-white/[0.08] focus:outline-none focus:border-[#00a3ff]"
                 autoFocus
               />
-              <button type="submit" className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400">
+              <button
+                type="submit"
+                className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#00a3ff]"
+              >
                 <Search className="w-4 h-4" />
               </button>
             </form>
           </div>
         )}
 
-        {/* القائمة المنبثقة للجوال */}
+        {/* Mobile menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-[#05070d] border-t border-[#16223a] px-5 py-4 space-y-3 shadow-2xl">
-            <nav className="flex flex-col space-y-2">
+          <div className="lg:hidden bg-[#05070d]/98 backdrop-blur-xl border-t border-white/[0.06] px-5 py-6 space-y-4 shadow-2xl">
+            <div className="grid grid-cols-2 gap-2 pb-4 border-b border-white/[0.06]">
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-gray-300">
+                <ShieldCheck className="w-4 h-4 text-[#00e5ff]" />
+                <span>ضمان سنة كاملة ⭐</span>
+              </div>
+              <div className="flex items-center gap-2 p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] text-xs text-gray-300">
+                <Truck className="w-4 h-4 text-[#00a3ff]" />
+                <span>شحن سريع 🚚</span>
+              </div>
+            </div>
+
+            <nav className="flex flex-col space-y-1.5">
               <button
                 onClick={() => {
                   onCategorySelect?.("all");
                   setMobileMenuOpen(false);
                 }}
-                className="text-right py-2 text-sm font-bold text-gray-200 border-b border-[#16223a]"
+                className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-gray-200 hover:text-[#00a3ff] hover:bg-white/[0.04] text-right w-full transition-colors"
               >
-                جميع الأقسام
+                <span>جميع الأقسام</span>
               </button>
+
               {categories.map((cat) => {
                 const Icon = cat.icon;
                 return (
                   <button
                     key={cat.id}
                     onClick={() => handleCategoryClick(cat.id)}
-                    className="flex items-center gap-2 py-2 text-sm font-bold text-gray-300 text-right hover:text-[#00e5ff]"
+                    className="flex items-center justify-between px-4 py-3 rounded-xl text-sm font-bold text-gray-200 hover:text-[#00a3ff] hover:bg-white/[0.04] text-right w-full transition-colors"
                   >
-                    <Icon className="w-4 h-4 text-[#00a3ff]" />
-                    <span>{cat.label}</span>
+                    <div className="flex items-center gap-2.5">
+                      <span className="flex items-center justify-center w-7 h-7 rounded-full bg-[#00a3ff]/10 border border-[#00a3ff]/25">
+                        <Icon className="w-3.5 h-3.5 text-[#00a3ff]" />
+                      </span>
+                      <span>{cat.label}</span>
+                    </div>
                   </button>
                 );
               })}
             </nav>
+
+            <div className="pt-4 border-t border-white/[0.06] flex flex-col gap-2.5">
+              {onOpenAdmin && (
+                <button
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onOpenAdmin();
+                  }}
+                  className="w-full py-2.5 rounded-xl bg-white/[0.03] border border-[#00a3ff]/40 text-[#00a3ff] font-bold flex items-center justify-center gap-2 text-xs cursor-pointer hover:bg-white/[0.06] transition-colors"
+                >
+                  <Lock className="w-4 h-4" />
+                  <span>لوحة تحكم المشرف</span>
+                </button>
+              )}
+              <a
+                href={`https://wa.me/${STORE_CONTACT.whatsapp}`}
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-3 rounded-xl btn-neon text-black font-bold flex items-center justify-center gap-2 shadow-lg"
+              >
+                <PhoneCall className="w-4 h-4" /> طلب سريع عبر واتساب المتجر
+              </a>
+            </div>
           </div>
         )}
       </div>
