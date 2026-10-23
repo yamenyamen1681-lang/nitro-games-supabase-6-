@@ -15,7 +15,6 @@ import {
   ShoppingBag,
   Flame,
   Crown,
-  Radio,
   Sparkles,
   Music,
   Disc,
@@ -117,17 +116,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
     { icon: <Crown className="w-4 h-4" />, text: "الأفضل في فلسطين" },
     { icon: <Truck className="w-4 h-4" />, text: "توصيل لكل المناطق" },
   ];
-  const renderRibbonHalf = (items: typeof ribbonA, key: string, hidden: boolean) => (
+  const renderRibbonHalf = (items: typeof ribbonA, key: string, hidden: boolean, dark: boolean) => (
     <div key={key} className="flex items-center shrink-0" aria-hidden={hidden}>
       {[0, 1, 2].flatMap((r) =>
         items.map((it, i) => (
           <span
             key={`${key}-${r}-${i}`}
-            className="flex items-center gap-2 px-5 text-[13px] sm:text-sm font-black font-['Cairo'] whitespace-nowrap"
+            className="flex items-center gap-3 pl-3 text-[14px] sm:text-base font-black font-['Cairo'] whitespace-nowrap tracking-wide"
           >
-            {it.icon}
-            {it.text}
-            <span className="mx-2 opacity-60">✦</span>
+            <span
+              className={`flex items-center justify-center w-7 h-7 rounded-full border ${
+                dark
+                  ? "border-[#00e5ff]/60 bg-[#00e5ff]/10 text-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.45)]"
+                  : "border-[#02121f]/40 bg-white/25 text-[#02121f]"
+              }`}
+            >
+              {it.icon}
+            </span>
+            <span className={dark ? "drop-shadow-[0_0_10px_rgba(0,229,255,0.6)]" : ""}>{it.text}</span>
+            <span className={`mx-3 text-xs ${dark ? "text-[#00a3ff]" : "text-[#02121f]/60"}`}>◆</span>
           </span>
         ))
       )}
@@ -211,6 +218,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
           -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
           animation: heroShimmer 3.5s linear infinite;
         }
+        @keyframes xrSheen { 0% { left: -30%; } 100% { left: 120%; } }
+        .xr-sheen { animation: xrSheen 3.6s ease-in-out infinite; }
+        @keyframes xrPing { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.9); opacity: 0; } }
+        .xr-ping { animation: xrPing 2.2s ease-out infinite; }
+        @keyframes eqBar { 0%,100% { transform: scaleY(.3); } 50% { transform: scaleY(1); } }
+        .eq-bar { display: block; width: 3px; height: 14px; border-radius: 2px; background: linear-gradient(to top, #0047ff, #00e5ff); transform-origin: bottom; animation: eqBar 1s ease-in-out infinite; }
+        .scanlines { background: repeating-linear-gradient(to bottom, rgba(255,255,255,.035) 0, rgba(255,255,255,.035) 1px, transparent 1px, transparent 3px); }
         .btn-sheen { position: relative; overflow: hidden; }
         .btn-sheen::after {
           content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%;
@@ -328,28 +342,37 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
               </div>
             </div>
 
-            {/* شريطان متقاطعان (X) متحركان بعكس بعض */}
-            <div className="relative w-full h-[132px] sm:h-[150px] overflow-hidden rounded-2xl hero-rise d5 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]" dir="ltr">
+            {/* شريطان متقاطعان (X) متحركان بعكس بعض + شعار بنقطة التقاطع */}
+            <div className="relative w-full h-[210px] sm:h-[230px] hero-rise d5" dir="ltr">
               <div
-                className="absolute left-[-15%] w-[130%] top-1/2 -mt-[24px] z-0 origin-center"
-                style={{ transform: "rotate(6deg)" }}
-              >
-                <div className="overflow-hidden border-y border-[#00e5ff]/40 bg-[#07122a]/90 text-[#9fe9ff] shadow-[0_0_24px_rgba(0,163,255,0.25)] py-3">
-                  <div className="xr-track xr-rev">
-                    {renderRibbonHalf(ribbonB, "b1", false)}
-                    {renderRibbonHalf(ribbonB, "b2", true)}
+                className="pointer-events-none absolute inset-x-4 top-1/2 -translate-y-1/2 h-36"
+                style={{ background: "radial-gradient(ellipse at center, rgba(0,163,255,0.32), transparent 70%)" }}
+              />
+              <div className="absolute inset-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+                <div className="absolute left-[-25%] w-[150%] top-1/2 -mt-[27px] z-0" style={{ transform: "rotate(11deg)" }}>
+                  <div className="relative overflow-hidden py-3 bg-gradient-to-b from-[#0a1a3a] to-[#050d20] text-[#d6f7ff] border-y border-[#00e5ff]/50 shadow-[0_0_28px_rgba(0,163,255,0.35)]">
+                    <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+                    <div className="xr-track xr-rev">
+                      {renderRibbonHalf(ribbonB, "b1", false, true)}
+                      {renderRibbonHalf(ribbonB, "b2", true, true)}
+                    </div>
+                  </div>
+                </div>
+                <div className="absolute left-[-25%] w-[150%] top-1/2 -mt-[27px] z-10" style={{ transform: "rotate(-11deg)" }}>
+                  <div className="relative overflow-hidden py-3 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] text-[#02121f] border-y border-white/50 shadow-[0_0_34px_rgba(0,163,255,0.65)]">
+                    <span className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent" />
+                    <span className="xr-sheen pointer-events-none absolute inset-y-0 w-1/4 bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+                    <div className="xr-track">
+                      {renderRibbonHalf(ribbonA, "a1", false, false)}
+                      {renderRibbonHalf(ribbonA, "a2", true, false)}
+                    </div>
                   </div>
                 </div>
               </div>
-              <div
-                className="absolute left-[-15%] w-[130%] top-1/2 -mt-[24px] z-10 origin-center"
-                style={{ transform: "rotate(-6deg)" }}
-              >
-                <div className="overflow-hidden bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] text-[#02121f] shadow-[0_0_30px_rgba(0,163,255,0.55)] py-3">
-                  <div className="xr-track">
-                    {renderRibbonHalf(ribbonA, "a1", false)}
-                    {renderRibbonHalf(ribbonA, "a2", true)}
-                  </div>
+              <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+                <span className="xr-ping absolute inset-0 rounded-full border border-[#00e5ff]/70" />
+                <div className="relative w-12 h-12 rounded-full bg-[#030a18] border-2 border-[#00e5ff] shadow-[0_0_28px_rgba(0,229,255,0.9),inset_0_0_14px_rgba(0,163,255,0.5)] flex items-center justify-center">
+                  <Zap className="w-6 h-6 text-[#00e5ff] fill-[#00a3ff]/40 drop-shadow-[0_0_8px_#00e5ff]" />
                 </div>
               </div>
             </div>
@@ -365,8 +388,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
                   <div className="relative rounded-[22px] bg-[#040814] overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
                       <AudioButton />
-                      <span className="text-[10px] font-tech font-black text-[#00e5ff] flex items-center gap-1.5 bg-[#091830] px-3 py-1 rounded-lg border border-[#00e5ff]/30">
-                        <Radio className="w-3.5 h-3.5 animate-pulse" /> {cfg.badgeText}
+                      <span className="flex items-center gap-2.5 bg-gradient-to-r from-[#07142e] to-[#0a1d40] px-3 py-1.5 rounded-xl border border-[#00e5ff]/40 shadow-[0_0_16px_rgba(0,229,255,0.25)]">
+                        <span className="relative flex h-2.5 w-2.5">
+                          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-70" />
+                          <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-[#00e5ff] shadow-[0_0_8px_#00e5ff]" />
+                        </span>
+                        <span className="text-[11px] font-tech font-black text-white tracking-widest">{cfg.badgeText}</span>
+                        <span className="flex items-end gap-[3px] h-[14px]" aria-hidden="true">
+                          <i className="eq-bar" style={{ animationDelay: "0s" }} />
+                          <i className="eq-bar" style={{ animationDelay: ".25s" }} />
+                          <i className="eq-bar" style={{ animationDelay: ".5s" }} />
+                          <i className="eq-bar" style={{ animationDelay: ".15s" }} />
+                        </span>
                       </span>
                     </div>
 
@@ -384,6 +417,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
                           onEnded={() => setShowcaseVideoIndex((i) => (i + 1) % cfg.videoUrls!.length)}
                           className="absolute inset-0 w-full h-full object-cover"
                         />
+                        <span className="scanlines pointer-events-none absolute inset-0 z-10" />
+                        <span className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_60%,rgba(0,8,24,0.55)_100%)]" />
+                        <span className="pointer-events-none absolute top-2 left-2 z-20 w-6 h-6 border-t-2 border-l-2 border-[#00e5ff] rounded-tl-lg" />
+                        <span className="pointer-events-none absolute top-2 right-2 z-20 w-6 h-6 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-lg" />
+                        <span className="pointer-events-none absolute bottom-12 left-2 z-20 w-6 h-6 border-b-2 border-l-2 border-[#00e5ff] rounded-bl-lg" />
+                        <span className="pointer-events-none absolute bottom-12 right-2 z-20 w-6 h-6 border-b-2 border-r-2 border-[#00e5ff] rounded-br-lg" />
                       </div>
                     </div>
 
@@ -393,7 +432,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
                       </h3>
                       <a
                         href="#products"
-                        className="flex items-center gap-2 whitespace-nowrap rounded-xl text-[11px] font-black px-4 py-2 text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_16px_rgba(0,229,255,0.45)] hover:shadow-[0_0_26px_rgba(0,229,255,0.8)] transition-all"
+                        className="btn-sheen flex items-center gap-2 whitespace-nowrap rounded-xl text-[11px] font-black px-4 py-2 text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_16px_rgba(0,229,255,0.45)] hover:shadow-[0_0_26px_rgba(0,229,255,0.8)] transition-all"
                       >
                         <ShoppingBag className="w-3.5 h-3.5" />
                         <span>{cfg.ctaLabel}</span>
