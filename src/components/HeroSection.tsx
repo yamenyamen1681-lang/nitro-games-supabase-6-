@@ -441,12 +441,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
                           className="absolute inset-0 w-full h-full object-cover"
                         />
                         <span className="scanlines pointer-events-none absolute inset-0 z-10" />
-                        <span className="scan-beam pointer-events-none absolute inset-x-0 top-0 h-[8%] z-10 bg-gradient-to-b from-transparent via-[#00e5ff]/25 to-transparent border-b border-[#00e5ff]/60 shadow-[0_6px_18px_rgba(0,229,255,0.5)]" />
                         <span className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,transparent_60%,rgba(0,8,24,0.55)_100%)]" />
-                        <span className="pointer-events-none absolute top-2 left-2 z-20 w-6 h-6 border-t-2 border-l-2 border-[#00e5ff] rounded-tl-lg" />
-                        <span className="pointer-events-none absolute top-2 right-2 z-20 w-6 h-6 border-t-2 border-r-2 border-[#00e5ff] rounded-tr-lg" />
-                        <span className="pointer-events-none absolute bottom-12 left-2 z-20 w-6 h-6 border-b-2 border-l-2 border-[#00e5ff] rounded-bl-lg" />
-                        <span className="pointer-events-none absolute bottom-12 right-2 z-20 w-6 h-6 border-b-2 border-r-2 border-[#00e5ff] rounded-br-lg" />
                       </div>
                     </div>
 
