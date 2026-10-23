@@ -1,152 +1,211 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Product } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
-import { Heart, ShoppingBag, Eye, Star, ShieldCheck, Zap } from "lucide-react";
+import { ShoppingBag, Heart, Eye, Star, ShieldCheck, CheckCircle2, Flame } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
   index?: number;
+  onQuickView?: (product: Product) => void;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
-  const { addToCart, wishlist, toggleWishlist, setQuickViewProduct } = useCart();
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
+  const { addToCart, wishlist, toggleWishlist } = useCart();
+  const p = product as any;
 
-  const isWishlisted = wishlist.some((id) => id === product.id);
+  const isWishlisted = wishlist.some((item: any) =>
+    typeof item === "object" && item !== null ? item.id === product.id : item === product.id
+  );
 
-  // حساب نسبة الخصم
-  const hasDiscount = product.originalPrice && product.originalPrice > product.price;
-  const discountPercent = hasDiscount
-    ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
-    : 0;
+  const price = Number(p.price) || 0;
+  const orig = Number(p.originalPrice) || 0;
+  const hasDiscount = orig > price && price > 0;
+  const pct = hasDiscount
+    ? Math.round((1 - price / orig) * 100)
+    : Number(p.discountPercent ?? p.discount) || 0;
+  const saved = hasDiscount ? orig - price : 0;
+  const rating = Number(p.rating) || 5;
+  const reviews = Number(p.reviewCount) || 0;
+  const inStock = p.inStock !== false && p.stock !== 0;
 
   return (
-    <div className="group relative bg-[#050914] hover:bg-[#080e1e] border-2 border-[#00a3ff]/40 hover:border-[#00e5ff] rounded-2xl p-4 flex flex-col justify-between transition-all duration-300 shadow-[0_0_20px_rgba(0,163,255,0.2)] hover:shadow-[0_0_35px_rgba(0,229,255,0.45)] hover:-translate-y-1.5 overflow-hidden">
-      
-      {/* ===== التأثيرات الضوئية للحواف والإطار الخارجي ===== */}
-      <div className="absolute inset-0 rounded-2xl pointer-events-none border border-[#00a3ff]/20 group-hover:border-[#00e5ff]/60 transition-colors" />
-      <div className="absolute -top-24 -right-24 w-48 h-48 bg-[#00a3ff]/20 rounded-full blur-3xl group-hover:bg-[#00e5ff]/35 transition-all pointer-events-none" />
-      <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-[#0066ff]/20 rounded-full blur-3xl group-hover:bg-[#00a3ff]/30 transition-all pointer-events-none" />
+    <div className="group relative h-full">
+      {/* هالة خلف الكرت عند اللمس */}
+      <div className="pointer-events-none absolute -inset-1 rounded-[26px] bg-gradient-to-b from-[#00e5ff] to-[#0047ff] opacity-0 blur-lg transition-opacity duration-500 group-hover:opacity-30" />
 
-      {/* ===== 1. الشريط العلوي: تصنيف المنتج، الخصم، والأزرار السريعة ===== */}
-      <div className="relative z-10 flex items-center justify-between gap-2 mb-2">
-        <div className="flex items-center gap-1.5">
-          {product.category && (
-            <span className="px-2.5 py-0.5 rounded-md bg-[#00a3ff]/20 border border-[#00a3ff]/50 text-[10px] font-black text-[#00e5ff] uppercase tracking-wider shadow-[0_0_10px_rgba(0,163,255,0.3)]">
-              {product.category}
-            </span>
-          )}
-          {hasDiscount && (
-            <span className="px-2 py-0.5 rounded-md bg-red-500/20 border border-red-500/50 text-[10px] font-black text-red-400 animate-pulse">
-              -{discountPercent}%
-            </span>
-          )}
-        </div>
+      {/* إطار متدرّج */}
+      <div className="relative h-full rounded-3xl p-[1.5px] bg-gradient-to-b from-[#00a3ff]/55 via-[#13213d] to-[#0a1630] transition-all duration-500 group-hover:from-[#00e5ff] group-hover:via-[#00a3ff]/50 group-hover:to-[#0047ff]/60 group-hover:-translate-y-1.5">
+        <div className="relative flex h-full flex-col overflow-hidden rounded-[22px] bg-gradient-to-b from-[#0a1630] via-[#071125] to-[#050b19]">
+          {/* خط ضوء علوي */}
+          <div className="pointer-events-none absolute inset-x-8 top-0 z-30 h-px bg-gradient-to-r from-transparent via-[#00e5ff] to-transparent" />
 
-        {/* أزرار التفاعل (نظرة سريعة والمفضلة) */}
-        <div className="flex items-center gap-1.5">
-          <button
-            onClick={() => setQuickViewProduct(product)}
-            className="p-1.5 rounded-lg bg-[#0b1222] border border-[#00a3ff]/30 text-gray-300 hover:text-white hover:border-[#00e5ff] hover:shadow-[0_0_10px_rgba(0,229,255,0.4)] transition-all"
-            title="نظرة سريعة"
+          {/* لمعة زجاجية تعبر عند اللمس */}
+          <span className="pointer-events-none absolute inset-y-0 left-0 z-30 w-1/4 -translate-x-full skew-x-[-18deg] bg-gradient-to-r from-transparent via-white/10 to-transparent transition-transform duration-1000 group-hover:translate-x-[420%]" />
+
+          {/* ===== منصة الصورة ===== */}
+          <div
+            className="relative aspect-[4/3] w-full cursor-pointer overflow-hidden"
+            onClick={() => onQuickView?.(product)}
           >
-            <Eye className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={() => toggleWishlist(product.id)}
-            className={`p-1.5 rounded-lg border transition-all ${
-              isWishlisted
-                ? "bg-red-500/20 border-red-500/60 text-red-500 shadow-[0_0_10px_rgba(239,68,68,0.4)]"
-                : "bg-[#0b1222] border-[#00a3ff]/30 text-gray-300 hover:text-red-400"
-            }`}
-            title="المفضلة"
-          >
-            <Heart className={`w-3.5 h-3.5 ${isWishlisted ? "fill-red-500" : ""}`} />
-          </button>
-        </div>
-      </div>
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(ellipse 75% 65% at 50% 48%, rgba(0,163,255,0.30), transparent 72%), linear-gradient(to bottom, #07122a, #040a16)",
+              }}
+            />
+            <div
+              className="absolute inset-0 opacity-20"
+              style={{
+                backgroundImage: "radial-gradient(rgba(0,229,255,0.55) 1px, transparent 1px)",
+                backgroundSize: "14px 14px",
+              }}
+            />
 
-      {/* ===== 2. الماركة واسم المنتج (في المنتصف مع وهج نيون أزرق قوي) ===== */}
-      <div className="relative z-10 text-center my-2 space-y-1">
-        {product.brand && (
-          <span className="text-[11px] font-black tracking-widest text-[#00e5ff] uppercase block drop-shadow-[0_0_10px_rgba(0,229,255,0.7)]">
-            {product.brand}
-          </span>
-        )}
-        <h3
-          onClick={() => setQuickViewProduct(product)}
-          className="text-base font-black text-white hover:text-[#00e5ff] cursor-pointer transition-colors leading-tight line-clamp-1 drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]"
-        >
-          {product.title}
-        </h3>
-      </div>
+            {/* انعكاس أرضية */}
+            <div
+              className="absolute bottom-3 left-1/2 h-5 w-3/5 -translate-x-1/2"
+              style={{ background: "radial-gradient(ellipse at center, rgba(0,229,255,0.4), transparent 70%)" }}
+            />
 
-      {/* ===== 3. منطقة صورة المنتج (مع خلفية نيون وشبكة ثلاثية الأبعاد) ===== */}
-      <div
-        onClick={() => setQuickViewProduct(product)}
-        className="relative z-10 w-full aspect-square rounded-xl bg-gradient-to-b from-[#080d1a] to-[#03060d] border border-[#00a3ff]/40 overflow-hidden flex items-center justify-center p-3 cursor-pointer group-hover:border-[#00e5ff] transition-all my-1 shadow-[inset_0_0_20px_rgba(0,163,255,0.2)]"
-      >
-        {/* خلفية الشبكة المتوهجة خلف الكيبورد */}
-        <div className="absolute inset-0 opacity-25 bg-[radial-gradient(#00a3ff_1px,transparent_1px)] [background-size:12px_12px] pointer-events-none" />
-        
-        {/* بقعة نيون دائرية خادعة للتوهج خلف الكيبورد تماماً */}
-        <div className="absolute w-28 h-28 bg-[#00a3ff]/30 rounded-full blur-2xl group-hover:scale-125 group-hover:bg-[#00e5ff]/45 transition-all duration-500 pointer-events-none" />
+            <Image
+              src={product.image || "/images/placeholder.jpg"}
+              alt={product.title}
+              fill
+              sizes="(max-width: 640px) 90vw, (max-width: 1024px) 45vw, 25vw"
+              className="object-contain p-5 drop-shadow-[0_16px_18px_rgba(0,0,0,0.65)] transition-transform duration-700 group-hover:scale-110 group-hover:-translate-y-1"
+            />
 
-        {/* صورة المنتج */}
-        <img
-          src={product.image}
-          alt={product.title}
-          className="relative z-10 w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_12px_25px_rgba(0,0,0,0.9)]"
-          loading="lazy"
-        />
-
-        {/* مؤشر متوفر بالمخزن */}
-        <div className="absolute bottom-2 right-2 z-20 px-2 py-0.5 rounded-md bg-[#050814]/90 border border-[#00a3ff]/40 flex items-center gap-1.5 text-[9px] text-emerald-400 font-black backdrop-blur-md shadow-[0_0_10px_rgba(0,0,0,0.5)]">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
-          متوفر
-        </div>
-      </div>
-
-      {/* ===== 4. التفاصيل والضمان والتسعير ===== */}
-      <div className="relative z-10 mt-2 space-y-2">
-        {/* الضمان والتقييم */}
-        <div className="flex items-center justify-between text-[11px] px-1">
-          <div className="flex items-center gap-1 text-[#00e5ff] font-bold drop-shadow-[0_0_5px_rgba(0,229,255,0.4)]">
-            <ShieldCheck className="w-3.5 h-3.5" />
-            <span>ضمان سنة</span>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-14 bg-gradient-to-t from-[#071125] to-transparent" />
           </div>
-          <div className="flex items-center gap-1 text-amber-400 font-bold">
-            <Star className="w-3 h-3 fill-amber-400" />
-            <span>{product.rating || "5.0"}</span>
-          </div>
-        </div>
 
-        {/* السعر وزر الإضافة للسلة */}
-        <div className="pt-2 border-t border-[#00a3ff]/30 flex items-center justify-between gap-2">
-          {/* عرض السعر */}
-          <div className="flex flex-col">
-            {hasDiscount && (
-              <span className="text-[10px] text-gray-500 line-through font-mono">
-                {product.originalPrice} ₪
+          {/* ===== الشارات والأزرار فوق الصورة ===== */}
+          <div className="absolute inset-x-3 top-3 z-20 flex items-start justify-between">
+            {/* يمين: التصنيف + الخصم */}
+            <div className="flex flex-col items-start gap-1.5">
+              <span className="rounded-lg border border-[#00e5ff]/40 bg-[#061124]/85 px-2.5 py-1 font-tech text-[10px] font-bold uppercase tracking-widest text-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.2)]">
+                {p.category || "GEAR"}
               </span>
-            )}
-            <div className="flex items-baseline gap-0.5">
-              <span className="text-xl font-black text-white font-mono leading-none tracking-tight drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]">
-                {product.price}
-              </span>
-              <span className="text-xs font-bold text-[#00e5ff]">₪</span>
+              {pct > 0 && (
+                <span className="flex items-center gap-1 rounded-full border border-white/30 bg-gradient-to-r from-[#0047ff] to-[#00e5ff] px-2.5 py-1 text-[11px] font-black text-white shadow-[0_0_14px_rgba(0,229,255,0.55)]">
+                  <Flame className="h-3 w-3" />
+                  خصم {pct}%
+                </span>
+              )}
+              {p.isNew && (
+                <span className="rounded-full bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] px-2.5 py-0.5 font-mono text-[10px] font-black text-[#02121f] shadow-[0_0_10px_#00e5ff]">
+                  NEW
+                </span>
+              )}
+            </div>
+
+            {/* يسار: مفضلة + معاينة */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => toggleWishlist(product.id as any)}
+                aria-label="المفضلة"
+                className={`cursor-pointer rounded-xl border p-2.5 backdrop-blur-md transition-all ${
+                  isWishlisted
+                    ? "border-[#00e5ff] bg-[#00e5ff]/20 text-[#00e5ff] shadow-[0_0_12px_#00e5ff]"
+                    : "border-white/10 bg-black/45 text-gray-200 hover:border-[#00a3ff] hover:text-[#00e5ff]"
+                }`}
+              >
+                <Heart className={`h-4 w-4 ${isWishlisted ? "fill-[#00e5ff]" : ""}`} />
+              </button>
+              {onQuickView && (
+                <button
+                  onClick={() => onQuickView(product)}
+                  aria-label="معاينة سريعة"
+                  className="cursor-pointer rounded-xl border border-white/10 bg-black/45 p-2.5 text-gray-200 backdrop-blur-md transition-all hover:border-[#00a3ff] hover:text-[#00e5ff]"
+                >
+                  <Eye className="h-4 w-4" />
+                </button>
+              )}
             </div>
           </div>
 
-          {/* زر أضف للسلة برسم سايبربانك مستقبلي */}
-          <button
-            onClick={() => addToCart(product)}
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#00a3ff] via-[#0080ff] to-[#00e5ff] hover:from-[#00c3ff] hover:to-[#00a3ff] text-black font-black text-xs flex items-center gap-1.5 shadow-[0_0_20px_rgba(0,163,255,0.5)] active:scale-95 transition-all shrink-0 cursor-pointer"
-          >
-            <ShoppingBag className="w-4 h-4" />
-            <span>أضف للسلة</span>
-          </button>
+          {/* ===== التفاصيل ===== */}
+          <div className="flex flex-1 flex-col p-4 sm:p-5">
+            <div className="font-tech text-[11px] font-bold uppercase tracking-[0.2em] text-[#00a3ff]">
+              {product.brand}
+            </div>
+
+            <h3
+              onClick={() => onQuickView?.(product)}
+              className="mt-1 line-clamp-2 min-h-[2.8em] cursor-pointer bg-gradient-to-b from-white to-[#bfeeff] bg-clip-text font-['Cairo'] text-lg font-black leading-snug text-transparent sm:text-xl"
+            >
+              {product.title}
+            </h3>
+
+            {/* التقييم + الضمان + التوفر */}
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className="flex items-center gap-1 rounded-lg border border-[#16294a] bg-[#0a1630] px-2 py-1">
+                <span className="flex">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <Star
+                      key={i}
+                      className={`h-3 w-3 ${i < Math.round(rating) ? "fill-[#00e5ff] text-[#00e5ff]" : "text-[#1d3563]"}`}
+                    />
+                  ))}
+                </span>
+                <span className="font-mono text-[11px] font-bold text-gray-200">{rating.toFixed(1)}</span>
+                {reviews > 0 && <span className="font-mono text-[10px] text-gray-500">({reviews})</span>}
+              </span>
+
+              <span className="flex items-center gap-1 rounded-lg border border-[#00a3ff]/30 bg-[#00a3ff]/10 px-2 py-1 text-[11px] font-bold text-[#00e5ff] font-['Cairo']">
+                <ShieldCheck className="h-3.5 w-3.5" />
+                ضمان سنة
+              </span>
+
+              <span
+                className={`flex items-center gap-1 rounded-lg border px-2 py-1 text-[11px] font-bold font-['Cairo'] ${
+                  inStock
+                    ? "border-[#00e5ff]/30 bg-[#00e5ff]/10 text-[#00e5ff]"
+                    : "border-gray-600/40 bg-gray-700/20 text-gray-400"
+                }`}
+              >
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                {inStock ? "متوفر" : "نفذت الكمية"}
+              </span>
+            </div>
+
+            {/* السعر والشراء */}
+            <div className="mt-auto pt-4">
+              <div className="flex items-end justify-between gap-3 rounded-2xl border border-[#16294a] bg-[#060e1f]/80 px-4 py-3">
+                <div>
+                  {hasDiscount && (
+                    <div className="font-mono text-xs text-gray-500 line-through">{orig.toLocaleString()} ₪</div>
+                  )}
+                  <div className="flex items-baseline gap-1">
+                    <span className="bg-gradient-to-r from-white to-[#00e5ff] bg-clip-text font-tech text-2xl font-black text-transparent drop-shadow-[0_0_12px_rgba(0,229,255,0.4)] sm:text-3xl">
+                      {price.toLocaleString()}
+                    </span>
+                    <span className="text-base font-black text-[#00a3ff]">₪</span>
+                  </div>
+                </div>
+                {saved > 0 && (
+                  <span className="rounded-lg border border-[#00e5ff]/35 bg-[#00e5ff]/10 px-2.5 py-1.5 font-['Cairo'] text-[11px] font-black text-[#00e5ff]">
+                    وفّرت {saved.toLocaleString()} ₪
+                  </span>
+                )}
+              </div>
+
+              <button
+                onClick={() => addToCart(product)}
+                disabled={!inStock}
+                className="relative mt-3 flex w-full cursor-pointer items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] px-5 py-3.5 font-['Cairo'] text-sm font-black text-[#02121f] shadow-[0_0_22px_rgba(0,163,255,0.5)] transition-all duration-300 hover:shadow-[0_0_34px_rgba(0,229,255,0.85)] active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+              >
+                <ShoppingBag className="h-5 w-5" />
+                <span>أضف للسلة</span>
+              </button>
+            </div>
+          </div>
+
+          {/* خط إضاءة سفلي */}
+          <div className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-[#0047ff] via-[#00e5ff] to-[#0047ff] opacity-0 shadow-[0_0_12px_#00e5ff] transition-opacity group-hover:opacity-100" />
         </div>
       </div>
     </div>
