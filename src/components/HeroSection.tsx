@@ -197,10 +197,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
           100% { transform: translateX(120%); }
         }
         .pill-sweep { animation: pillSweep 4.5s ease-in-out infinite; }
+        @property --luxA { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+        @keyframes luxSpin { to { --luxA: 360deg; } }
+        .lux-frame {
+          background: conic-gradient(from var(--luxA), #00e5ff, #0047ff 25%, #04101f 45%, #00a3ff 65%, #00e5ff 85%, #00e5ff);
+          animation: luxSpin 7s linear infinite;
+        }
+        @keyframes heroRise {
+          from { opacity: 0; transform: translate3d(0, 22px, 0); }
+          to { opacity: 1; transform: translate3d(0, 0, 0); }
+        }
+        .hero-rise { opacity: 0; animation: heroRise 0.8s cubic-bezier(.2,.7,.2,1) forwards; }
+        .d1 { animation-delay: .05s; } .d2 { animation-delay: .18s; } .d3 { animation-delay: .3s; }
+        .d4 { animation-delay: .42s; } .d5 { animation-delay: .54s; } .d6 { animation-delay: .66s; }
+        .btn-sheen { position: relative; overflow: hidden; }
+        .btn-sheen::after {
+          content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%;
+          background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+          transform: skewX(-20deg); animation: btnSheen 3.8s ease-in-out infinite;
+        }
+        @keyframes btnSheen { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+        .hero-title {
+          background: linear-gradient(180deg, #ffffff 30%, #9fe9ff 100%);
+          -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0 4px 24px rgba(0,163,255,.35));
+        }
+        .hero-watermark {
+          -webkit-text-stroke: 1px rgba(0,229,255,.10);
+          color: transparent;
+        }
         @media (prefers-reduced-motion: reduce) {
-          .hero-glow, .hero-shimmer, .pill-sweep { animation: none !important; }
+          .hero-glow, .hero-shimmer, .pill-sweep, .lux-frame, .btn-sheen::after { animation: none !important; }
+          .hero-rise { opacity: 1; animation: none !important; }
         }
       `}</style>
+
+      {/* علامة مائية ضخمة خلف المحتوى */}
+      <div
+        className="hero-watermark pointer-events-none select-none absolute top-6 left-1/2 -translate-x-1/2 font-tech font-black leading-none whitespace-nowrap text-[26vw] lg:text-[16rem] opacity-90"
+        dir="ltr"
+        aria-hidden="true"
+      >
+        NITRO
+      </div>
 
       <div className="absolute inset-0 tech-grid opacity-70 pointer-events-none" />
       <div
@@ -214,7 +253,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-7">
         {/* الشارة العلوية: إطار متدرج ثابت + لمعة خفيفة تعبر */}
-        <div className="flex justify-center">
+        <div className="flex justify-center hero-rise d1">
           <div className="p-[1px] rounded-full bg-gradient-to-r from-[#00e5ff]/70 via-[#00a3ff]/25 to-[#00e5ff]/70 max-w-full">
             <div className="relative overflow-hidden flex items-center gap-3 rounded-full bg-[#060c18] px-3 py-2 sm:px-4">
               <span className="pill-sweep pointer-events-none absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-[#00e5ff]/10 to-transparent" />
@@ -231,7 +270,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
           {/* --- النصوص --- */}
           <div className="lg:col-span-6 space-y-5 text-right">
-            <div className="flex items-center gap-4 justify-start">
+            <div className="flex items-center gap-4 justify-start hero-rise d2">
               <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl grad-frame flex items-center justify-center shrink-0">
                 <Zap className="w-7 h-7 sm:w-8 sm:h-8 text-[#00a3ff] drop-shadow-[0_0_12px_#00a3ff]" />
               </div>
@@ -252,9 +291,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
               </div>
             </div>
 
-            <h1 className="font-['Cairo'] leading-[1.35]">
+            <h1 className="font-['Cairo'] leading-[1.35] hero-rise d3">
               <span className="sr-only">نيترو قيمز — </span>
-              <span className="block text-3xl sm:text-4xl lg:text-[2.8rem] font-black text-white">
+              <span className="hero-title block text-4xl sm:text-5xl lg:text-[3.3rem] font-black">
                 خياركم الأفضل في فلسطين
               </span>
               <span className="block text-xl sm:text-3xl lg:text-[2.1rem] text-gray-200 mt-1 font-light">
@@ -263,10 +302,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
               </span>
             </h1>
 
-            <div className="flex flex-wrap items-center justify-start gap-3 pt-1">
+            <div className="flex flex-wrap items-center justify-start gap-3 pt-1 hero-rise d4">
               <button
                 onClick={() => scrollTo("products")}
-                className="relative overflow-hidden text-sm sm:text-base px-6 py-2.5 rounded-xl font-black text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_22px_rgba(0,229,255,0.5)] hover:shadow-[0_0_32px_rgba(0,229,255,0.8)] hover:scale-[1.03] transition-all duration-300 flex items-center gap-2 cursor-pointer group"
+                className="btn-sheen text-sm sm:text-base px-6 py-2.5 rounded-xl font-black text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_22px_rgba(0,229,255,0.5)] hover:shadow-[0_0_32px_rgba(0,229,255,0.8)] hover:scale-[1.03] transition-all duration-300 flex items-center gap-2 cursor-pointer group"
               >
                 <ShoppingBag className="w-4 h-4" />
                 <span>{cfg.ctaLabel || "تسوق الآن"}</span>
@@ -287,7 +326,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
             </div>
 
             {/* شريط الإحصائيات: نصفان متطابقان + animate-marquee (بدون flex عليه) */}
-            <div className="w-full pt-2">
+            <div className="w-full pt-2 hero-rise d5">
               <div
                 dir="ltr"
                 className="relative w-full overflow-hidden rounded-2xl py-3 px-1
@@ -308,12 +347,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
           </div>
 
           {/* --- المربع المميز --- */}
-          <div className="lg:col-span-6">
+          <div className="lg:col-span-6 hero-rise d6">
             {cfg.enabled && cfg.videoUrls && cfg.videoUrls.length > 0 ? (
               <div className="relative">
                 <div className="hero-glow absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-lg" />
 
-                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/80 via-[#00a3ff]/35 to-[#0a1630]">
+                <div className="lux-frame relative p-[2px] rounded-3xl">
                   <div className="relative rounded-[22px] bg-[#040814] overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
                       <AudioButton />
@@ -363,7 +402,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
               >
                 <div className="hero-glow absolute -inset-1 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] rounded-3xl blur-lg" />
 
-                <div className="relative p-[2px] rounded-3xl bg-gradient-to-b from-[#00e5ff]/70 via-[#00a3ff]/30 to-[#101c38]">
+                <div className="lux-frame relative p-[2px] rounded-3xl">
                   <div className="rounded-[22px] bg-[#040814] overflow-hidden">
                     <div className="flex items-center justify-between px-4 py-3 border-b border-[#142342] bg-gradient-to-r from-[#070e20] via-[#0b1733] to-[#070e20]">
                       <AudioButton />
