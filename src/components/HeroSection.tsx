@@ -17,7 +17,6 @@ import {
   Crown,
   Radio,
   Sparkles,
-  BadgePercent,
   Music,
   Disc,
 } from "lucide-react";
@@ -263,7 +262,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
                 CYBER ESPORTS
               </span>
               <span className="relative flex items-center gap-2">
-                <BadgePercent className="w-5 h-5 sm:w-6 sm:h-6 text-[#00e5ff] drop-shadow-[0_0_10px_#00e5ff]" />
                 <span className={`price-text ${bannerFont.className} text-xl sm:text-3xl leading-none tracking-wide whitespace-nowrap`}>
                   أفضل سعر في فلسطين
                 </span>
