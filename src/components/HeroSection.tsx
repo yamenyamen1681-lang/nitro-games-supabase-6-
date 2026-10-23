@@ -16,6 +16,7 @@ import {
   Crown,
   Radio,
   Sparkles,
+  BadgePercent,
   Music,
   Disc,
 } from "lucide-react";
@@ -108,23 +109,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
   // شريطان متقاطعان على شكل X: كل شريط نصفين متطابقين (حلقة بدون فراغ)
   const ribbonA = [
     { icon: <ShieldCheck className="w-4 h-4" />, text: "ضمان حقيقي لمدة سنة" },
-    { icon: <span>⭐</span>, text: "+5,400 لاعب يثق بنا" },
+    { icon: <span className="text-sm leading-none">⭐</span>, text: "+5,400 لاعب يثق بنا" },
   ];
   const ribbonB = [
     { icon: <Crown className="w-4 h-4" />, text: "الأفضل في فلسطين" },
     { icon: <Truck className="w-4 h-4" />, text: "توصيل لكل المناطق" },
   ];
-  const renderRibbonHalf = (items: typeof ribbonA, key: string, hidden: boolean) => (
+  const renderRibbonHalf = (items: typeof ribbonA, key: string, hidden: boolean, dark: boolean) => (
     <div key={key} className="flex items-center shrink-0" aria-hidden={hidden}>
       {[0, 1, 2].flatMap((r) =>
         items.map((it, i) => (
           <span
             key={`${key}-${r}-${i}`}
-            className="flex items-center gap-2 px-5 text-[13px] sm:text-sm font-black font-['Cairo'] whitespace-nowrap"
+            className="flex items-center gap-3 pl-3 text-[14px] sm:text-base font-black font-['Cairo'] whitespace-nowrap tracking-wide"
           >
-            {it.icon}
-            {it.text}
-            <span className="mx-2 opacity-60">✦</span>
+            <span
+              className={`flex items-center justify-center w-7 h-7 rounded-full border ${
+                dark
+                  ? "border-[#00e5ff]/60 bg-[#00e5ff]/10 text-[#00e5ff] shadow-[0_0_12px_rgba(0,229,255,0.45)]"
+                  : "border-[#02121f]/40 bg-white/25 text-[#02121f]"
+              }`}
+            >
+              {it.icon}
+            </span>
+            <span className={dark ? "drop-shadow-[0_0_10px_rgba(0,229,255,0.6)]" : ""}>{it.text}</span>
+            <span className={`mx-3 text-xs ${dark ? "text-[#00a3ff]" : "text-[#02121f]/60"}`}>◆</span>
           </span>
         ))
       )}
@@ -197,6 +206,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
         .xr-track { display: inline-flex; width: max-content; animation: xrMove 30s linear infinite; }
         .xr-rev { animation-direction: reverse; }
         @keyframes xrMove { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @keyframes xrSheen { 0% { left: -30%; } 100% { left: 120%; } }
+        .xr-sheen { animation: xrSheen 3.6s ease-in-out infinite; }
+        @keyframes xrPing { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(1.9); opacity: 0; } }
+        .xr-ping { animation: xrPing 2.2s ease-out infinite; }
+        @keyframes priceGlow { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+        .price-text {
+          background: linear-gradient(100deg, #ffffff 0%, #9fe9ff 30%, #00e5ff 50%, #ffffff 70%, #9fe9ff 100%);
+          background-size: 220% auto;
+          -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+          animation: heroShimmer 3.5s linear infinite;
+        }
         .btn-sheen { position: relative; overflow: hidden; }
         .btn-sheen::after {
           content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%;
@@ -214,7 +234,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
           color: transparent;
         }
         @media (prefers-reduced-motion: reduce) {
-          .hero-glow, .hero-shimmer, .pill-sweep, .lux-frame, .xr-track, .btn-sheen::after { animation: none !important; }
+          .hero-glow, .hero-shimmer, .pill-sweep, .lux-frame, .xr-track, .xr-sheen, .xr-ping, .price-text, .btn-sheen::after { animation: none !important; }
           .hero-rise { opacity: 1; animation: none !important; }
         }
       `}</style>
@@ -241,14 +261,18 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 space-y-7">
         {/* البنر العلوي: خط ضوئي يدور حواليه */}
         <div className="flex justify-center hero-rise d1">
-          <div className="lux-frame p-[2px] rounded-full max-w-full shadow-[0_0_28px_rgba(0,163,255,0.3)]">
-            <div className="relative overflow-hidden flex items-center gap-3 rounded-full bg-[#060c18] px-3 py-2 sm:px-4">
+          <div className="lux-frame p-[2px] rounded-full max-w-full shadow-[0_0_34px_rgba(0,163,255,0.4)]">
+            <div className="relative overflow-hidden flex items-center gap-3 sm:gap-4 rounded-full bg-gradient-to-r from-[#050c1c] via-[#08183a] to-[#050c1c] px-3 py-2.5 sm:px-5">
+              <span className="pill-sweep pointer-events-none absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-[#00e5ff]/15 to-transparent" />
               <span className="relative shrink-0 bg-[#00a3ff]/15 border border-[#00a3ff]/50 text-[#00e5ff] px-3 py-1 rounded-full text-[10px] sm:text-xs font-black tracking-wider uppercase font-tech whitespace-nowrap">
                 CYBER ESPORTS
               </span>
-              <p className="relative text-white text-[12px] sm:text-sm font-bold leading-snug">
-                أفضل سعر في فلسطين
-              </p>
+              <span className="relative flex items-center gap-2">
+                <BadgePercent className="w-5 h-5 sm:w-6 sm:h-6 text-[#00e5ff] drop-shadow-[0_0_10px_#00e5ff]" />
+                <span className="price-text text-base sm:text-xl font-black font-['Cairo'] leading-none whitespace-nowrap">
+                  أفضل سعر في فلسطين
+                </span>
+              </span>
             </div>
           </div>
         </div>
@@ -311,28 +335,46 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
               </div>
             </div>
 
-            {/* شريطان متقاطعان (X) متحركان بعكس بعض */}
-            <div className="relative w-full h-[132px] sm:h-[150px] overflow-hidden rounded-2xl hero-rise d5 [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]" dir="ltr">
+            {/* شريطان متقاطعان (X) متحركان بعكس بعض + شعار بنقطة التقاطع */}
+            <div className="relative w-full h-[150px] sm:h-[170px] hero-rise d5" dir="ltr">
               <div
-                className="absolute left-[-15%] w-[130%] top-1/2 -mt-[24px] z-0 origin-center"
-                style={{ transform: "rotate(6deg)" }}
-              >
-                <div className="overflow-hidden border-y border-[#00e5ff]/40 bg-[#07122a]/90 text-[#9fe9ff] shadow-[0_0_24px_rgba(0,163,255,0.25)] py-3">
-                  <div className="xr-track xr-rev">
-                    {renderRibbonHalf(ribbonB, "b1", false)}
-                    {renderRibbonHalf(ribbonB, "b2", true)}
+                className="pointer-events-none absolute inset-x-6 top-1/2 -translate-y-1/2 h-24"
+                style={{ background: "radial-gradient(ellipse at center, rgba(0,163,255,0.30), transparent 70%)" }}
+              />
+              <div className="absolute inset-0 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+                {/* الشريط الداكن (خلف) */}
+                <div
+                  className="absolute left-[-20%] w-[140%] top-1/2 -mt-[27px] z-0"
+                  style={{ transform: "rotate(7deg)" }}
+                >
+                  <div className="relative overflow-hidden py-3 bg-gradient-to-b from-[#0a1a3a] to-[#050d20] text-[#d6f7ff] border-y border-[#00e5ff]/50 shadow-[0_0_30px_rgba(0,163,255,0.35)]">
+                    <span className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent" />
+                    <div className="xr-track xr-rev">
+                      {renderRibbonHalf(ribbonB, "b1", false, true)}
+                      {renderRibbonHalf(ribbonB, "b2", true, true)}
+                    </div>
+                  </div>
+                </div>
+                {/* الشريط الأزرق اللامع (قدّام) */}
+                <div
+                  className="absolute left-[-20%] w-[140%] top-1/2 -mt-[27px] z-10"
+                  style={{ transform: "rotate(-7deg)" }}
+                >
+                  <div className="relative overflow-hidden py-3 bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] text-[#02121f] border-y border-white/50 shadow-[0_0_36px_rgba(0,163,255,0.7)]">
+                    <span className="pointer-events-none absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/30 to-transparent" />
+                    <span className="xr-sheen pointer-events-none absolute inset-y-0 w-1/4 bg-gradient-to-r from-transparent via-white/50 to-transparent" />
+                    <div className="xr-track">
+                      {renderRibbonHalf(ribbonA, "a1", false, false)}
+                      {renderRibbonHalf(ribbonA, "a2", true, false)}
+                    </div>
                   </div>
                 </div>
               </div>
-              <div
-                className="absolute left-[-15%] w-[130%] top-1/2 -mt-[24px] z-10 origin-center"
-                style={{ transform: "rotate(-6deg)" }}
-              >
-                <div className="overflow-hidden bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] text-[#02121f] shadow-[0_0_30px_rgba(0,163,255,0.55)] py-3">
-                  <div className="xr-track">
-                    {renderRibbonHalf(ribbonA, "a1", false)}
-                    {renderRibbonHalf(ribbonA, "a2", true)}
-                  </div>
+              {/* شعار نقطة التقاطع */}
+              <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+                <span className="xr-ping absolute inset-0 rounded-full border border-[#00e5ff]/70" />
+                <div className="relative w-12 h-12 rounded-full bg-[#030a18] border-2 border-[#00e5ff] shadow-[0_0_28px_rgba(0,229,255,0.9),inset_0_0_14px_rgba(0,163,255,0.5)] flex items-center justify-center">
+                  <Zap className="w-6 h-6 text-[#00e5ff] fill-[#00a3ff]/40 drop-shadow-[0_0_8px_#00e5ff]" />
                 </div>
               </div>
             </div>
