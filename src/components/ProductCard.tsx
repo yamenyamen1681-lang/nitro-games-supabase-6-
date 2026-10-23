@@ -13,8 +13,10 @@ interface ProductCardProps {
 }
 
 export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }) => {
-  const { addToCart, wishlist, toggleWishlist } = useCart();
+  const { addToCart, wishlist, toggleWishlist, setQuickViewProduct } = useCart();
   const p = product as any;
+  // يفتح نافذة المعاينة: من الـprop إذا انمرّرت، وإلا مباشرة من الـCartContext
+  const openQuick = () => (onQuickView ? onQuickView(product) : setQuickViewProduct(product));
 
   const isWishlisted = wishlist.some((item: any) =>
     typeof item === "object" && item !== null ? item.id === product.id : item === product.id
@@ -48,7 +50,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
           {/* ===== منصة الصورة ===== */}
           <div
             className="relative aspect-[4/3] w-full cursor-pointer overflow-hidden"
-            onClick={() => onQuickView?.(product)}
+            onClick={openQuick}
           >
             <div
               className="absolute inset-0"
@@ -115,9 +117,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
               >
                 <Heart className={`h-4 w-4 ${isWishlisted ? "fill-[#00e5ff]" : ""}`} />
               </button>
-              {onQuickView && (
+              {(
                 <button
-                  onClick={() => onQuickView(product)}
+                  onClick={openQuick}
                   aria-label="معاينة سريعة"
                   className="cursor-pointer rounded-xl border border-white/10 bg-black/45 p-2.5 text-gray-200 backdrop-blur-md transition-all hover:border-[#00a3ff] hover:text-[#00e5ff]"
                 >
@@ -134,7 +136,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
             </div>
 
             <h3
-              onClick={() => onQuickView?.(product)}
+              onClick={openQuick}
               className="mt-1 line-clamp-2 min-h-[2.8em] cursor-pointer bg-gradient-to-b from-white to-[#bfeeff] bg-clip-text font-['Cairo'] text-lg font-black leading-snug text-transparent sm:text-xl"
             >
               {product.title}
