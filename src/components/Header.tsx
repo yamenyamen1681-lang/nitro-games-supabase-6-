@@ -69,6 +69,9 @@ export const Header: React.FC<HeaderProps> = ({
           background-size: 220% auto;
           animation: shimmerSweep 3.2s linear infinite;
         }
+        .hdr-marquee { display: inline-flex; width: max-content; animation: hdrMarq 36s linear infinite; }
+        @keyframes hdrMarq { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+        @media (prefers-reduced-motion: reduce) { .hdr-marquee { animation: none; } }
       `}</style>
 
       {/* ===== 1. Announcement Bar — زجاجي فاخر بدل الخلفية الداكنة الصلبة ===== */}
@@ -77,14 +80,14 @@ export const Header: React.FC<HeaderProps> = ({
         <span className="absolute -top-10 right-1/3 w-64 h-24 bg-[#00a3ff]/10 blur-3xl rounded-full pointer-events-none" />
 
         <div className="relative flex items-center justify-between max-w-7xl mx-auto">
-          <div className="flex-1 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
+          <div dir="ltr" className="flex-1 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_4%,black_96%,transparent)]">
             {/* مهم: نفس المحتوى بالضبط مكرر مرتين (مجموعة أ + مجموعة ب) —
                 هاد شرط أساسي حتى تكون لفّة animate-marquee (0% → -50%) مثالية
                 بدون أي قطع أو اختفاء. قبل كان في عنصر فريد (التاغلاين وكود
                 الخصم) موجود مرة وحدة بس، فما كانت نص الحركة تطابق النص التاني. */}
-            <div className="animate-marquee items-center gap-10 whitespace-nowrap text-xs font-bold text-gray-200">
+            <div className="hdr-marquee items-center whitespace-nowrap text-xs font-bold text-gray-200">
               {(["a", "b"] as const).map((groupKey) => (
-                <div key={groupKey} className="flex items-center gap-10 shrink-0" aria-hidden={groupKey === "b"}>
+                <div key={groupKey} className="flex items-center gap-10 shrink-0 pr-10" aria-hidden={groupKey === "b"}>
                   <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/[0.07]">
                     <Truck className="w-3.5 h-3.5 text-[#00a3ff]" />
                     توصيل لكافة مناطق فلسطين والداخل المحتل 🚚
@@ -136,10 +139,10 @@ export const Header: React.FC<HeaderProps> = ({
       <div className="relative bg-[#05070d]/90 backdrop-blur-xl border-b border-white/[0.06] shadow-[0_10px_35px_rgba(0,0,0,0.85)]">
         <span className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-[#00a3ff]/40 to-transparent" />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-2 sm:gap-3">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-3 group">
-            <div className="relative w-11 h-11 rounded-xl grad-frame flex items-center justify-center transition-all duration-300">
+          <a href="#" className="flex items-center gap-2 sm:gap-3 group">
+            <div className="relative w-10 h-10 sm:w-11 sm:h-11 rounded-xl grad-frame flex items-center justify-center transition-all duration-300">
               <Zap className="w-6 h-6 text-[#00a3ff] group-hover:scale-110 transition-transform drop-shadow-[0_0_10px_#00a3ff]" />
               <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00e5ff] opacity-75"></span>
@@ -152,7 +155,7 @@ export const Header: React.FC<HeaderProps> = ({
                 <span className="brand-mark brand-mark-sm text-white">
                   NITRO <span className="brand-mark-games">GAMES</span>
                 </span>
-                <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-[#00a3ff]/20 to-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/30 font-tech shadow-[0_0_10px_rgba(0,229,255,0.2)]">
+                <span className="hidden sm:inline-block text-[9px] font-black px-2 py-0.5 rounded-full bg-gradient-to-r from-[#00a3ff]/20 to-[#00e5ff]/20 text-[#00e5ff] border border-[#00e5ff]/30 font-tech shadow-[0_0_10px_rgba(0,229,255,0.2)]">
                   PRO
                 </span>
               </div>
@@ -209,7 +212,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 sm:gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
             <div
               className="hidden sm:flex items-center gap-1 px-3 py-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-xs font-bold text-gray-200"
               title="العملة الرسمية: شيكل فلسطيني (₪ ILS)"
@@ -220,7 +223,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setSearchOpen(!searchOpen)}
-              className="xl:hidden p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-gray-300 hover:text-[#00a3ff] hover:border-[#00a3ff]/40 transition-colors"
+              className="xl:hidden p-2 sm:p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-gray-300 hover:text-[#00a3ff] hover:border-[#00a3ff]/40 transition-colors"
               aria-label="البحث"
             >
               <Search className="w-5 h-5" />
@@ -229,7 +232,7 @@ export const Header: React.FC<HeaderProps> = ({
             {onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
-                className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.03] hover:bg-[#00a3ff] border border-white/[0.08] hover:border-[#00a3ff] text-gray-300 hover:text-black transition-all text-xs font-bold shadow-sm cursor-pointer group"
+                className="hidden sm:flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white/[0.03] hover:bg-[#00a3ff] border border-white/[0.08] hover:border-[#00a3ff] text-gray-300 hover:text-black transition-all text-xs font-bold shadow-sm cursor-pointer group"
                 title="لوحة تحكم المشرف"
               >
                 <Lock className="w-3.5 h-3.5 text-[#00a3ff] group-hover:text-black transition-colors" />
@@ -243,7 +246,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={() => onCategorySelect?.("all")}
               title="قائمة المفضلة"
               aria-label="المفضلة"
-              className="group relative flex h-11 w-11 items-center justify-center rounded-2xl p-[1px] bg-gradient-to-b from-[#00e5ff]/50 to-[#0047ff]/20 transition-all duration-300 hover:from-[#00e5ff] hover:to-[#0047ff]/60 hover:shadow-[0_0_18px_rgba(0,229,255,0.45)] active:scale-95"
+              className="group relative flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl p-[1px] bg-gradient-to-b from-[#00e5ff]/50 to-[#0047ff]/20 transition-all duration-300 hover:from-[#00e5ff] hover:to-[#0047ff]/60 hover:shadow-[0_0_18px_rgba(0,229,255,0.45)] active:scale-95"
             >
               <span className="flex h-full w-full items-center justify-center rounded-[15px] bg-gradient-to-b from-[#0a1a38] to-[#050c1e]">
                 <Heart
@@ -265,9 +268,9 @@ export const Header: React.FC<HeaderProps> = ({
             <button
               onClick={() => setIsCartOpen(true)}
               aria-label="سلة المشتريات"
-              className="group relative flex h-11 items-center rounded-2xl p-[1px] bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,163,255,0.35)] transition-all duration-300 hover:shadow-[0_0_28px_rgba(0,229,255,0.65)] active:scale-95 cursor-pointer"
+              className="group relative flex h-10 sm:h-11 items-center rounded-2xl p-[1px] bg-gradient-to-r from-[#0047ff] via-[#00a3ff] to-[#00e5ff] shadow-[0_0_18px_rgba(0,163,255,0.35)] transition-all duration-300 hover:shadow-[0_0_28px_rgba(0,229,255,0.65)] active:scale-95 cursor-pointer"
             >
-              <span className="flex h-full items-center gap-2.5 rounded-[15px] bg-gradient-to-b from-[#0a1a38] to-[#050c1e] px-3 md:px-4">
+              <span className="flex h-full items-center gap-2.5 rounded-[15px] bg-gradient-to-b from-[#0a1a38] to-[#050c1e] px-2.5 sm:px-3 md:px-4">
                 <span className="relative flex items-center">
                   <ShoppingBag className="h-5 w-5 text-[#00e5ff] transition-transform duration-300 group-hover:scale-110 drop-shadow-[0_0_6px_rgba(0,229,255,0.6)]" />
                   {totalItemsCount > 0 && (
@@ -287,7 +290,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-gray-300 hover:text-[#00a3ff] transition-colors"
+              className="lg:hidden p-2 sm:p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.08] text-gray-300 hover:text-[#00a3ff] transition-colors"
               aria-label="القائمة"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
