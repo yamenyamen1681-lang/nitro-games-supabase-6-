@@ -39,24 +39,26 @@ export const LiveSalesToast: React.FC = () => {
   useEffect(() => {
     if (closedManually) return;
 
-    // First appearance
+    // أول ظهور
     const first = setTimeout(() => setVisible(true), 3000);
 
-    // Rotate the delivery message every 5s
+    // تغيير الرسالة كل 5 ثواني
     const rotator = setInterval(() => {
       setIndex((i) => (i + 1) % messages.length);
     }, 5000);
 
-    // Hide / show cycle
+    // دورة إخفاء / إظهار
+    let showTimer: ReturnType<typeof setTimeout> | undefined;
     const cycle = setInterval(() => {
       setVisible(false);
-      setTimeout(() => setVisible(true), 1200);
+      showTimer = setTimeout(() => setVisible(true), 1200);
     }, 14000);
 
     return () => {
       clearTimeout(first);
       clearInterval(rotator);
       clearInterval(cycle);
+      if (showTimer) clearTimeout(showTimer);
     };
   }, [closedManually, messages.length]);
 
@@ -66,46 +68,79 @@ export const LiveSalesToast: React.FC = () => {
   const Icon = ICONS[index % ICONS.length];
 
   return (
-    <div className="fixed bottom-5 right-3 sm:right-5 z-40 max-w-[240px] sm:max-w-xs transition-all duration-500">
-      <div className="relative p-2.5 pr-2.5 pl-2 rounded-xl bg-[#0b1120] border border-[#00a3ff]/35 shadow-[0_10px_35px_rgba(0,0,0,.85),0_0_20px_rgba(0,163,255,.15)] flex items-center gap-2 text-right">
-        {/* Glowing icon */}
-        <div className="relative w-8 h-8 rounded-lg bg-[#152034] border border-[#00a3ff]/40 flex items-center justify-center flex-shrink-0 text-[#00a3ff]">
-          <Icon className="w-3.5 h-3.5" />
-          <span className="absolute -top-0.5 -right-0.5 flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00a3ff] opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#00a3ff]"></span>
-          </span>
-        </div>
+    <div className="fixed bottom-5 right-3 sm:right-5 z-40 w-[250px] sm:w-[300px]">
+      <style>{`
+        @keyframes lstIn { from { opacity: 0; transform: translate3d(0, 18px, 0) scale(.96); } to { opacity: 1; transform: translate3d(0,0,0) scale(1); } }
+        @keyframes lstText { from { opacity: 0; transform: translate3d(0, -6px, 0); } to { opacity: 1; transform: translate3d(0,0,0); } }
+        @keyframes lstSheen { 0% { transform: translateX(-130%) skewX(-18deg); } 55%,100% { transform: translateX(520%) skewX(-18deg); } }
+        @keyframes lstBar { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+        .lst-in { animation: lstIn .5s cubic-bezier(.2,.8,.2,1) both; }
+        .lst-text { animation: lstText .4s ease both; }
+        .lst-sheen { animation: lstSheen 4.5s ease-in-out infinite; }
+        .lst-bar { transform-origin: right center; animation: lstBar 5s linear both; }
+        @media (prefers-reduced-motion: reduce) {
+          .lst-in, .lst-text, .lst-sheen, .lst-bar { animation: none !important; }
+        }
+      `}</style>
 
-        {/* Message */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-1 mb-0.5">
-            <span className="text-[8px] font-black text-[#02121f] bg-[#00e5ff] px-1.5 py-0.5 rounded-full font-tech">
-              NITRO GAMES
-            </span>
-            <span className="text-[8px] font-bold text-[#00a3ff]">مزايا المتجر</span>
+      <div className="lst-in relative rounded-2xl p-[1.5px] bg-gradient-to-br from-[#00e5ff] via-[#0047ff] to-[#00a3ff] shadow-[0_12px_36px_rgba(0,0,0,.8),0_0_22px_rgba(0,163,255,.35)]">
+        <div className="relative overflow-hidden rounded-[14px] bg-gradient-to-b from-[#0a1630] to-[#050b19] px-3 py-2.5 sm:px-3.5 sm:py-3 text-right">
+          {/* خط ضوء علوي */}
+          <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-[#00e5ff] to-transparent" />
+
+          {/* لمعة تعبر */}
+          <span className="lst-sheen pointer-events-none absolute inset-y-0 left-0 w-1/4 bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
+          <div className="relative flex items-center gap-2.5">
+            {/* الأيقونة */}
+            <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-[#0047ff] to-[#00a3ff] p-[1.5px] shadow-[0_0_14px_rgba(0,163,255,.55)]">
+              <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-[#061124] text-[#00e5ff]">
+                <Icon className="h-[18px] w-[18px]" />
+              </div>
+              <span className="absolute -top-0.5 -right-0.5 flex h-2.5 w-2.5">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#00e5ff] opacity-70" />
+                <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-[#00e5ff]" />
+              </span>
+            </div>
+
+            {/* الرسالة */}
+            <div className="min-w-0 flex-1">
+              <div className="mb-1 flex items-center gap-1.5">
+                <span className="rounded-full bg-gradient-to-r from-[#0047ff] to-[#00e5ff] px-2 py-0.5 font-tech text-[8px] font-black tracking-wider text-white">
+                  NITRO GAMES
+                </span>
+                <span className="font-['Cairo'] text-[9px] font-bold text-[#00a3ff]">مزايا المتجر</span>
+              </div>
+              <p
+                key={index}
+                className="lst-text line-clamp-2 font-['Cairo'] text-[11px] font-bold leading-snug text-gray-100 sm:text-xs"
+              >
+                {current}
+              </p>
+            </div>
+
+            {/* إغلاق */}
+            <button
+              onClick={() => {
+                setVisible(false);
+                setClosedManually(true);
+              }}
+              className="cursor-pointer self-start rounded-lg border border-white/10 bg-white/5 p-1 text-gray-400 transition-colors hover:border-[#00a3ff]/60 hover:text-white"
+              aria-label="إغلاق الإشعار"
+              title="إغلاق الإشعار"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
           </div>
 
-          <p
-            key={index}
-            className="animate-fade-in-down text-[10px] sm:text-[11px] font-bold text-gray-100 leading-snug font-['Cairo'] line-clamp-2"
-          >
-            {current}
-          </p>
+          {/* شريط الوقت */}
+          <div className="absolute inset-x-0 bottom-0 h-[2px] bg-[#0d1a33]">
+            <div
+              key={`bar-${index}`}
+              className="lst-bar h-full bg-gradient-to-l from-[#0047ff] via-[#00a3ff] to-[#00e5ff]"
+            />
+          </div>
         </div>
-
-        {/* Close */}
-        <button
-          onClick={() => {
-            setVisible(false);
-            setClosedManually(true);
-          }}
-          className="p-0.5 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors self-start"
-          aria-label="إغلاق الإشعار"
-          title="إغلاق الإشعار"
-        >
-          <X className="w-3.5 h-3.5" />
-        </button>
       </div>
     </div>
   );
