@@ -15,7 +15,6 @@ import {
   ShoppingBag,
   Flame,
   Crown,
-  Sparkles,
   Music,
   Disc,
 } from "lucide-react";
@@ -327,7 +326,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
               </span>
             </h1>
 
-            <div className="flex flex-nowrap items-center justify-start gap-2.5 pt-1 hero-rise d4">
+            <div className="flex flex-wrap items-center justify-start gap-3 pt-1 hero-rise d4">
               <button
                 onClick={() => scrollTo("products")}
                 className="btn-sheen text-sm sm:text-base px-6 py-2.5 rounded-xl font-black text-[#02121f] bg-gradient-to-r from-[#00a3ff] to-[#00e5ff] shadow-[0_0_22px_rgba(0,229,255,0.5)] hover:shadow-[0_0_32px_rgba(0,229,255,0.8)] hover:scale-[1.03] transition-all duration-300 flex items-center gap-2 cursor-pointer group"
@@ -336,22 +335,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
                 <span>{cfg.ctaLabel || "تسوق الآن"}</span>
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               </button>
-
-              <div dir="ltr" className="lux-frame shrink-0 rounded-xl p-[1.5px] shadow-[0_0_18px_rgba(0,163,255,0.35)]">
-                <div className="flex items-center gap-2 rounded-[10px] bg-gradient-to-r from-[#050c1c] via-[#0a1d42] to-[#050c1c] px-2 py-1.5">
-                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#00e5ff]/60 bg-[#00e5ff]/10 shadow-[0_0_10px_rgba(0,229,255,0.5)]">
-                    <Crown className="h-3.5 w-3.5 fill-[#00a3ff]/40 text-[#00e5ff] drop-shadow-[0_0_5px_#00e5ff]" />
-                  </span>
-                  <div className="flex flex-col leading-none">
-                    <span className="font-mono text-[7px] font-bold uppercase tracking-[0.2em] text-gray-400">
-                      Store Owner
-                    </span>
-                    <span className="hero-shimmer mt-0.5 bg-gradient-to-r from-[#00a3ff] via-[#d6f7ff] to-[#00e5ff] bg-clip-text font-tech text-sm font-black tracking-wider text-transparent">
-                      YamEn
-                    </span>
-                  </div>
-                </div>
-              </div>
             </div>
 
             {/* شريطان متقاطعان (X): معدن أزرق لامع × أوبسيديان بنيون، وشعار دوّار بالتقاطع */}
@@ -401,6 +384,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
                   </div>
                 </div>
               </div>
+            </div>
+            {/* توقيع صاحب المتجر: سطر صغير تحت الشريطين */}
+            <div className="flex items-center justify-center gap-2 pt-1 hero-rise d6" dir="ltr">
+              <span className="h-px w-8 bg-gradient-to-r from-transparent to-[#00a3ff]/60" />
+              <Crown className="h-3 w-3 fill-[#00a3ff]/40 text-[#00e5ff]" />
+              <span className="font-mono text-[8px] font-bold uppercase tracking-[0.25em] text-gray-500">Store Owner</span>
+              <span className="hero-shimmer bg-gradient-to-r from-[#00a3ff] via-[#d6f7ff] to-[#00e5ff] bg-clip-text font-tech text-[11px] font-black tracking-[0.2em] text-transparent">
+                YamEn
+              </span>
+              <span className="h-px w-8 bg-gradient-to-l from-transparent to-[#00a3ff]/60" />
             </div>
           </div>
 
