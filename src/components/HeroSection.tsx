@@ -337,16 +337,21 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
               </button>
 
-              <div
-                dir="ltr"
-                className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-gradient-to-r from-[#020a17] via-[#091b3a] to-[#020a17] border border-[#00a3ff]/50 shadow-[0_0_18px_rgba(0,163,255,0.2)]"
-              >
-                <Crown className="w-4 h-4 text-[#00e5ff] fill-[#00a3ff]/30" />
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest font-mono">
-                  STORE OWNER:
-                </span>
-                <span className="text-sm font-black text-[#00e5ff] tracking-widest font-mono">YamEn</span>
-                <Sparkles className="w-3.5 h-3.5 text-[#00a3ff]" />
+              <div dir="ltr" className="lux-frame rounded-2xl p-[1.5px] shadow-[0_0_26px_rgba(0,163,255,0.35)]">
+                <div className="flex items-center gap-3 rounded-[15px] bg-gradient-to-r from-[#050c1c] via-[#0a1d42] to-[#050c1c] px-3.5 py-2">
+                  <span className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-[#00e5ff]/60 bg-[#00e5ff]/10 shadow-[0_0_14px_rgba(0,229,255,0.5)]">
+                    <Crown className="h-[18px] w-[18px] fill-[#00a3ff]/40 text-[#00e5ff] drop-shadow-[0_0_6px_#00e5ff]" />
+                  </span>
+                  <div className="flex flex-col leading-tight">
+                    <span className="font-mono text-[9px] font-bold uppercase tracking-[0.25em] text-gray-400">
+                      Store Owner
+                    </span>
+                    <span className="hero-shimmer bg-gradient-to-r from-[#00a3ff] via-[#d6f7ff] to-[#00e5ff] bg-clip-text font-tech text-lg font-black tracking-widest text-transparent">
+                      YamEn
+                    </span>
+                  </div>
+                  <Sparkles className="h-4 w-4 text-[#00e5ff] drop-shadow-[0_0_6px_#00e5ff]" />
+                </div>
               </div>
             </div>
 
