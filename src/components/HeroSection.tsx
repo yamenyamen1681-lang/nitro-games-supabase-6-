@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
-import { Lalezar } from "next/font/google";
+import { El_Messiri } from "next/font/google";
 import { Product, ShowcaseConfig, DEFAULT_SHOWCASE, CATEGORIES_META } from "@/lib/data";
 import { useCart } from "@/context/CartContext";
 import {
@@ -19,7 +19,7 @@ import {
   Disc,
 } from "lucide-react";
 
-const bannerFont = Lalezar({ subsets: ["arabic"], weight: "400", display: "swap" });
+const bannerFont = El_Messiri({ subsets: ["arabic"], weight: ["700"], display: "swap" });
 
 interface HeroSectionProps {
   products: Product[];
@@ -283,7 +283,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
                 CYBER ESPORTS
               </span>
               <span className="relative flex items-center gap-2">
-                <span className={`price-text ${bannerFont.className} text-xl sm:text-3xl leading-none tracking-wide whitespace-nowrap`}>
+                <span className={`price-text ${bannerFont.className} text-xl sm:text-3xl font-bold leading-snug whitespace-nowrap`}>
                   أفضل سعر في فلسطين
                 </span>
               </span>
