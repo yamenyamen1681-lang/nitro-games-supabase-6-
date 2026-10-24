@@ -277,13 +277,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ products, showcase }) 
         {/* البنر العلوي: خط ضوئي يدور حواليه */}
         <div className="flex justify-center hero-rise d1">
           <div className="lux-frame p-[2px] rounded-full max-w-full shadow-[0_0_34px_rgba(0,163,255,0.4)]">
-            <div className="relative overflow-hidden flex items-center gap-3 sm:gap-4 rounded-full bg-gradient-to-r from-[#050c1c] via-[#08183a] to-[#050c1c] px-3 py-2.5 sm:px-5">
+            <div className="relative overflow-hidden flex items-center gap-3 sm:gap-4 rounded-full bg-gradient-to-r from-[#050c1c] via-[#08183a] to-[#050c1c] px-2.5 py-2 sm:px-5 sm:py-2.5">
               <span className="pill-sweep pointer-events-none absolute inset-y-0 w-1/3 bg-gradient-to-r from-transparent via-[#00e5ff]/15 to-transparent" />
-              <span className="relative shrink-0 bg-[#00a3ff]/15 border border-[#00a3ff]/50 text-[#00e5ff] px-3 py-1 rounded-full text-[10px] sm:text-xs font-black tracking-wider uppercase font-tech whitespace-nowrap">
+              <span className="relative shrink-0 bg-[#00a3ff]/15 border border-[#00a3ff]/50 text-[#00e5ff] px-2 sm:px-3 py-1 rounded-full text-[9px] sm:text-xs font-black tracking-wider uppercase font-tech whitespace-nowrap">
                 CYBER ESPORTS
               </span>
-              <span className="relative flex items-center gap-2">
-                <span className={`price-text ${bannerFont.className} text-xl sm:text-3xl font-bold leading-snug whitespace-nowrap`}>
+              <span className="relative flex min-w-0 items-center gap-2 pl-1">
+                <span className={`price-text ${bannerFont.className} text-[17px] sm:text-3xl font-bold leading-snug whitespace-nowrap`}>
                   أفضل سعر في فلسطين
                 </span>
               </span>
